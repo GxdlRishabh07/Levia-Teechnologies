@@ -14,8 +14,8 @@ import {
 const GROQ_CHAT_URL = 'https://api.groq.com/openai/v1/chat/completions';
 const GROQ_AUDIO_URL = 'https://api.groq.com/openai/v1/audio/transcriptions';
 
-const PRIMARY_MODEL = env.GROQ_MODEL || 'qwen/qwen3.8-27b';
-const FALLBACK_MODEL = 'openai/gpt-oss-120b';
+const PRIMARY_MODEL = 'llama-3.1-8b-instant';
+const FALLBACK_MODEL = 'llama-3.3-70b-versatile';
 const WHISPER_MODEL = 'whisper-large-v3';
 
 const CHAT_TIMEOUT_MS = 8000;
@@ -1170,7 +1170,7 @@ export async function transliterateToHinglish(text) {
           Authorization: `Bearer ${env.GROQ_API_KEY}`,
         },
         body: JSON.stringify({
-          model: env.GROQ_MODEL || 'qwen/qwen3.8-27b',
+          model: PRIMARY_MODEL,
           messages: [
             {
               role: 'system',

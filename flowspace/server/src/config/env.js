@@ -36,9 +36,8 @@ const envSchema = z.object({
     .min(16, 'JWT_SECRET must be at least 16 characters')
     .default('flowspace-dev-jwt-secret-change-in-production-2026'),
 
-  // Groq AI (Qwen / Llama + Whisper)
+  // Groq AI (Llama 3.3 + Whisper)
   GROQ_API_KEY: z.string().optional().default(''),
-  GROQ_MODEL: z.string().optional().default('qwen/qwen3.8-27b'),
 
   // Pusher Channels (Realtime)
   PUSHER_APP_ID: z.string().optional().default(''),
