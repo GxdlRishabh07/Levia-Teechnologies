@@ -1,0 +1,60 @@
+name: FlowSpace CI (MySQL 8.0 + API Tests + Client Build)
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  verify:
+    name: Backend Integration Tests & Frontend Build
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: rootpassword
+          MYSQL_DATABASE: flowspace_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -u root -prootpassword"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=12
+
+    env:
+      NODE_ENV: test
+      PORT: 4000
+      CLIENT_URL: http://localhost:5173
+      DB_HOST: 127.0.0.1
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: rootpassword
+      DB_NAME: flowspace_test
+      DB_SSL: 'false'
+      JWT_SECRET: flowspace-ci-test-jwt-secret-key-2026
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install root & server dependencies
+        run: npm install
+
+      - name: Initialize MySQL 8.0 schema
+        run: npm run db:setup
+
+      - name: Run Supertest API & multi-tenant isolation test suite
+        run: npm test
+
+      - name: Install client dependencies & build Vite production bundle
+        run: npm run build
