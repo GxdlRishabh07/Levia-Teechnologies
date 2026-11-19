@@ -14,8 +14,8 @@ import {
 const GROQ_CHAT_URL = 'https://api.groq.com/openai/v1/chat/completions';
 const GROQ_AUDIO_URL = 'https://api.groq.com/openai/v1/audio/transcriptions';
 
-const PRIMARY_MODEL = 'llama-3.3-70b-versatile';
-const FALLBACK_MODEL = 'llama-3.1-8b-instant';
+const PRIMARY_MODEL = env.GROQ_MODEL || 'qwen/qwen3.8-27b';
+const FALLBACK_MODEL = 'openai/gpt-oss-120b';
 const WHISPER_MODEL = 'whisper-large-v3';
 
 const CHAT_TIMEOUT_MS = 8000;
@@ -1022,10 +1022,16 @@ export async function parseCommand({
   const startedAt = Date.now();
   const today = new Date().toISOString().slice(0, 10);
 
+  // If input contains Devanagari script, normalize to Romanized Hinglish
+  let inputText = String(text || '').trim();
+  if (containsDevanagari(inputText)) {
+    inputText = await transliterateToHinglish(inputText);
+  }
+
   const [projects, members, candidates] = await Promise.all([
     projectRepo.listByWorkspace(workspaceId),
     workspaceRepo.listMembers(workspaceId),
-    taskRepo.searchCandidates(workspaceId, text),
+    taskRepo.searchCandidates(workspaceId, inputText),
   ]);
 
   let rawOutput = null;
@@ -1043,7 +1049,7 @@ export async function parseCommand({
       const groqRes = await callGroqChat({
         messages: [
           { role: 'system', content: systemPrompt },
-          { role: 'user', content: String(text).trim() },
+          { role: 'user', content: inputText },
         ],
         temperature: 0,
         jsonMode: true,
@@ -1059,7 +1065,7 @@ export async function parseCommand({
         );
       }
       rawOutput = compileFallbackIntent({
-        text,
+        text: inputText,
         projects,
         members,
         candidates,
@@ -1068,7 +1074,7 @@ export async function parseCommand({
     }
   } else {
     rawOutput = compileFallbackIntent({
-      text,
+      text: inputText,
       projects,
       members,
       candidates,
@@ -1079,21 +1085,21 @@ export async function parseCommand({
   let preview;
   try {
     preview = normalizeAndValidatePreview(rawOutput, {
-      text,
+      text: inputText,
       projects,
       members,
       candidates,
     });
   } catch (_validationErr) {
     const fallbackRaw = compileFallbackIntent({
-      text,
+      text: inputText,
       projects,
       members,
       candidates,
       today,
     });
     preview = normalizeAndValidatePreview(fallbackRaw, {
-      text,
+      text: inputText,
       projects,
       members,
       candidates,
@@ -1107,6 +1113,106 @@ export async function parseCommand({
     latencyMs: Date.now() - startedAt,
     model: modelUsed,
   };
+}
+
+/**
+ * Detects if a string contains any Devanagari characters (Hindi script).
+ * Unicode range for Devanagari: \u0900-\u097F
+ */
+export function containsDevanagari(text) {
+  return /[\u0900-\u097F]/.test(text || '');
+}
+
+const DEVANAGARI_PHONETIC_MAP = {
+  'क': 'k', 'ख': 'kh', 'ग': 'g', 'घ': 'gh', 'ङ': 'ng',
+  'च': 'ch', 'छ': 'chh', 'ज': 'j', 'झ': 'jh', 'ञ': 'ny',
+  'ट': 't', 'ठ': 'th', 'ड': 'd', 'ढ': 'dh', 'ण': 'n',
+  'त': 't', 'थ': 'th', 'द': 'd', 'ध': 'dh', 'न': 'n',
+  'प': 'p', 'फ': 'ph', 'ब': 'b', 'भ': 'bh', 'म': 'm',
+  'य': 'y', 'र': 'r', 'ल': 'l', 'व': 'v', 'श': 'sh',
+  'ष': 'sh', 'स': 's', 'ह': 'h',
+  'अ': 'a', 'आ': 'aa', 'इ': 'i', 'ई': 'ee', 'उ': 'u', 'ऊ': 'oo',
+  'ऋ': 'ri', 'ए': 'e', 'ऐ': 'ai', 'ओ': 'o', 'औ': 'au',
+  'ा': 'a', 'ि': 'i', 'ी': 'ee', 'ु': 'u', 'ू': 'oo',
+  'ृ': 'ri', 'े': 'e', 'ै': 'ai', 'ो': 'o', 'ौ': 'au',
+  'ं': 'n', 'ँ': 'n', 'ः': 'h', '्': '', '़': '',
+};
+
+export function fallbackDevanagariToLatin(text) {
+  let result = '';
+  for (let i = 0; i < text.length; i += 1) {
+    const ch = text[i];
+    result += DEVANAGARI_PHONETIC_MAP[ch] !== undefined ? DEVANAGARI_PHONETIC_MAP[ch] : ch;
+  }
+  return result.replace(/\s+/g, ' ').trim();
+}
+
+/**
+ * Transliterates Hindi/Devanagari text into natural Roman/Latin script Hinglish.
+ * E.g., "बोर पे नाविकेशन कर सकते होगे" -> "board pe navigation kar sakte hoge"
+ * "टास्क को ऐड करो" -> "task ko add karo"
+ */
+export async function transliterateToHinglish(text) {
+  const trimmed = String(text || '').trim();
+  if (!trimmed || !containsDevanagari(trimmed)) {
+    return trimmed;
+  }
+
+  if (env.hasGroq) {
+    try {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 4000);
+
+      const response = await fetch(GROQ_CHAT_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${env.GROQ_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: env.GROQ_MODEL || 'qwen/qwen3.8-27b',
+          messages: [
+            {
+              role: 'system',
+              content:
+                'You are an expert Hinglish transliterator for a software workspace.\n' +
+                'Transliterate any Hindi or Devanagari text into natural Roman/Latin script Hinglish (e.g. "task ko add karo", "board pe navigation kar sakte hoge", "Rahul ke liye bug fix task banao").\n' +
+                'CRITICAL RULES:\n' +
+                '1. Output ONLY the Roman/Latin script Hinglish text.\n' +
+                '2. Do NOT translate into English - keep the exact conversational words in Latin letters (e.g. "task ko add karo", "board pe navigation kar sakte hoge").\n' +
+                '3. Output strictly in Latin alphabet. Zero Devanagari characters.\n' +
+                '4. No quotes, no markdown, no explanations.',
+            },
+            {
+              role: 'user',
+              content: trimmed,
+            },
+          ],
+          temperature: 0,
+        }),
+        signal: controller.signal,
+      });
+
+      clearTimeout(timer);
+
+      if (response.ok) {
+        const data = await response.json();
+        const transliterated = data?.choices?.[0]?.message?.content?.trim();
+        if (transliterated && !containsDevanagari(transliterated)) {
+          return transliterated;
+        }
+      }
+    } catch (err) {
+      if (!env.isTest) {
+        console.warn(
+          '[aiService.transliterateToHinglish] Groq transliteration call failed, using phonetic mapper:',
+          err?.message
+        );
+      }
+    }
+  }
+
+  return fallbackDevanagariToLatin(trimmed);
 }
 
 /**
@@ -1149,6 +1255,10 @@ export async function transcribeAudio({
       formData.append('model', WHISPER_MODEL);
       formData.append('temperature', '0');
       formData.append('response_format', 'json');
+      formData.append(
+        'prompt',
+        'Transcribe in Romanized Hinglish (Latin alphabet only). Examples: task ko add karo, board pe navigation kar sakte hoge, Rahul ke liye task banao, priority high rakho, bug fix karo. Never output Devanagari script.'
+      );
 
       const response = await fetch(GROQ_AUDIO_URL, {
         method: 'POST',
@@ -1180,7 +1290,12 @@ export async function transcribeAudio({
       }
 
       const data = await response.json();
-      const transcribedText = String(data?.text || '').trim();
+      let transcribedText = String(data?.text || '').trim();
+
+      // If speech was transcribed into Devanagari Hindi, transliterate into Romanized Hinglish
+      if (containsDevanagari(transcribedText)) {
+        transcribedText = await transliterateToHinglish(transcribedText);
+      }
 
       return {
         text: transcribedText,
@@ -1354,4 +1469,6 @@ export default {
   parseCommand,
   transcribeAudio,
   generateStandup,
+  containsDevanagari,
+  transliterateToHinglish,
 };
