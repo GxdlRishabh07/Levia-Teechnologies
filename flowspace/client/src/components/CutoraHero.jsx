@@ -3,50 +3,52 @@ import { Link } from 'react-router-dom';
 
 const SLIDES = [
   {
-    line1: 'Edit Smarter. Export Faster.',
-    line2: 'Create Anywhere.',
-    sub: 'From quick social media clips to full-length videos, our powerful editor lets you work seamlessly across devices.',
+    line1: 'Think at the Speed of Thought.',
+    line2: 'Ship Without Friction.',
+    sub: 'FlowSpace unites AI-powered natural language execution, real-time Kanban boards, and live multi-tenant sync so modern engineering teams turn ambitious ideas into shipped software effortlessly.',
   },
   {
-    line1: 'Timeline in Flow. Zero Friction.',
-    line2: 'Build Together.',
-    sub: 'Instant multi-agent collaboration and realtime boards keep your entire team aligned on every release.',
+    line1: 'Voice-Driven Execution.',
+    line2: 'Zero Management Overhead.',
+    sub: 'Speak or type in English or Hinglish — our intelligent Groq AI compiler breaks down features, assigns engineers, tags priorities, and updates your boards in milliseconds.',
   },
   {
-    line1: 'High Performance. Golden Quality.',
-    line2: 'One Click Polish.',
-    sub: 'Ultra-fast rendering and clean workflows designed for modern builders who refuse to compromise.',
+    line1: 'Synchronized in Real Time.',
+    line2: 'Engineered for Velocity.',
+    sub: 'Live presence indicators, automated daily standup digests, and complete audit trails keep your entire organization laser-focused on shipping what truly moves the needle.',
   },
 ];
 
-export default function CutoraHero({ backTo = '/', backLabel = '← Back to Website' }) {
+export default function CutoraHero({ backTo = '/', backLabel = '← Back to Workspace' }) {
   const [activeSlide, setActiveSlide] = useState(0);
 
   const current = SLIDES[activeSlide];
 
   return (
     <div className="cutora-hero">
-      {/* Top bar: 57u from top, 92.5u from left */}
+      {/* Top bar: Brand + Back link */}
       <div className="cutora-topbar">
         <Link to="/" className="cutora-logo">
-          {/* 48u Black tile holding thick amber-gradient "C" */}
+          {/* Professional Dark Tile with FlowSpace Geometric Flow Emblem */}
           <div className="cutora-logo-tile" aria-hidden="true">
-            <svg viewBox="0 0 28 28" fill="none">
+            <svg viewBox="0 0 24 24" fill="none">
               <defs>
-                <linearGradient id="cutora-c-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#FFC233" />
-                  <stop offset="100%" stopColor="#F58A07" />
+                <linearGradient id="flowspace-blue-mark" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#60A5FA" />
+                  <stop offset="100%" stopColor="#2563EB" />
                 </linearGradient>
               </defs>
+              <rect width="24" height="24" rx="7" fill="#060A18" stroke="rgba(96, 165, 250, 0.35)" strokeWidth="1" />
               <path
-                d="M19.5 8.5C18.2 6.9 16.2 6 14 6C9.58 6 6 9.58 6 14C6 18.42 9.58 22 14 22C16.2 22 18.2 21.1 19.5 19.5"
-                stroke="url(#cutora-c-grad)"
-                strokeWidth="4"
+                d="M6.5 8.25H17.5M6.5 12H14.5M6.5 15.75H11"
+                stroke="url(#flowspace-blue-mark)"
+                strokeWidth="2"
                 strokeLinecap="round"
               />
+              <circle cx="16.5" cy="15.75" r="1.75" fill="#38BDF8" />
             </svg>
           </div>
-          <span className="cutora-logo-title">Cutora</span>
+          <span className="cutora-logo-title">FlowSpace</span>
         </Link>
 
         <Link to={backTo} className="cutora-back-link">
@@ -54,7 +56,7 @@ export default function CutoraHero({ backTo = '/', backLabel = '← Back to Webs
         </Link>
       </div>
 
-      {/* Pitch (Bottom Left): Headline + Subline + Interactive Dots */}
+      {/* Inspirational Pitch (Bottom Left): Headlines + Subline + Interactive Dots */}
       <div className="cutora-pitch">
         <div className="cutora-headline-clip">
           <h1 key={`l1-${activeSlide}`} className="cutora-headline cutora-enter-wipe-1">
@@ -71,8 +73,8 @@ export default function CutoraHero({ backTo = '/', backLabel = '← Back to Webs
           {current.sub}
         </p>
 
-        {/* Slider dots: 34.5x9u amber pill for active, 9u white dots at 55% */}
-        <div className="cutora-dots cutora-enter-dots" role="tablist" aria-label="Pitch highlights">
+        {/* Slider dots: 34.5x9u blue pill for active, 9u white dots at 55% */}
+        <div className="cutora-dots cutora-enter-dots" role="tablist" aria-label="Product highlights">
           {SLIDES.map((_, idx) => {
             const isActive = idx === activeSlide;
             return (

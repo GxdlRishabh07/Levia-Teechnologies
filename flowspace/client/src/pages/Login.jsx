@@ -23,7 +23,7 @@ export default function Login() {
     setSubmitting(true);
     try {
       await login({ email: loginEmail, password: loginPassword });
-      toast.success('Welcome back to Cutora');
+      toast.success('Welcome back to FlowSpace');
       navigate('/', { replace: true });
     } catch (err) {
       toast.error(err.message || 'Invalid email or password');
@@ -44,14 +44,9 @@ export default function Login() {
     performLogin(demoEmail, 'Demo@1234');
   };
 
-  const handleGoogleClick = () => {
-    toast.success('Signing in with Google...');
-    handleDemoLogin('arjun@flowspace.dev');
-  };
-
   return (
     <div className="cutora-root">
-      {/* Cinematic Sunset Gradient Stage (In place of image) */}
+      {/* Cinematic Deep Blue Gradient Stage */}
       <div className="cutora-gradient-stage" />
       <div className="cutora-washes" />
 
@@ -60,7 +55,7 @@ export default function Login() {
         {/* Left Column: Hero Pitch & Logo */}
         <CutoraHero backTo="/" backLabel="← Back to Workspace" />
 
-        {/* Right Column: Clean White Log-in Card with Amber Accents */}
+        {/* Right Column: Clean White Log-in Card with Blue Accents */}
         <div className="cutora-card-wrap">
           <div className="cutora-card cutora-enter-card">
             {/* Theme Toggle Button in Card Corner */}
@@ -71,12 +66,12 @@ export default function Login() {
               aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
               className="cutora-theme-toggle"
             >
-              {isDark ? <Sun className="h-5 w-5 text-[#F59A08]" /> : <Moon className="h-5 w-5" />}
+              {isDark ? <Sun className="h-5 w-5 text-[#60A5FA]" /> : <Moon className="h-5 w-5" />}
             </button>
 
             {/* Heading & Subtitle */}
             <h2 className="cutora-card-heading">Welcome Back!</h2>
-            <p className="cutora-card-sub">Log in to start creating stunning videos with ease.</p>
+            <p className="cutora-card-sub">Sign in to access your projects and collaborate live with your team.</p>
 
             {/* Evaluator Quick-Access Demo Pills */}
             <div className="cutora-demo-row">
@@ -98,68 +93,67 @@ export default function Login() {
               </button>
             </div>
 
-            {/* Form */}
-            <form onSubmit={handleSubmit} className="cutora-form" noValidate>
-              {/* Email Field */}
+            {/* Login Form */}
+            <form onSubmit={handleSubmit} className="cutora-form">
+              {/* Email */}
               <div className="cutora-field">
-                <label className="cutora-label" htmlFor="cutora-email">
-                  Email
+                <label className="cutora-label" htmlFor="cutora-login-email">
+                  Work Email
                 </label>
                 <div className="cutora-input-wrap">
                   <input
-                    id="cutora-email"
+                    id="cutora-login-email"
                     type="email"
-                    className="cutora-input"
-                    placeholder="Input your email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    autoComplete="email"
+                    placeholder="you@company.com"
                     required
+                    autoComplete="email"
+                    className="cutora-input"
                   />
                 </div>
               </div>
 
-              {/* Password Field with Eye Slash Toggle */}
+              {/* Password with Eye Slash Toggle */}
               <div className="cutora-field">
-                <label className="cutora-label" htmlFor="cutora-password">
+                <label className="cutora-label" htmlFor="cutora-login-password">
                   Password
                 </label>
                 <div className="cutora-input-wrap">
                   <input
-                    id="cutora-password"
+                    id="cutora-login-password"
                     type={showPassword ? 'text' : 'password'}
-                    className="cutora-input cutora-input-with-eye"
-                    placeholder="Input your password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    autoComplete="current-password"
+                    placeholder="Enter your password"
                     required
+                    autoComplete="current-password"
+                    className="cutora-input cutora-input-with-eye"
                   />
                   <button
                     type="button"
+                    onClick={() => setShowPassword(!showPassword)}
                     className="cutora-eye-btn"
-                    onClick={() => setShowPassword((v) => !v)}
                     aria-label={showPassword ? 'Hide password' : 'Show password'}
-                    aria-pressed={showPassword}
                   >
                     {showPassword ? (
-                      /* Eye with Slash */
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
-                        <line x1="1" y1="1" x2="23" y2="23" stroke="#F59A08" strokeWidth="2.2" />
+                      /* Eye Off SVG */
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24" />
+                        <line x1="1" y1="1" x2="23" y2="23" strokeLinecap="round" strokeWidth="1.8" />
                       </svg>
                     ) : (
-                      /* Clean Eye */
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                        <circle cx="12" cy="12" r="3" />
+                      /* Eye SVG */
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                        <circle cx="12" cy="12" r="3" strokeWidth="1.8" />
                       </svg>
                     )}
                   </button>
                 </div>
               </div>
 
-              {/* Options Row: 26u Remember Me Checkbox + Amber Forgot Password */}
+              {/* Remember Me & Forgot Password */}
               <div className="cutora-options-row">
                 <label className="cutora-check-wrap">
                   <input
@@ -168,26 +162,19 @@ export default function Login() {
                     onChange={(e) => setRemember(e.target.checked)}
                   />
                   <span className="cutora-check-box" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                      <polyline points="20 6 9 17 4 12" />
+                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor">
+                      <path d="M3.5 8.5L6.5 11.5L12.5 4.5" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </span>
                   <span className="cutora-check-label">Remember Me</span>
                 </label>
 
-                <a
-                  href="#forgot"
-                  className="cutora-forgot-link"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    toast('Password reset link sent to your email inbox', { icon: '✉️' });
-                  }}
-                >
+                <a href="#forgot" onClick={(e) => { e.preventDefault(); toast('Password reset link sent to registered email'); }} className="cutora-forgot-link">
                   Forgot Password?
                 </a>
               </div>
 
-              {/* 66u Black Pill Login Button with Amber Text */}
+              {/* Primary Action Button */}
               <button
                 type="submit"
                 disabled={submitting || !email.trim() || !password}
@@ -195,54 +182,20 @@ export default function Login() {
               >
                 {submitting ? (
                   <>
-                    <Loader2 className="h-5 w-5 animate-spin text-[#F59A08]" />
-                    <span>Logging in...</span>
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                    <span>Signing in…</span>
                   </>
                 ) : (
-                  <span>Login</span>
+                  <span>Sign In to FlowSpace</span>
                 )}
               </button>
             </form>
 
-            {/* Divider */}
-            <div className="cutora-divider">
-              <span>Or continue with:</span>
-            </div>
-
-            {/* Google 66u White Pill Button */}
-            <button
-              type="button"
-              onClick={handleGoogleClick}
-              className="cutora-google-btn"
-            >
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path
-                  fill="#4285F4"
-                  d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17Z"
-                />
-                <path
-                  fill="#34A853"
-                  d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24Z"
-                />
-                <path
-                  fill="#FBBC05"
-                  d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15Z"
-                />
-                <path
-                  fill="#EA4335"
-                  d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98Z"
-                />
-              </svg>
-              <span>Continue with Google</span>
-            </button>
-
-            {/* Footer Line */}
-            <p className="cutora-card-footer">
+            {/* Footer Navigation */}
+            <div className="cutora-card-footer">
               Don’t have an account?{' '}
-              <Link to="/signup">
-                Sign up here
-              </Link>
-            </p>
+              <Link to="/signup">Sign up for free</Link>
+            </div>
           </div>
         </div>
       </div>

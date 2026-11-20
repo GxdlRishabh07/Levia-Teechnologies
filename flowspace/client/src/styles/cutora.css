@@ -1,6 +1,6 @@
 /* ==================================================================
-   Cutora Cinematic Auth Stylesheet
-   Warm sunset gradient plate + amber accents + fluid artboard scaling
+   FlowSpace Cinematic Blue Auth Stylesheet
+   Deep sapphire/cobalt gradient mesh + electric blue accents + fluid artboard scaling
    Reference artboard: 1672 × 941 (--u = max(.62px, min(100vw/1672, 100dvh/941)))
    ================================================================== */
 
@@ -22,22 +22,25 @@
 
 .cutora-root {
   --u: var(--cutora-u);
-  --font-hero: "Plus Jakarta Sans", "General Sans", "Red Hat Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-hero: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
-  /* Palette */
-  --c-ink: #000000;
-  --c-secondary: #5F636B;
-  --c-muted: #898D94;
-  --c-placeholder: #95999F;
-  --c-line: #E2E4E7;
-  --c-line-soft: #E9EAEC;
-  --c-card: #FEFEFE;
-  --c-btn: #161515;
-  --c-btn-hover: #0a0a0a;
-  --c-amber: #F59A08;
-  --c-amber-light: #FBAE05;
-  --c-amber-hover: #E08905;
-  --c-amber-glow: rgba(245, 154, 8, 0.35);
+  /* Refined Professional Blue Palette */
+  --c-ink: #0F172A;
+  --c-secondary: #475569;
+  --c-muted: #64748B;
+  --c-placeholder: #94A3B8;
+  --c-line: #E2E8F0;
+  --c-line-soft: #F1F5F9;
+  --c-card: #FFFFFF;
+  --c-btn: #0F172A;
+  --c-btn-hover: #1E293B;
+
+  /* Electric Sapphire / Cobalt Blue Accents */
+  --c-blue: #2563EB;
+  --c-blue-light: #3B82F6;
+  --c-blue-glow: rgba(37, 99, 235, 0.35);
+  --c-blue-bright: #60A5FA;
+  --c-cyan: #0EA5E9;
 
   margin: 0;
   padding: 0;
@@ -53,20 +56,21 @@
 }
 
 html.dark .cutora-root {
-  --c-card: #12131A;
-  --c-line: rgba(255, 255, 255, 0.12);
-  --c-line-soft: rgba(255, 255, 255, 0.08);
-  --c-ink: #F9FAFB;
-  --c-secondary: #A0A4AE;
-  --c-muted: #7A7E88;
-  --c-placeholder: #62656E;
-  --c-btn: #1A1C24;
-  --c-btn-hover: #222530;
+  --c-card: #0B0F19;
+  --c-line: rgba(255, 255, 255, 0.1);
+  --c-line-soft: rgba(255, 255, 255, 0.06);
+  --c-ink: #F8FAFC;
+  --c-secondary: #94A3B8;
+  --c-muted: #64748B;
+  --c-placeholder: #475569;
+  --c-btn: #1E293B;
+  --c-btn-hover: #2563EB;
+  --c-blue-bright: #93C5FD;
 }
 
 /* ==================================================================
-   Background: Warm Cinematic Sunset Gradient Mesh
-   Replacing static image with alive, multi-layered sunset ambiance
+   Background: Deep Sapphire & Electric Blue Cinematic Gradient Mesh
+   Replacing yellow sunset with executive deep oceanic & midnight blue
    ================================================================== */
 .cutora-gradient-stage {
   position: absolute;
@@ -75,16 +79,16 @@ html.dark .cutora-root {
   height: 100%;
   z-index: 0;
   overflow: hidden;
-  background-color: #080B14;
+  background-color: #030712;
   background-image:
-    /* Low-left Sun Flare / Golden Glow */
-    radial-gradient(ellipse 950px 700px at 15% 82%, rgba(245, 154, 8, 0.52) 0%, rgba(226, 109, 40, 0.28) 35%, transparent 70%),
-    /* Mid-horizon Copper warmth */
-    radial-gradient(ellipse 850px 550px at 42% 68%, rgba(251, 174, 5, 0.32) 0%, rgba(217, 95, 24, 0.18) 45%, transparent 75%),
-    /* High-right Twilight Dusk / Royal Indigo */
-    radial-gradient(ellipse 950px 650px at 80% 18%, rgba(101, 49, 247, 0.32) 0%, rgba(59, 28, 82, 0.22) 50%, transparent 80%),
-    /* Deep Sky Foundation */
-    linear-gradient(135deg, #070913 0%, #101322 25%, #1E172B 50%, #2D1822 75%, #120B13 100%);
+    /* Low-left Electric Sapphire / Blue Flare */
+    radial-gradient(ellipse 950px 720px at 16% 82%, rgba(37, 99, 235, 0.55) 0%, rgba(14, 165, 233, 0.3) 38%, transparent 72%),
+    /* Mid-horizon Deep Cobalt & Indigo warmth */
+    radial-gradient(ellipse 850px 550px at 42% 68%, rgba(59, 130, 246, 0.35) 0%, rgba(30, 64, 175, 0.22) 45%, transparent 75%),
+    /* High-right Celestial Violet / Deep Azure Night */
+    radial-gradient(ellipse 950px 650px at 80% 18%, rgba(79, 70, 229, 0.35) 0%, rgba(30, 27, 75, 0.22) 50%, transparent 80%),
+    /* Deep Space Foundation */
+    linear-gradient(135deg, #020617 0%, #0A1128 28%, #101E46 55%, #0B132B 80%, #030712 100%);
 }
 
 /* Dynamic Breathing Shimmer Layers */
@@ -95,23 +99,23 @@ html.dark .cutora-root {
   width: 120%;
   height: 120%;
   background:
-    radial-gradient(circle 600px at 28% 70%, rgba(255, 194, 51, 0.22) 0%, transparent 60%),
-    radial-gradient(circle 500px at 70% 30%, rgba(138, 77, 255, 0.18) 0%, transparent 60%);
+    radial-gradient(circle 650px at 28% 70%, rgba(56, 189, 248, 0.24) 0%, transparent 60%),
+    radial-gradient(circle 500px at 70% 30%, rgba(99, 102, 241, 0.2) 0%, transparent 60%);
   filter: blur(50px);
   animation: cutora-drift 12s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
   pointer-events: none;
 }
 
-/* Atmospheric Sun Glint */
+/* Atmospheric Cyan-Blue Starburst Glint */
 .cutora-gradient-stage::after {
   content: "";
   position: absolute;
-  left: 5%;
+  left: 6%;
   bottom: 8%;
   width: 500px;
   height: 500px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 220, 140, 0.38) 0%, rgba(245, 154, 8, 0.15) 35%, transparent 70%);
+  background: radial-gradient(circle, rgba(147, 197, 253, 0.4) 0%, rgba(37, 99, 235, 0.18) 35%, transparent 70%);
   filter: blur(40px);
   animation: cutora-flare 8s ease-in-out infinite alternate;
   pointer-events: none;
@@ -127,22 +131,22 @@ html.dark .cutora-root {
   100% { transform: scale(1.15); opacity: 1; }
 }
 
-/* Readability dark washes (150u left, 140u top, 420u bottom) */
+/* Readability dark washes */
 .cutora-washes {
   position: absolute;
   inset: 0;
   pointer-events: none;
   z-index: 1;
   background:
-    linear-gradient(to right, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.25) calc(150 * var(--u)), transparent calc(320 * var(--u))),
-    linear-gradient(to bottom, rgba(0, 0, 0, 0.55) 0%, transparent calc(140 * var(--u))),
-    linear-gradient(to top, rgba(20, 10, 0, 0.5) 0%, rgba(20, 10, 0, 0.22) calc(200 * var(--u)), transparent calc(420 * var(--u)));
+    linear-gradient(to right, rgba(2, 6, 23, 0.68) 0%, rgba(2, 6, 23, 0.3) calc(150 * var(--u)), transparent calc(340 * var(--u))),
+    linear-gradient(to bottom, rgba(2, 6, 23, 0.55) 0%, transparent calc(140 * var(--u))),
+    linear-gradient(to top, rgba(3, 7, 18, 0.6) 0%, rgba(3, 7, 18, 0.25) calc(200 * var(--u)), transparent calc(420 * var(--u)));
 }
 
 /* ==================================================================
    Main Layout: Two-column Flex Row
    Left: Hero pitch (white type)
-   Right: Log-in Card (amber accents)
+   Right: Log-in Card (blue accents)
    ================================================================== */
 .cutora-layout {
   position: relative;
@@ -186,8 +190,9 @@ html.dark .cutora-root {
   width: calc(48 * var(--u));
   height: calc(48 * var(--u));
   border-radius: calc(12 * var(--u));
-  background: #000000;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+  background: #060A18;
+  border: 1px solid rgba(96, 165, 250, 0.35);
+  box-shadow: 0 4px 20px rgba(14, 165, 233, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.15);
   display: grid;
   place-items: center;
   flex: none;
@@ -199,9 +204,9 @@ html.dark .cutora-root {
 }
 
 .cutora-logo-title {
-  font-size: calc(35.5 * var(--u));
+  font-size: calc(34 * var(--u));
   line-height: 1;
-  font-weight: 680;
+  font-weight: 700;
   letter-spacing: calc(-0.95 * var(--u));
   color: #FFFFFF;
 }
@@ -210,9 +215,9 @@ html.dark .cutora-root {
   display: inline-flex;
   align-items: center;
   gap: calc(6 * var(--u));
-  font-size: calc(17.4 * var(--u));
+  font-size: calc(17 * var(--u));
   font-weight: 520;
-  color: var(--c-amber-light);
+  color: var(--c-blue-bright);
   text-decoration: none;
   transition: opacity 0.18s ease, transform 0.18s ease;
 }
@@ -234,19 +239,19 @@ html.dark .cutora-root {
 
 .cutora-headline {
   margin: 0;
-  font-size: calc(62 * var(--u));
-  line-height: calc(70 * var(--u));
-  font-weight: 600;
-  letter-spacing: calc(-2.6 * var(--u));
+  font-size: calc(60 * var(--u));
+  line-height: calc(68 * var(--u));
+  font-weight: 650;
+  letter-spacing: calc(-2.4 * var(--u));
   color: #FFFFFF;
 }
 
 .cutora-subline {
   margin: calc(19 * var(--u)) 0 0;
-  font-size: calc(20 * var(--u));
-  line-height: calc(27.5 * var(--u));
-  font-weight: 460;
-  color: rgba(255, 255, 255, 0.85);
+  font-size: calc(19 * var(--u));
+  line-height: calc(27 * var(--u));
+  font-weight: 440;
+  color: rgba(241, 245, 249, 0.88);
   max-width: calc(640 * var(--u));
 }
 
@@ -271,15 +276,15 @@ html.dark .cutora-root {
   width: calc(34.5 * var(--u));
   height: calc(9 * var(--u));
   border-radius: calc(4.5 * var(--u));
-  background: var(--c-amber);
-  box-shadow: 0 0 calc(12 * var(--u)) var(--c-amber-glow);
+  background: var(--c-blue-bright);
+  box-shadow: 0 0 calc(12 * var(--u)) var(--c-blue-glow);
 }
 
 .cutora-dot-inactive {
   width: calc(9 * var(--u));
   height: calc(9 * var(--u));
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.45);
 }
 
 .cutora-dot-inactive:hover {
@@ -302,12 +307,12 @@ html.dark .cutora-root {
   border-radius: calc(20 * var(--u));
   background: var(--c-card);
   box-shadow:
-    0 calc(20 * var(--u)) calc(50 * var(--u)) rgba(0, 0, 0, 0.28),
-    0 1px 2px rgba(0, 0, 0, 0.08);
+    0 calc(20 * var(--u)) calc(50 * var(--u)) rgba(2, 6, 23, 0.32),
+    0 1px 2px rgba(2, 6, 23, 0.08);
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: calc(32 * var(--u)) calc(96.2 * var(--u));
+  padding: calc(36 * var(--u)) calc(96.2 * var(--u));
   overflow-y: auto;
   position: relative;
 }
@@ -315,16 +320,16 @@ html.dark .cutora-root {
 /* Card Heading & Subtitle */
 .cutora-card-heading {
   margin: 0;
-  font-size: calc(50.6 * var(--u));
+  font-size: calc(48 * var(--u));
   line-height: 1.1;
-  font-weight: 660;
-  letter-spacing: calc(-1.9 * var(--u));
+  font-weight: 700;
+  letter-spacing: calc(-1.8 * var(--u));
   color: var(--c-ink);
 }
 
 .cutora-card-sub {
   margin: calc(8 * var(--u)) 0 0;
-  font-size: calc(19 * var(--u));
+  font-size: calc(18.5 * var(--u));
   line-height: 1.35;
   color: var(--c-secondary);
 }
@@ -333,7 +338,7 @@ html.dark .cutora-root {
 .cutora-demo-row {
   display: flex;
   gap: calc(10 * var(--u));
-  margin-top: calc(16 * var(--u));
+  margin-top: calc(18 * var(--u));
 }
 
 .cutora-demo-pill {
@@ -342,26 +347,26 @@ html.dark .cutora-root {
   align-items: center;
   justify-content: center;
   gap: calc(6 * var(--u));
-  padding: calc(9 * var(--u)) calc(12 * var(--u));
+  padding: calc(10 * var(--u)) calc(12 * var(--u));
   border-radius: calc(8 * var(--u));
   border: 1px dashed var(--c-line);
-  background: rgba(245, 154, 8, 0.04);
+  background: rgba(37, 99, 235, 0.04);
   color: var(--c-secondary);
   font-size: calc(13.5 * var(--u));
-  font-weight: 540;
+  font-weight: 560;
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
 .cutora-demo-pill:hover {
-  background: rgba(245, 154, 8, 0.12);
-  border-color: var(--c-amber);
-  color: var(--c-amber);
+  background: rgba(37, 99, 235, 0.1);
+  border-color: var(--c-blue);
+  color: var(--c-blue);
 }
 
 /* Form Styles */
 .cutora-form {
-  margin-top: calc(24 * var(--u));
+  margin-top: calc(26 * var(--u));
   display: flex;
   flex-direction: column;
 }
@@ -373,9 +378,9 @@ html.dark .cutora-root {
 }
 
 .cutora-label {
-  font-size: calc(17.4 * var(--u));
+  font-size: calc(16.5 * var(--u));
   line-height: 1.25;
-  font-weight: 560;
+  font-weight: 580;
   color: var(--c-ink);
   margin-bottom: calc(8 * var(--u));
 }
@@ -387,12 +392,12 @@ html.dark .cutora-root {
 
 .cutora-input {
   width: 100%;
-  height: calc(66 * var(--u));
+  height: calc(64 * var(--u));
   border-radius: calc(10 * var(--u));
   border: calc(1 * var(--u)) solid var(--c-line);
   background: transparent;
   padding: 0 calc(20 * var(--u));
-  font-size: calc(17 * var(--u));
+  font-size: calc(16.5 * var(--u));
   color: var(--c-ink);
   outline: none;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
@@ -404,8 +409,8 @@ html.dark .cutora-root {
 }
 
 .cutora-input:focus {
-  border-color: var(--c-amber);
-  box-shadow: 0 0 0 calc(3 * var(--u)) rgba(245, 154, 8, 0.2);
+  border-color: var(--c-blue);
+  box-shadow: 0 0 0 calc(3 * var(--u)) rgba(37, 99, 235, 0.2);
 }
 
 .cutora-input-with-eye {
@@ -444,7 +449,7 @@ html.dark .cutora-root {
   align-items: center;
   justify-content: space-between;
   margin-top: calc(4 * var(--u));
-  margin-bottom: calc(28 * var(--u));
+  margin-bottom: calc(26 * var(--u));
 }
 
 .cutora-check-wrap {
@@ -463,8 +468,8 @@ html.dark .cutora-root {
 }
 
 .cutora-check-box {
-  width: calc(26 * var(--u));
-  height: calc(26 * var(--u));
+  width: calc(24 * var(--u));
+  height: calc(24 * var(--u));
   border-radius: calc(6 * var(--u));
   border: calc(1.5 * var(--u)) solid var(--c-line);
   background: transparent;
@@ -475,22 +480,16 @@ html.dark .cutora-root {
 }
 
 .cutora-check-box svg {
-  width: calc(16 * var(--u));
-  height: calc(16 * var(--u));
+  width: calc(15 * var(--u));
+  height: calc(15 * var(--u));
   opacity: 0;
   stroke-width: 2.5;
   transition: opacity 0.12s ease;
 }
 
 .cutora-check-wrap input:checked + .cutora-check-box {
-  background: #000000;
-  border-color: #000000;
-}
-
-html.dark .cutora-check-wrap input:checked + .cutora-check-box {
-  background: var(--c-amber);
-  border-color: var(--c-amber);
-  color: #000000;
+  background: var(--c-blue);
+  border-color: var(--c-blue);
 }
 
 .cutora-check-wrap input:checked + .cutora-check-box svg {
@@ -498,17 +497,21 @@ html.dark .cutora-check-wrap input:checked + .cutora-check-box {
 }
 
 .cutora-check-label {
-  font-size: calc(16.5 * var(--u));
+  font-size: calc(16 * var(--u));
   font-weight: 500;
   color: var(--c-ink);
 }
 
 .cutora-forgot-link {
-  font-size: calc(16.5 * var(--u));
+  font-size: calc(16 * var(--u));
   font-weight: 560;
-  color: var(--c-amber);
+  color: var(--c-blue);
   text-decoration: none;
   transition: opacity 0.15s ease;
+}
+
+html.dark .cutora-forgot-link {
+  color: var(--c-blue-bright);
 }
 
 .cutora-forgot-link:hover {
@@ -516,15 +519,15 @@ html.dark .cutora-check-wrap input:checked + .cutora-check-box {
   opacity: 0.85;
 }
 
-/* Primary Action Button: Black Pill with Amber Text */
+/* Primary Action Button: High-Tech Sapphire / Midnight Pill */
 .cutora-btn-primary {
   width: 100%;
-  height: calc(66 * var(--u));
-  border-radius: calc(33 * var(--u));
-  background: var(--c-btn);
-  border: 0;
-  color: var(--c-amber);
-  font-size: calc(18.5 * var(--u));
+  height: calc(64 * var(--u));
+  border-radius: calc(32 * var(--u));
+  background: #0F172A;
+  border: 1px solid rgba(59, 130, 246, 0.25);
+  color: #60A5FA;
+  font-size: calc(18 * var(--u));
   font-weight: 650;
   letter-spacing: calc(-0.2 * var(--u));
   cursor: pointer;
@@ -532,14 +535,27 @@ html.dark .cutora-check-wrap input:checked + .cutora-check-box {
   align-items: center;
   justify-content: center;
   gap: calc(10 * var(--u));
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.25), 0 0 calc(12 * var(--u)) rgba(37, 99, 235, 0.15);
   transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .cutora-btn-primary:hover {
-  background: var(--c-btn-hover);
-  box-shadow: 0 calc(8 * var(--u)) calc(24 * var(--u)) rgba(0, 0, 0, 0.35);
+  background: #1E293B;
+  color: #93C5FD;
+  border-color: rgba(96, 165, 250, 0.45);
+  box-shadow: 0 calc(8 * var(--u)) calc(24 * var(--u)) rgba(15, 23, 42, 0.35), 0 0 calc(18 * var(--u)) rgba(59, 130, 246, 0.28);
   transform: translateY(calc(-1 * var(--u)));
+}
+
+html.dark .cutora-btn-primary {
+  background: #1E293B;
+  color: #93C5FD;
+  border: 1px solid rgba(96, 165, 250, 0.3);
+}
+
+html.dark .cutora-btn-primary:hover {
+  background: #2563EB;
+  color: #FFFFFF;
 }
 
 .cutora-btn-primary:active {
@@ -547,85 +563,27 @@ html.dark .cutora-check-wrap input:checked + .cutora-check-box {
 }
 
 .cutora-btn-primary:disabled {
-  opacity: 0.65;
+  opacity: 0.6;
   cursor: not-allowed;
   transform: none;
-}
-
-/* Divider with Hairlines */
-.cutora-divider {
-  display: flex;
-  align-items: center;
-  gap: calc(16 * var(--u));
-  margin: calc(26 * var(--u)) 0;
-}
-
-.cutora-divider::before,
-.cutora-divider::after {
-  content: "";
-  flex: 1;
-  height: calc(1 * var(--u));
-  background: var(--c-line-soft);
-}
-
-.cutora-divider span {
-  font-size: calc(15 * var(--u));
-  color: var(--c-muted);
-  white-space: nowrap;
-}
-
-/* Google Button: White 66u Pill with G Mark */
-.cutora-google-btn {
-  width: 100%;
-  height: calc(66 * var(--u));
-  border-radius: calc(33 * var(--u));
-  background: #FFFFFF;
-  border: calc(1 * var(--u)) solid var(--c-line);
-  color: #1F2024;
-  font-size: calc(17 * var(--u));
-  font-weight: 560;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: calc(12 * var(--u));
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  transition: background-color 0.15s ease, box-shadow 0.15s ease;
-}
-
-html.dark .cutora-google-btn {
-  background: #181A22;
-  border-color: rgba(255, 255, 255, 0.12);
-  color: #F9FAFB;
-}
-
-.cutora-google-btn:hover {
-  background: #F9FAFB;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-}
-
-html.dark .cutora-google-btn:hover {
-  background: #20232E;
-}
-
-.cutora-google-btn svg {
-  width: calc(22 * var(--u));
-  height: calc(22 * var(--u));
-  flex: none;
 }
 
 /* Footer Link */
 .cutora-card-footer {
   margin: calc(26 * var(--u)) 0 0;
   text-align: center;
-  font-size: calc(16 * var(--u));
+  font-size: calc(15.5 * var(--u));
   color: var(--c-secondary);
 }
 
 .cutora-card-footer a {
-  color: var(--c-amber);
+  color: var(--c-blue);
   font-weight: 600;
   text-decoration: none;
+}
+
+html.dark .cutora-card-footer a {
+  color: var(--c-blue-bright);
 }
 
 .cutora-card-footer a:hover {
@@ -740,8 +698,7 @@ html.dark .cutora-google-btn:hover {
   }
 
   .cutora-input,
-  .cutora-btn-primary,
-  .cutora-google-btn {
+  .cutora-btn-primary {
     height: 52px;
   }
 }
