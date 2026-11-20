@@ -55,7 +55,13 @@ export function useVoiceCapture({ workspaceId, onTranscribed, enableShortcut = t
     if (isRecording || isTranscribing || !workspaceId) return;
 
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true,
+        },
+      });
       streamRef.current = stream;
 
       const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus')

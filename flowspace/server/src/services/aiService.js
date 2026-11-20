@@ -106,7 +106,9 @@ export async function callGroqChat({
         );
 
         if (isRetryable && !isFinalAttempt) {
-          await sleep(BACKOFF_DELAYS_MS[attempt]);
+          if (response.status !== 404) {
+            await sleep(BACKOFF_DELAYS_MS[attempt]);
+          }
           continue;
         }
         throw lastError;
@@ -183,6 +185,11 @@ const HINGLISH_REPLACEMENTS = [
   [/\bbana do\b/gi, 'create'],
   [/\bbanana hai\b/gi, 'build'],
   [/\bkarna hai\b/gi, 'implement'],
+  [/\bek kaam karna(?: ki)?\b/gi, ''],
+  [/\bek kaam karo(?: ki)?\b/gi, ''],
+  [/\bbaad mein\b/gi, ''],
+  [/\bko bolna(?: ki)?\b/gi, ''],
+  [/\bkar dena\b/gi, ''],
   [/\bkaro\b/gi, ''],
   [/\bkar do\b/gi, ''],
   [/\bkardo\b/gi, ''],
@@ -548,11 +555,18 @@ export function compileFallbackIntent({
       const mergedTags =
         clauseTags.length > 0 ? clauseTags : globalTags;
 
+      const extractedClauseStatus = extractStatusFromText(clause, 'BACKLOG') || 'BACKLOG';
+      const createTaskStatus =
+        extractedClauseStatus === 'DONE' &&
+        !/\b(?:already done|completed|marked done|ho gaya|complete ho)\b/i.test(clause)
+          ? 'BACKLOG'
+          : extractedClauseStatus;
+
       taskDrafts.push({
         title: cleanTaskTitle(clause, members),
         description: null,
         priority: clausePriority,
-        status: extractStatusFromText(clause, 'BACKLOG') || 'BACKLOG',
+        status: createTaskStatus,
         tags: mergedTags,
         dueDate: clauseDueDate,
         assigneeName: clauseMember ? clauseMember.name : null,
@@ -1008,6 +1022,8 @@ Your job is to parse the user's command (which may be in English, Hindi, or Hing
 Rules:
 - Output ONLY valid JSON. Never include markdown code fences or prose outside JSON.
 - Always translate Hindi or Hinglish (e.g. "Rahul ke liye kal tak payment webhook fix karne ka urgent task banao") into clean, professional English task titles ("Fix payment webhook integration").
+- Ignore conversational voice filler words (like "um", "uh", "matlab", "ek kaam karna ki", "baad mein ... ko bolna ki") and extract the actionable intent cleanly.
+- For Hinglish delegation/reminders (e.g. "Baad mein Rishabh ko bolna ki task complete kar dena"), compile to CREATE_TASKS (status "BACKLOG") with a crisp English title (e.g. "Follow up with Rishabh on task completion") and assigneeName matched to the member — unless an explicit existing task (e.g. FLOW-5) is being marked done via UPDATE_STATUS.
 - Resolve relative dates ("today", "tomorrow", "kal", "parso", "Friday", "next week") relative to ${today} into YYYY-MM-DD.
 - If the user asks to create N tasks (e.g. "Create 3 backend tasks for payment integration"), generate N distinct, concrete engineering tasks in the "tasks" array.`;
 }
@@ -1146,13 +1162,13 @@ const DEVANAGARI_PHONETIC_MAP = {
 };
 
 const URDU_PHONETIC_MAP = {
-  'ا': 'a', 'آ': 'aa', 'ب': 'b', 'پ': 'p', 'ت': 't', 'ٹ': 't',
+  'ا': 'a', 'آ': 'aa', 'أ': 'a', 'إ': 'i', 'ب': 'b', 'پ': 'p', 'ت': 't', 'ٹ': 't',
   'ث': 's', 'ج': 'j', 'چ': 'ch', 'ح': 'h', 'خ': 'kh', 'د': 'd',
   'ڈ': 'd', 'ذ': 'z', 'ر': 'r', 'ڑ': 'r', 'ز': 'z', 'ژ': 'zh',
   'س': 's', 'ش': 'sh', 'ص': 's', 'ض': 'z', 'ط': 't', 'ظ': 'z',
-  'ع': 'a', 'غ': 'gh', 'ف': 'f', 'ق': 'q', 'ک': 'k', 'گ': 'g',
-  'ل': 'l', 'م': 'm', 'ن': 'n', 'ں': 'n', 'و': 'o', 'ہ': 'h',
-  'ھ': 'h', 'ء': '', 'ی': 'i', 'ے': 'e',
+  'ع': 'a', 'غ': 'gh', 'ف': 'f', 'ق': 'q', 'ک': 'k', 'ك': 'k', 'گ': 'g',
+  'ل': 'l', 'م': 'm', 'ن': 'n', 'ں': 'n', 'و': 'o', 'ؤ': 'o', 'ہ': 'h', 'ة': 'h',
+  'ھ': 'h', 'ء': '', 'ی': 'i', 'ي': 'i', 'ئ': 'i', 'ى': 'a', 'ے': 'e',
 };
 
 export function fallbackNonLatinToLatin(text) {
@@ -1172,6 +1188,107 @@ export function fallbackNonLatinToLatin(text) {
 
 export const fallbackDevanagariToLatin = fallbackNonLatinToLatin;
 
+const VOICE_FILLER_STOPWORDS = new Set([
+  'task', 'tasks', 'complete', 'completed', 'karna', 'karo', 'kardo', 'dena', 'bolna',
+  'baad', 'mein', 'liye', 'assign', 'board', 'move', 'show', 'only', 'high', 'urgent',
+  'medium', 'low', 'that', 'this', 'with', 'from', 'have', 'your', 'time', 'some',
+  'them', 'then', 'what', 'when', 'here', 'there', 'make', 'create', 'work', 'kaam',
+  'bhai', 'yaar', 'parso', 'today', 'tomorrow', 'review', 'progress', 'backlog', 'done',
+  'login', 'update', 'filter', 'check', 'status', 'priority', 'project', 'please',
+]);
+
+function levenshteinDistance(a, b) {
+  const m = a.length;
+  const n = b.length;
+  if (m === 0) return n;
+  if (n === 0) return m;
+  const dp = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
+  for (let i = 0; i <= m; i += 1) dp[i][0] = i;
+  for (let j = 0; j <= n; j += 1) dp[0][j] = j;
+  for (let i = 1; i <= m; i += 1) {
+    for (let j = 1; j <= n; j += 1) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      dp[i][j] = Math.min(
+        dp[i - 1][j] + 1,
+        dp[i][j - 1] + 1,
+        dp[i - 1][j - 1] + cost
+      );
+    }
+  }
+  return dp[m][n];
+}
+
+/**
+ * Corrects phonetically misheard workspace member names (e.g. "rishat" -> "Rishabh").
+ */
+export function fuzzyFixMemberNames(text, members = []) {
+  const raw = String(text || '');
+  if (!raw || !Array.isArray(members) || members.length === 0) return raw;
+
+  const memberFirstNames = [];
+  for (const m of members) {
+    const first = String(m?.name || '').trim().split(/\s+/)[0];
+    if (first && first.length >= 4) {
+      memberFirstNames.push(first);
+    }
+  }
+  if (memberFirstNames.length === 0) return raw;
+
+  return raw.replace(/\b([A-Za-z]{4,})\b/g, (word) => {
+    const lower = word.toLowerCase();
+    if (VOICE_FILLER_STOPWORDS.has(lower)) return word;
+
+    let bestMatch = null;
+    let bestDist = Infinity;
+    for (const target of memberFirstNames) {
+      const targetLower = target.toLowerCase();
+      if (lower === targetLower) return target;
+      const dist = levenshteinDistance(lower, targetLower);
+      const maxAllowed = Math.min(2, Math.floor(targetLower.length / 3) + 1);
+      const sharesInitial = lower[0] === targetLower[0];
+      if (dist <= maxAllowed && (sharesInitial || dist <= 1) && dist < bestDist) {
+        bestDist = dist;
+        bestMatch = target;
+      }
+    }
+    return bestMatch || word;
+  });
+}
+
+/**
+ * Deterministic cleanup for spoken voice transcripts:
+ * - Converts any non-Latin chars via phonetic fallback
+ * - Strips hesitation fillers and common Hinglish conversational padding
+ * - Fixes common phonetic speech-to-text typos and fuzzy-matches member names
+ */
+export function deterministicCleanVoiceText(text, members = []) {
+  let cleaned = String(text || '').trim();
+  if (!cleaned) return '';
+
+  if (containsNonLatinScript(cleaned)) {
+    cleaned = fallbackNonLatinToLatin(cleaned);
+  }
+
+  cleaned = cleaned
+    .replace(/\b(?:um+|uh+|ah+|hmm+|err+)\b,?\s*/gi, '')
+    .replace(
+      /\b(?:so\s+basically|you know|basically|actually|i mean|i am saying|matlab(?:\s+yeh\s+ki)?|arre(?:\s+yaar)?|sun(?:\s+na)?|ek\s+kaam\s+kar(?:na|o)(?:\s+ki)?)\b[,:\s]*/gi,
+      ''
+    )
+    .replace(/\bbonna\b/gi, 'bolna')
+    .replace(/\basaim\b/gi, 'assign')
+    .replace(/\bnavikeshan\b/gi, 'navigation');
+
+  cleaned = fuzzyFixMemberNames(cleaned, members)
+    .replace(/\s+([,.!?])/g, '$1')
+    .replace(/\s+/g, ' ')
+    .replace(/^[,.\s]+/, '')
+    .trim();
+
+  if (!cleaned) return '';
+  return cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
+}
+
 /**
  * Transliterates Hindi/Devanagari or Urdu/Arabic script text into natural Roman/Latin script Hinglish.
  * E.g., "رومن اور برائن کو یہ کام اسام کرو" -> "Roman aur Brian ko yeh kaam assign karo"
@@ -1179,12 +1296,29 @@ export const fallbackDevanagariToLatin = fallbackNonLatinToLatin;
  * "टास्क को ऐड करो" -> "task ko add karo"
  */
 export async function transliterateToHinglish(text) {
+  return refineVoiceTranscript({ text });
+}
+
+/**
+ * Cleans and refines raw voice transcripts (English, Hinglish, Hindi, or Urdu/Arabic) into
+ * crisp Romanized Hinglish by stripping speech fillers, fixing phonetic typos, and correcting
+ * workspace member/project names.
+ */
+export async function refineVoiceTranscript({
+  text,
+  members = [],
+  projects = [],
+}) {
   const trimmed = String(text || '').trim();
-  if (!trimmed || !containsNonLatinScript(trimmed)) {
-    return trimmed;
-  }
+  if (!trimmed) return '';
 
   if (env.hasGroq) {
+    const memberNames = members.map((m) => m.name).filter(Boolean).join(', ');
+    const projectNames = projects.map((p) => `${p.key} (${p.name})`).filter(Boolean).join(', ');
+    const contextBlock =
+      (memberNames ? `Known Workspace Members: ${memberNames}\n` : '') +
+      (projectNames ? `Known Projects: ${projectNames}\n` : '');
+
     const candidateModels = [PRIMARY_MODEL, FALLBACK_MODEL, SAFETY_FALLBACK_MODEL];
     for (const model of candidateModels) {
       try {
@@ -1203,13 +1337,16 @@ export async function transliterateToHinglish(text) {
               {
                 role: 'system',
                 content:
-                  'You are an expert Hinglish transliterator for a software workspace.\n' +
-                  'Transliterate any Hindi, Urdu, Arabic script, or Devanagari text into natural Roman/Latin script Hinglish (e.g. "task ko add karo", "board pe navigation kar sakte hoge", "Roman aur Brian ko yeh kaam assign karo", "Rahul ke liye bug fix task banao").\n' +
+                  'You are an expert Hinglish voice-transcript cleaner for a software workspace.\n' +
+                  contextBlock +
+                  '\nClean the raw speech-to-text output into crisp, accurate Romanized Hinglish or English (Latin alphabet A-Z only).\n' +
                   'CRITICAL RULES:\n' +
-                  '1. Output ONLY the Roman/Latin script Hinglish text (A-Z, 0-9, standard punctuation).\n' +
-                  '2. Do NOT translate conversational words into pure English - keep the natural spoken phrasing in Latin letters (e.g. "Roman aur Brian ko yeh kaam assign karo", "task ko add karo", "board pe navigation kar sakte hoge").\n' +
-                  '3. Output strictly in the Latin alphabet. Zero Arabic, Urdu, or Devanagari characters.\n' +
-                  '4. No quotes, no markdown fences, no conversational preamble or explanations.',
+                  '1. REMOVE conversational filler words, stutters, hesitation noises, and meta-phrases (e.g. "um", "uh", "ah", "hmm", "you know", "basically", "actually", "matlab", "ek kaam karna ki", "ek kaam karo ki", "I am saying", "arre yaar", "sun na").\n' +
+                  '2. CORRECT phonetic speech-to-text typos in Hinglish/English words (e.g. "bonna" -> "bolna", "asaim" -> "assign", "navikeshan" -> "navigation").\n' +
+                  '3. CORRECT misheard member names to match Known Workspace Members (e.g. "rishat" or "rishab" -> "Rishabh", "bryan" -> "Brian").\n' +
+                  '4. TRANSLITERATE any Arabic, Urdu, or Devanagari characters strictly into Roman/Latin script Hinglish (zero non-Latin characters).\n' +
+                  '5. DO NOT translate the whole sentence into stiff formal English — keep the speaker\'s natural Hinglish phrasing (e.g. "Baad mein Rishabh ko bolna ki task complete kar dena", "Roman aur Brian ko yeh kaam assign karo").\n' +
+                  '6. Output ONLY the cleaned transcript text. No quotes, no markdown fences, no explanations.',
               },
               {
                 role: 'user',
@@ -1225,9 +1362,13 @@ export async function transliterateToHinglish(text) {
 
         if (response.ok) {
           const data = await response.json();
-          const transliterated = data?.choices?.[0]?.message?.content?.trim();
-          if (transliterated && !containsNonLatinScript(transliterated)) {
-            return transliterated;
+          const refined = data?.choices?.[0]?.message?.content?.trim();
+          if (
+            refined &&
+            !containsNonLatinScript(refined) &&
+            refined.length <= Math.max(trimmed.length * 2.5, 60)
+          ) {
+            return fuzzyFixMemberNames(refined, members);
           }
         }
       } catch {
@@ -1236,19 +1377,21 @@ export async function transliterateToHinglish(text) {
     }
   }
 
-  return fallbackNonLatinToLatin(trimmed);
+  return deterministicCleanVoiceText(trimmed, members);
 }
 
 /**
  * Transcribes an audio buffer via Groq's `whisper-large-v3` endpoint at `temperature: 0`.
- * Supports English, Hindi, and Hinglish voice commands.
+ * Supports English, Hindi, and Hinglish voice commands with workspace-aware member biasing
+ * and post-transcription cleanup for fillers and phonetic typos.
  *
- * @param {{ buffer: Buffer, filename?: string, mimeType?: string }} params
+ * @param {{ buffer: Buffer, filename?: string, mimeType?: string, workspaceId?: number | null }} params
  */
 export async function transcribeAudio({
   buffer,
   filename = 'voice.webm',
   mimeType = 'audio/webm',
+  workspaceId = null,
 }) {
   if (!buffer || buffer.length === 0) {
     throw new AppError(400, 'EMPTY_AUDIO', 'Audio file is required and cannot be empty.');
@@ -1263,6 +1406,30 @@ export async function transcribeAudio({
   }
 
   const startedAt = Date.now();
+  let members = [];
+  let projects = [];
+
+  if (workspaceId) {
+    try {
+      [members, projects] = await Promise.all([
+        workspaceRepo.listMembers(workspaceId),
+        projectRepo.listByWorkspace(workspaceId),
+      ]);
+    } catch {
+      // Non-fatal: continue transcription without workspace hints
+    }
+  }
+
+  const memberHint = members.length
+    ? ` Workspace team members: ${members.map((m) => m.name).filter(Boolean).join(', ')}.`
+    : '';
+  const projectHint = projects.length
+    ? ` Projects: ${projects.map((p) => `${p.key} ${p.name}`).join(', ')}.`
+    : '';
+  const whisperPrompt =
+    `Transcribe in clean Romanized Hinglish or English (Latin alphabet A-Z only).${memberHint}${projectHint} ` +
+    'Examples: task ko add karo, baad mein Rishabh ko bolna ki task complete kar dena, Roman aur Brian ko yeh kaam assign karo, Rahul ke liye task banao, priority high rakho, bug fix karo. Never output Arabic, Urdu, or Devanagari script.';
+
   let lastError = null;
 
   for (let attempt = 0; attempt <= BACKOFF_DELAYS_MS.length; attempt += 1) {
@@ -1279,10 +1446,7 @@ export async function transcribeAudio({
       formData.append('model', WHISPER_MODEL);
       formData.append('temperature', '0');
       formData.append('response_format', 'json');
-      formData.append(
-        'prompt',
-        'Transcribe in Romanized Hinglish (Latin alphabet only, A-Z). Examples: task ko add karo, board pe navigation kar sakte hoge, Roman aur Brian ko yeh kaam assign karo, Rahul ke liye task banao, priority high rakho, bug fix karo. Never output Arabic, Urdu, or Devanagari script.'
-      );
+      formData.append('prompt', whisperPrompt);
 
       const response = await fetch(GROQ_AUDIO_URL, {
         method: 'POST',
@@ -1307,7 +1471,9 @@ export async function transcribeAudio({
         );
 
         if (isRetryable && !isFinalAttempt) {
-          await sleep(BACKOFF_DELAYS_MS[attempt]);
+          if (response.status !== 404) {
+            await sleep(BACKOFF_DELAYS_MS[attempt]);
+          }
           continue;
         }
         throw lastError;
@@ -1316,9 +1482,13 @@ export async function transcribeAudio({
       const data = await response.json();
       let transcribedText = String(data?.text || '').trim();
 
-      // If speech was transcribed into Urdu/Arabic or Devanagari Hindi script, transliterate into Romanized Hinglish
-      if (containsNonLatinScript(transcribedText)) {
-        transcribedText = await transliterateToHinglish(transcribedText);
+      // Refine transcript: strip spoken fillers, fix phonetic Hinglish/name typos, and enforce Latin script
+      if (transcribedText) {
+        transcribedText = await refineVoiceTranscript({
+          text: transcribedText,
+          members,
+          projects,
+        });
       }
 
       return {
@@ -1496,5 +1666,8 @@ export default {
   containsDevanagari,
   containsNonLatinScript,
   transliterateToHinglish,
+  refineVoiceTranscript,
+  deterministicCleanVoiceText,
+  fuzzyFixMemberNames,
   fallbackNonLatinToLatin,
 };

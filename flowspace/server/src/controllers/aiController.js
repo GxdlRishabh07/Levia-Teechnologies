@@ -96,6 +96,7 @@ export const transcribeVoice = asyncHandler(async (req, res) => {
     buffer: req.file.buffer,
     filename: req.file.originalname || 'voice.webm',
     mimeType: req.file.mimetype || 'audio/webm',
+    workspaceId: req.workspaceId,
   });
 
   return res.status(200).json({ text, latencyMs });
