@@ -1,0 +1,759 @@
+/* ==================================================================
+   Cutora Cinematic Auth Stylesheet
+   Warm sunset gradient plate + amber accents + fluid artboard scaling
+   Reference artboard: 1672 × 941 (--u = max(.62px, min(100vw/1672, 100dvh/941)))
+   ================================================================== */
+
+:root {
+  --cutora-u: max(0.62px, min(calc(100vw / 1672), calc(100dvh / 941)));
+}
+
+@media (max-width: 1024px) {
+  :root {
+    --cutora-u: max(0.75px, min(calc(100vw / 768), calc(100dvh / 1024)));
+  }
+}
+
+@media (max-width: 640px) {
+  :root {
+    --cutora-u: max(0.85px, min(calc(100vw / 390), calc(100dvh / 844)));
+  }
+}
+
+.cutora-root {
+  --u: var(--cutora-u);
+  --font-hero: "Plus Jakarta Sans", "General Sans", "Red Hat Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  /* Palette */
+  --c-ink: #000000;
+  --c-secondary: #5F636B;
+  --c-muted: #898D94;
+  --c-placeholder: #95999F;
+  --c-line: #E2E4E7;
+  --c-line-soft: #E9EAEC;
+  --c-card: #FEFEFE;
+  --c-btn: #161515;
+  --c-btn-hover: #0a0a0a;
+  --c-amber: #F59A08;
+  --c-amber-light: #FBAE05;
+  --c-amber-hover: #E08905;
+  --c-amber-glow: rgba(245, 154, 8, 0.35);
+
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  position: relative;
+  font-family: var(--font-hero);
+  color: var(--c-ink);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html.dark .cutora-root {
+  --c-card: #12131A;
+  --c-line: rgba(255, 255, 255, 0.12);
+  --c-line-soft: rgba(255, 255, 255, 0.08);
+  --c-ink: #F9FAFB;
+  --c-secondary: #A0A4AE;
+  --c-muted: #7A7E88;
+  --c-placeholder: #62656E;
+  --c-btn: #1A1C24;
+  --c-btn-hover: #222530;
+}
+
+/* ==================================================================
+   Background: Warm Cinematic Sunset Gradient Mesh
+   Replacing static image with alive, multi-layered sunset ambiance
+   ================================================================== */
+.cutora-gradient-stage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  overflow: hidden;
+  background-color: #080B14;
+  background-image:
+    /* Low-left Sun Flare / Golden Glow */
+    radial-gradient(ellipse 950px 700px at 15% 82%, rgba(245, 154, 8, 0.52) 0%, rgba(226, 109, 40, 0.28) 35%, transparent 70%),
+    /* Mid-horizon Copper warmth */
+    radial-gradient(ellipse 850px 550px at 42% 68%, rgba(251, 174, 5, 0.32) 0%, rgba(217, 95, 24, 0.18) 45%, transparent 75%),
+    /* High-right Twilight Dusk / Royal Indigo */
+    radial-gradient(ellipse 950px 650px at 80% 18%, rgba(101, 49, 247, 0.32) 0%, rgba(59, 28, 82, 0.22) 50%, transparent 80%),
+    /* Deep Sky Foundation */
+    linear-gradient(135deg, #070913 0%, #101322 25%, #1E172B 50%, #2D1822 75%, #120B13 100%);
+}
+
+/* Dynamic Breathing Shimmer Layers */
+.cutora-gradient-stage::before {
+  content: "";
+  position: absolute;
+  inset: -10%;
+  width: 120%;
+  height: 120%;
+  background:
+    radial-gradient(circle 600px at 28% 70%, rgba(255, 194, 51, 0.22) 0%, transparent 60%),
+    radial-gradient(circle 500px at 70% 30%, rgba(138, 77, 255, 0.18) 0%, transparent 60%);
+  filter: blur(50px);
+  animation: cutora-drift 12s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
+  pointer-events: none;
+}
+
+/* Atmospheric Sun Glint */
+.cutora-gradient-stage::after {
+  content: "";
+  position: absolute;
+  left: 5%;
+  bottom: 8%;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 220, 140, 0.38) 0%, rgba(245, 154, 8, 0.15) 35%, transparent 70%);
+  filter: blur(40px);
+  animation: cutora-flare 8s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes cutora-drift {
+  0% { transform: translate3d(-3%, -2%, 0) scale(0.98); opacity: 0.85; }
+  100% { transform: translate3d(3%, 2%, 0) scale(1.05); opacity: 1; }
+}
+
+@keyframes cutora-flare {
+  0% { transform: scale(0.92); opacity: 0.7; }
+  100% { transform: scale(1.15); opacity: 1; }
+}
+
+/* Readability dark washes (150u left, 140u top, 420u bottom) */
+.cutora-washes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background:
+    linear-gradient(to right, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.25) calc(150 * var(--u)), transparent calc(320 * var(--u))),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.55) 0%, transparent calc(140 * var(--u))),
+    linear-gradient(to top, rgba(20, 10, 0, 0.5) 0%, rgba(20, 10, 0, 0.22) calc(200 * var(--u)), transparent calc(420 * var(--u)));
+}
+
+/* ==================================================================
+   Main Layout: Two-column Flex Row
+   Left: Hero pitch (white type)
+   Right: Log-in Card (amber accents)
+   ================================================================== */
+.cutora-layout {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: space-between;
+}
+
+/* ---------------- Left Hero Column ---------------- */
+.cutora-hero {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: calc(57 * var(--u)) 0 calc(60 * var(--u)) calc(92.5 * var(--u));
+  color: #FFFFFF;
+}
+
+/* Top bar: Logo + Back link */
+.cutora-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-right: calc(48 * var(--u));
+}
+
+.cutora-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(16 * var(--u));
+  text-decoration: none;
+  color: #FFFFFF;
+}
+
+.cutora-logo-tile {
+  width: calc(48 * var(--u));
+  height: calc(48 * var(--u));
+  border-radius: calc(12 * var(--u));
+  background: #000000;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+  display: grid;
+  place-items: center;
+  flex: none;
+}
+
+.cutora-logo-tile svg {
+  width: calc(28 * var(--u));
+  height: calc(28 * var(--u));
+}
+
+.cutora-logo-title {
+  font-size: calc(35.5 * var(--u));
+  line-height: 1;
+  font-weight: 680;
+  letter-spacing: calc(-0.95 * var(--u));
+  color: #FFFFFF;
+}
+
+.cutora-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(6 * var(--u));
+  font-size: calc(17.4 * var(--u));
+  font-weight: 520;
+  color: var(--c-amber-light);
+  text-decoration: none;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.cutora-back-link:hover {
+  opacity: 0.85;
+  transform: translateX(calc(-2 * var(--u)));
+}
+
+/* Pitch text (bottom-left) */
+.cutora-pitch {
+  max-width: calc(720 * var(--u));
+  margin-top: auto;
+}
+
+.cutora-headline-clip {
+  overflow: hidden;
+}
+
+.cutora-headline {
+  margin: 0;
+  font-size: calc(62 * var(--u));
+  line-height: calc(70 * var(--u));
+  font-weight: 600;
+  letter-spacing: calc(-2.6 * var(--u));
+  color: #FFFFFF;
+}
+
+.cutora-subline {
+  margin: calc(19 * var(--u)) 0 0;
+  font-size: calc(20 * var(--u));
+  line-height: calc(27.5 * var(--u));
+  font-weight: 460;
+  color: rgba(255, 255, 255, 0.85);
+  max-width: calc(640 * var(--u));
+}
+
+/* Interactive Slider Dots */
+.cutora-dots {
+  display: flex;
+  align-items: center;
+  gap: calc(9 * var(--u));
+  margin-top: calc(35.5 * var(--u));
+}
+
+.cutora-dot-btn {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.25s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+
+.cutora-dot-active {
+  width: calc(34.5 * var(--u));
+  height: calc(9 * var(--u));
+  border-radius: calc(4.5 * var(--u));
+  background: var(--c-amber);
+  box-shadow: 0 0 calc(12 * var(--u)) var(--c-amber-glow);
+}
+
+.cutora-dot-inactive {
+  width: calc(9 * var(--u));
+  height: calc(9 * var(--u));
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.cutora-dot-inactive:hover {
+  background: rgba(255, 255, 255, 0.85);
+  transform: scale(1.15);
+}
+
+/* ---------------- Right Card Column ---------------- */
+.cutora-card-wrap {
+  flex: none;
+  width: calc(742.4 * var(--u));
+  margin: calc(18 * var(--u)) calc(18 * var(--u)) calc(22.5 * var(--u)) 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.cutora-card {
+  width: 100%;
+  height: 100%;
+  border-radius: calc(20 * var(--u));
+  background: var(--c-card);
+  box-shadow:
+    0 calc(20 * var(--u)) calc(50 * var(--u)) rgba(0, 0, 0, 0.28),
+    0 1px 2px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: calc(32 * var(--u)) calc(96.2 * var(--u));
+  overflow-y: auto;
+  position: relative;
+}
+
+/* Card Heading & Subtitle */
+.cutora-card-heading {
+  margin: 0;
+  font-size: calc(50.6 * var(--u));
+  line-height: 1.1;
+  font-weight: 660;
+  letter-spacing: calc(-1.9 * var(--u));
+  color: var(--c-ink);
+}
+
+.cutora-card-sub {
+  margin: calc(8 * var(--u)) 0 0;
+  font-size: calc(19 * var(--u));
+  line-height: 1.35;
+  color: var(--c-secondary);
+}
+
+/* Quick Evaluator Access Pills */
+.cutora-demo-row {
+  display: flex;
+  gap: calc(10 * var(--u));
+  margin-top: calc(16 * var(--u));
+}
+
+.cutora-demo-pill {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(6 * var(--u));
+  padding: calc(9 * var(--u)) calc(12 * var(--u));
+  border-radius: calc(8 * var(--u));
+  border: 1px dashed var(--c-line);
+  background: rgba(245, 154, 8, 0.04);
+  color: var(--c-secondary);
+  font-size: calc(13.5 * var(--u));
+  font-weight: 540;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.cutora-demo-pill:hover {
+  background: rgba(245, 154, 8, 0.12);
+  border-color: var(--c-amber);
+  color: var(--c-amber);
+}
+
+/* Form Styles */
+.cutora-form {
+  margin-top: calc(24 * var(--u));
+  display: flex;
+  flex-direction: column;
+}
+
+.cutora-field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: calc(18 * var(--u));
+}
+
+.cutora-label {
+  font-size: calc(17.4 * var(--u));
+  line-height: 1.25;
+  font-weight: 560;
+  color: var(--c-ink);
+  margin-bottom: calc(8 * var(--u));
+}
+
+.cutora-input-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.cutora-input {
+  width: 100%;
+  height: calc(66 * var(--u));
+  border-radius: calc(10 * var(--u));
+  border: calc(1 * var(--u)) solid var(--c-line);
+  background: transparent;
+  padding: 0 calc(20 * var(--u));
+  font-size: calc(17 * var(--u));
+  color: var(--c-ink);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.cutora-input::placeholder {
+  color: var(--c-placeholder);
+  opacity: 1;
+}
+
+.cutora-input:focus {
+  border-color: var(--c-amber);
+  box-shadow: 0 0 0 calc(3 * var(--u)) rgba(245, 154, 8, 0.2);
+}
+
+.cutora-input-with-eye {
+  padding-right: calc(56 * var(--u));
+}
+
+.cutora-eye-btn {
+  position: absolute;
+  right: calc(16 * var(--u));
+  top: 50%;
+  transform: translateY(-50%);
+  width: calc(34 * var(--u));
+  height: calc(34 * var(--u));
+  border: 0;
+  background: none;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  color: var(--c-muted);
+  border-radius: calc(6 * var(--u));
+  transition: color 0.15s ease;
+}
+
+.cutora-eye-btn:hover {
+  color: var(--c-ink);
+}
+
+.cutora-eye-btn svg {
+  width: calc(20 * var(--u));
+  height: calc(20 * var(--u));
+}
+
+/* Options Row: Remember Me & Forgot Password */
+.cutora-options-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: calc(4 * var(--u));
+  margin-bottom: calc(28 * var(--u));
+}
+
+.cutora-check-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(10 * var(--u));
+  cursor: pointer;
+  user-select: none;
+}
+
+.cutora-check-wrap input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.cutora-check-box {
+  width: calc(26 * var(--u));
+  height: calc(26 * var(--u));
+  border-radius: calc(6 * var(--u));
+  border: calc(1.5 * var(--u)) solid var(--c-line);
+  background: transparent;
+  display: grid;
+  place-items: center;
+  color: #FFFFFF;
+  transition: all 0.15s ease;
+}
+
+.cutora-check-box svg {
+  width: calc(16 * var(--u));
+  height: calc(16 * var(--u));
+  opacity: 0;
+  stroke-width: 2.5;
+  transition: opacity 0.12s ease;
+}
+
+.cutora-check-wrap input:checked + .cutora-check-box {
+  background: #000000;
+  border-color: #000000;
+}
+
+html.dark .cutora-check-wrap input:checked + .cutora-check-box {
+  background: var(--c-amber);
+  border-color: var(--c-amber);
+  color: #000000;
+}
+
+.cutora-check-wrap input:checked + .cutora-check-box svg {
+  opacity: 1;
+}
+
+.cutora-check-label {
+  font-size: calc(16.5 * var(--u));
+  font-weight: 500;
+  color: var(--c-ink);
+}
+
+.cutora-forgot-link {
+  font-size: calc(16.5 * var(--u));
+  font-weight: 560;
+  color: var(--c-amber);
+  text-decoration: none;
+  transition: opacity 0.15s ease;
+}
+
+.cutora-forgot-link:hover {
+  text-decoration: underline;
+  opacity: 0.85;
+}
+
+/* Primary Action Button: Black Pill with Amber Text */
+.cutora-btn-primary {
+  width: 100%;
+  height: calc(66 * var(--u));
+  border-radius: calc(33 * var(--u));
+  background: var(--c-btn);
+  border: 0;
+  color: var(--c-amber);
+  font-size: calc(18.5 * var(--u));
+  font-weight: 650;
+  letter-spacing: calc(-0.2 * var(--u));
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(10 * var(--u));
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.cutora-btn-primary:hover {
+  background: var(--c-btn-hover);
+  box-shadow: 0 calc(8 * var(--u)) calc(24 * var(--u)) rgba(0, 0, 0, 0.35);
+  transform: translateY(calc(-1 * var(--u)));
+}
+
+.cutora-btn-primary:active {
+  transform: translateY(0);
+}
+
+.cutora-btn-primary:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Divider with Hairlines */
+.cutora-divider {
+  display: flex;
+  align-items: center;
+  gap: calc(16 * var(--u));
+  margin: calc(26 * var(--u)) 0;
+}
+
+.cutora-divider::before,
+.cutora-divider::after {
+  content: "";
+  flex: 1;
+  height: calc(1 * var(--u));
+  background: var(--c-line-soft);
+}
+
+.cutora-divider span {
+  font-size: calc(15 * var(--u));
+  color: var(--c-muted);
+  white-space: nowrap;
+}
+
+/* Google Button: White 66u Pill with G Mark */
+.cutora-google-btn {
+  width: 100%;
+  height: calc(66 * var(--u));
+  border-radius: calc(33 * var(--u));
+  background: #FFFFFF;
+  border: calc(1 * var(--u)) solid var(--c-line);
+  color: #1F2024;
+  font-size: calc(17 * var(--u));
+  font-weight: 560;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(12 * var(--u));
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+html.dark .cutora-google-btn {
+  background: #181A22;
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #F9FAFB;
+}
+
+.cutora-google-btn:hover {
+  background: #F9FAFB;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+html.dark .cutora-google-btn:hover {
+  background: #20232E;
+}
+
+.cutora-google-btn svg {
+  width: calc(22 * var(--u));
+  height: calc(22 * var(--u));
+  flex: none;
+}
+
+/* Footer Link */
+.cutora-card-footer {
+  margin: calc(26 * var(--u)) 0 0;
+  text-align: center;
+  font-size: calc(16 * var(--u));
+  color: var(--c-secondary);
+}
+
+.cutora-card-footer a {
+  color: var(--c-amber);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.cutora-card-footer a:hover {
+  text-decoration: underline;
+}
+
+/* Theme toggle floating icon in card corner */
+.cutora-theme-toggle {
+  position: absolute;
+  top: calc(24 * var(--u));
+  right: calc(24 * var(--u));
+  border: 0;
+  background: transparent;
+  color: var(--c-muted);
+  cursor: pointer;
+  padding: calc(6 * var(--u));
+  border-radius: 50%;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.cutora-theme-toggle:hover {
+  color: var(--c-ink);
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* ==================================================================
+   Entrance Animation Sequences (1.6s backwards fill)
+   ================================================================== */
+@keyframes cutora-rise-card {
+  from { opacity: 0; transform: translateY(calc(30 * var(--u))) scale(0.99); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes cutora-wipe-up {
+  from { opacity: 0; transform: translateY(105%); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes cutora-fade-up {
+  from { opacity: 0; transform: translateY(calc(12 * var(--u))); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.cutora-enter-card {
+  animation: cutora-rise-card 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.cutora-enter-wipe-1 {
+  animation: cutora-wipe-up 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
+}
+
+.cutora-enter-wipe-2 {
+  animation: cutora-wipe-up 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.28s both;
+}
+
+.cutora-enter-sub {
+  animation: cutora-fade-up 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.4s both;
+}
+
+.cutora-enter-dots {
+  animation: cutora-fade-up 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 0.52s both;
+}
+
+/* ==================================================================
+   Responsive Styles (Tablets & Phones)
+   ================================================================== */
+@media (max-width: 1024px) {
+  .cutora-layout {
+    flex-direction: column;
+    overflow-y: auto;
+  }
+
+  .cutora-hero {
+    padding: 28px 24px 24px;
+    flex: none;
+  }
+
+  .cutora-topbar {
+    padding-right: 0;
+  }
+
+  .cutora-logo-title {
+    font-size: 26px;
+  }
+
+  .cutora-pitch {
+    margin-top: 24px;
+  }
+
+  .cutora-headline {
+    font-size: 38px;
+    line-height: 44px;
+    letter-spacing: -1px;
+  }
+
+  .cutora-subline {
+    font-size: 16px;
+    line-height: 22px;
+  }
+
+  .cutora-card-wrap {
+    width: auto;
+    margin: 12px 16px 24px;
+  }
+
+  .cutora-card {
+    padding: 32px 24px;
+  }
+
+  .cutora-card-heading {
+    font-size: 32px;
+  }
+
+  .cutora-input,
+  .cutora-btn-primary,
+  .cutora-google-btn {
+    height: 52px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cutora-gradient-stage::before,
+  .cutora-gradient-stage::after,
+  .cutora-enter-card,
+  .cutora-enter-wipe-1,
+  .cutora-enter-wipe-2,
+  .cutora-enter-sub,
+  .cutora-enter-dots {
+    animation: none !important;
+  }
+}
