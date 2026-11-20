@@ -1,5 +1,6 @@
 {
-  "buildCommand": "npm run build",
+  "installCommand": "env -u npm_config_cache_dir -u NPM_CONFIG_CACHE_DIR -u npm_config_cache-dir -u NPM_CONFIG_CACHE-DIR npm install --loglevel=error --no-audit --no-fund",
+  "buildCommand": "env -u npm_config_cache_dir -u NPM_CONFIG_CACHE_DIR -u npm_config_cache-dir -u NPM_CONFIG_CACHE-DIR npm run build",
   "outputDirectory": "client/dist",
   "functions": {
     "api/index.js": {
