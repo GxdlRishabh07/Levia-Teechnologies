@@ -6,6 +6,11 @@ client/node_modules/
 client/dist/
 dist/
 
+# Implementation specs and design documents
+*DESIGN*.md
+*design*.md
+*implementation*.md
+
 # Environment variables & secrets
 .env
 .env.local

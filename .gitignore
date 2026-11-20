@@ -10,8 +10,15 @@ client/dist/
 **/.build/
 .build/
 build/
-Checking/.build/
-Checking/FlowVoice.app/
+
+# FlowVoice native application (user's personal app)
+Checking/
+Checking/**
+
+# Implementation specs and design documents
+*implementation*.md
+*DESIGN*.md
+*design*.md
 
 # Environment variables & secrets
 **/.env
