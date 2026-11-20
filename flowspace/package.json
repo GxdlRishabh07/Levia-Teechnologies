@@ -8,7 +8,7 @@
     "dev:server": "node --watch server/src/dev.js",
     "dev:client": "npm --prefix client run dev",
     "dev": "npx concurrently \"npm:dev:server\" \"npm:dev:client\"",
-    "build": "npm --prefix client install --include=dev && npm --prefix client run build",
+    "build": "npm --prefix client install --include=dev --loglevel=error --no-audit --no-fund && npm --prefix client run build",
     "db:setup": "node server/db/setup.js",
     "db:seed": "node server/db/seed.js",
     "test": "NODE_ENV=test DB_NAME=flowspace_test node --test server/tests/*.test.js"
