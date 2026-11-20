@@ -58,8 +58,8 @@ export default function TaskList({
   return (
     <div className="space-y-4">
       {/* Frosted Glass Filter Bar */}
-      <div className="linear-panel !rounded-[16px] p-3">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-2.5 items-center">
+      <div className="linear-panel !rounded-[16px] p-3.5 sm:p-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 items-center">
           {/* Search query */}
           <div className="relative lg:col-span-2">
             <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#111216]/40 dark:text-[#F5F6FA]/40" />

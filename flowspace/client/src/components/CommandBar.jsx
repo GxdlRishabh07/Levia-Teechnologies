@@ -83,14 +83,14 @@ export default function CommandBar({
   };
 
   return (
-    <section className="mb-4">
+    <section className="mb-4.5">
       {/* Frosted Glass AI Command Capsule */}
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 linear-panel-elevated !rounded-[16px] px-3.5 py-2.5 transition-all focus-within:border-[#6531F7]/50 dark:focus-within:border-[#855BFF]/60 focus-within:ring-4 focus-within:ring-[#6531F7]/12 dark:focus-within:ring-[#7242FF]/20"
+        className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 linear-panel-elevated !rounded-[16px] px-4 py-2.5 sm:py-3 transition-all focus-within:border-[#6531F7]/50 dark:focus-within:border-[#855BFF]/60 focus-within:ring-4 focus-within:ring-[#6531F7]/12 dark:focus-within:ring-[#7242FF]/20"
       >
         {/* Left: Quiet Command Icon + Input */}
-        <div className="flex flex-1 items-center gap-2.5 min-w-0">
+        <div className="flex flex-1 items-center gap-3 min-w-0">
           <Terminal
             className={`h-4 w-4 shrink-0 transition-colors ${
               isParsing
@@ -104,7 +104,7 @@ export default function CommandBar({
             onChange={(e) => setCommandText(e.target.value)}
             disabled={isParsing || isTranscribing}
             placeholder='Command workspace in English or Hinglish — "Move FLOW-5 to In Review" or "Create 2 backend tasks for Priya"'
-            className="w-full min-w-0 bg-transparent text-[15px] text-[#111216] dark:text-[#F5F6FA] placeholder-[#111216]/40 dark:placeholder-[#F5F6FA]/35 outline-none disabled:opacity-50"
+            className="w-full min-w-0 bg-transparent text-[14.5px] text-[#111216] dark:text-[#F5F6FA] placeholder-[#111216]/40 dark:placeholder-[#F5F6FA]/35 outline-none disabled:opacity-50"
           />
         </div>
 

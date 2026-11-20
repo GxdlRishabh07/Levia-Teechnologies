@@ -39,11 +39,11 @@ export default function TopBar({
   const onlineCount = Math.max(1, onlineMembers.length);
 
   return (
-    <header className="sticky top-2.5 sm:top-3 z-30 linear-panel !rounded-[16px] sm:!rounded-[18px] px-2.5 sm:px-3 py-2 flex flex-col gap-2">
+    <header className="sticky top-2.5 sm:top-3.5 z-30 linear-panel !rounded-[16px] sm:!rounded-[18px] px-3 sm:px-4 py-2.5 sm:py-3 flex flex-col gap-2.5">
       {/* Primary Row */}
-      <div className="flex items-center justify-between gap-2 min-w-0">
+      <div className="flex items-center justify-between gap-3 min-w-0">
         {/* Left: Mobile Drawer Trigger, Brand Mark, Workspace Name & Desktop View Switcher */}
-        <div className="flex items-center gap-2 min-w-0">
+        <div className="flex items-center gap-2.5 min-w-0">
           <button
             type="button"
             onClick={onToggleMobileSidebar}
@@ -73,7 +73,7 @@ export default function TopBar({
 
           {/* Desktop & Tablet View Switcher Glass Capsule */}
           <nav
-            className="hidden md:flex items-center gap-0.5 rounded-full bg-white/45 dark:bg-white/[0.05] border border-white/70 dark:border-white/10 p-0.5 shrink-0"
+            className="hidden md:flex items-center gap-1 rounded-full bg-white/45 dark:bg-white/[0.05] border border-white/70 dark:border-white/10 p-1 shrink-0"
             aria-label="Workspace views"
           >
             {TABS.map((tab) => {
@@ -84,7 +84,7 @@ export default function TopBar({
                   key={tab.id}
                   type="button"
                   onClick={() => setActiveTab(tab.id)}
-                  className={`linear-tab !px-2.5 !py-1.5 !text-[13px] shrink-0 ${isActive ? 'linear-tab-active' : ''}`}
+                  className={`linear-tab !px-3 !py-1.5 !text-[13px] gap-1.5 shrink-0 ${isActive ? 'linear-tab-active' : ''}`}
                 >
                   <Icon
                     className={`h-3.5 w-3.5 ${

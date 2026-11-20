@@ -28,14 +28,14 @@ function KanbanColumn({ column, tasks, onTaskClick, onQuickAdd }) {
   return (
     <div
       ref={setNodeRef}
-      className={`flex flex-col rounded-[18px] sm:rounded-[20px] border p-3 sm:p-3.5 min-h-[180px] sm:min-h-[340px] xl:min-h-[540px] transition-all duration-150 backdrop-blur-xl ${
+      className={`flex flex-col rounded-[20px] border p-3.5 sm:p-4.5 min-h-[190px] sm:min-h-[350px] xl:min-h-[560px] transition-all duration-150 backdrop-blur-xl ${
         isOver
           ? 'bg-white/75 dark:bg-white/[0.12] border-[#6531F7] dark:border-[#855BFF] shadow-[0_8px_28px_rgba(101,49,247,0.12)] dark:shadow-[0_10px_32px_rgba(114,66,255,0.28)]'
           : 'linear-panel'
       }`}
     >
       {/* Column Header */}
-      <div className="flex items-center justify-between px-1 pb-3 mb-3 border-b border-[#111216]/8 dark:border-white/10">
+      <div className="flex items-center justify-between px-1 pb-3.5 mb-3.5 border-b border-[#111216]/8 dark:border-white/10">
         <div className="flex items-center gap-2.5 min-w-0">
           <StatusIcon status={column.id} size={16} className="shrink-0" />
           <h3 className="text-[14.5px] font-semibold leading-[1.3] tracking-[-0.015em] text-[#111216] dark:text-[#F5F6FA] m-0 truncate">
@@ -58,7 +58,7 @@ function KanbanColumn({ column, tasks, onTaskClick, onQuickAdd }) {
       </div>
 
       {/* Column Cards Stack */}
-      <div className="flex-1 space-y-2.5">
+      <div className="flex-1 space-y-3">
         {tasks.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-36 rounded-[14px] border border-dashed border-[#111216]/12 dark:border-white/12 bg-white/35 dark:bg-white/[0.03] p-4 text-center">
             <p className="text-[13.5px] font-medium text-[#111216]/45 dark:text-[#F5F6FA]/45 m-0">
@@ -133,11 +133,11 @@ export default function KanbanBoard({
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3.5 sm:gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 lg:gap-5">
         {KANBAN_COLUMNS.map((col) => (
           <div
             key={col.id}
-            className="linear-panel p-3.5 h-[260px] sm:h-[380px] xl:h-[540px] space-y-2.5"
+            className="linear-panel p-4 h-[260px] sm:h-[380px] xl:h-[560px] space-y-3"
           >
             <div className="flex items-center gap-2 pb-3 mb-2 border-b border-[#111216]/8 dark:border-white/10">
               <div className="h-4 w-4 rounded-full bg-white/80 dark:bg-white/12 animate-pulse" />
@@ -158,7 +158,7 @@ export default function KanbanBoard({
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3.5 sm:gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 lg:gap-5">
         {KANBAN_COLUMNS.map((column) => {
           const columnTasks = tasks.filter((t) => t.status === column.id);
           return (

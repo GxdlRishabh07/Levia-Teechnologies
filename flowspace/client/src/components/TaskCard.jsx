@@ -51,10 +51,10 @@ export default function TaskCard({ task, onClick, isOverlay = false }) {
       {...(isOverlay ? {} : listeners)}
       {...(isOverlay ? {} : attributes)}
       onClick={() => onClick?.(task)}
-      className={`rounded-[14px] border p-3.5 select-none cursor-grab active:cursor-grabbing transition-all duration-150 ${surfaceClasses}`}
+      className={`rounded-[16px] border p-4 select-none cursor-grab active:cursor-grabbing transition-all duration-150 ${surfaceClasses}`}
     >
       {/* Top Row: Monospace Code left, Priority Icon + Assignee Avatar right */}
-      <div className="flex items-center justify-between gap-2 mb-2">
+      <div className="flex items-center justify-between gap-2.5 mb-2.5">
         <span className="type-mono text-[12.5px] font-medium text-[#111216]/50 dark:text-[#F5F6FA]/50 leading-none">
           {task.code}
         </span>
@@ -82,14 +82,14 @@ export default function TaskCard({ task, onClick, isOverlay = false }) {
 
       {/* Optional compact description preview */}
       {task.description && (
-        <p className="text-[13px] text-[#111216]/55 dark:text-[#F5F6FA]/55 leading-[1.45] m-0 mt-1 line-clamp-1">
+        <p className="text-[13px] text-[#111216]/55 dark:text-[#F5F6FA]/55 leading-[1.45] m-0 mt-1.5 line-clamp-1">
           {task.description}
         </p>
       )}
 
       {/* Bottom Row: Tags, AI/Voice micro-tag, Due Date */}
       {showFooter && (
-        <div className="flex items-center justify-between gap-2 mt-3 pt-2.5 border-t border-[#111216]/8 dark:border-white/10">
+        <div className="flex items-center justify-between gap-2.5 mt-3.5 pt-3 border-t border-[#111216]/8 dark:border-white/10">
           <div className="flex items-center flex-wrap gap-1.5 min-w-0">
             {hasAiSource && (
               <span

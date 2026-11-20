@@ -84,7 +84,7 @@ export default function StatsCards({ stats, isLoading = false, onOpenStandup }) 
   return (
     <div className="space-y-5">
       {/* Top 4 Frosted Bento Telemetry Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4.5">
         <div className="linear-panel p-4 sm:p-6 flex flex-col justify-between">
           <div className="flex items-center justify-between">
             <span className="text-[13.5px] font-semibold text-[#111216]/60 dark:text-[#F5F6FA]/65">
@@ -185,7 +185,7 @@ export default function StatsCards({ stats, isLoading = false, onOpenStandup }) 
       </div>
 
       {/* Distribution Breakdown Bento Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-5">
         <div className="linear-panel p-6">
           <div className="flex items-center justify-between mb-5">
             <h3 className="text-[15.5px] font-semibold tracking-[-0.015em] text-[#111216] dark:text-[#F5F6FA] m-0">

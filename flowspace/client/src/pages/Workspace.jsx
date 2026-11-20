@@ -280,8 +280,8 @@ export default function Workspace() {
       {/* Fixed Luminous Ambient Canvas (Sky-blue + Lavender/Violet Blurs) */}
       <GlassAmbientCanvas />
 
-      {/* Outer Floating Viewport Frame: responsive padding & layout gap */}
-      <div className="relative z-10 min-h-screen flex flex-col lg:flex-row items-stretch gap-3 sm:gap-4 p-2.5 sm:p-3 max-w-[1680px] mx-auto">
+      {/* Outer Floating Viewport Frame: generous responsive padding & clean layout gap */}
+      <div className="relative z-10 min-h-screen flex flex-col lg:flex-row items-stretch gap-4 lg:gap-5 p-3.5 sm:p-4.5 lg:p-6 max-w-[1740px] mx-auto">
         {/* Floating Left Glass Panel (Desktop) + Slide-Over Drawer (Mobile/Tablet) */}
         <Sidebar
           workspaces={workspaces}
@@ -303,7 +303,7 @@ export default function Workspace() {
         />
 
         {/* Right Main Column: Floating TopBar + AI Command Bar + View Canvas */}
-        <div className="flex-1 min-w-0 flex flex-col gap-3 sm:gap-4">
+        <div className="flex-1 min-w-0 flex flex-col gap-3.5 sm:gap-4.5">
           <TopBar
             user={user}
             activeWorkspace={activeWorkspace}

@@ -99,14 +99,14 @@ export default function Sidebar({
 
       <aside
         aria-label="Workspace navigation"
-        className={`glass-sidebar flex flex-col p-3 overflow-hidden transition-transform duration-200 ease-out
+        className={`glass-sidebar flex flex-col p-3.5 sm:p-4 overflow-hidden transition-transform duration-200 ease-out
           fixed inset-y-2.5 left-2.5 z-50 w-[280px] max-w-[calc(100vw-24px)]
-          lg:static lg:inset-auto lg:z-auto lg:w-[248px] lg:shrink-0 lg:h-[calc(100vh-24px)] lg:max-h-[calc(100vh-24px)] lg:sticky lg:top-3 lg:translate-x-0
+          lg:static lg:inset-auto lg:z-auto lg:w-[264px] lg:shrink-0 lg:h-[calc(100vh-32px)] lg:max-h-[calc(100vh-32px)] lg:sticky lg:top-4 lg:translate-x-0
           ${isMobileOpen ? 'translate-x-0' : '-translate-x-[calc(100%+24px)] pointer-events-none lg:pointer-events-auto'}
         `}
       >
         {/* Workspace Header Switcher (Pinned at top) */}
-        <div className="shrink-0 relative mb-3" ref={dropdownRef}>
+        <div className="shrink-0 relative mb-3.5" ref={dropdownRef}>
           <div className="flex items-center justify-between px-1 mb-2">
             <span className="type-eyebrow">Workspace</span>
             <div className="flex items-center gap-1">
@@ -137,7 +137,7 @@ export default function Sidebar({
           type="button"
           onClick={() => setWsDropdownOpen((open) => !open)}
           aria-expanded={wsDropdownOpen}
-          className="w-full flex items-center justify-between gap-2.5 rounded-[12px] bg-white/55 dark:bg-white/[0.06] hover:bg-white/85 dark:hover:bg-white/[0.11] border border-white/80 dark:border-white/12 px-2.5 py-2 text-left shadow-[inset_1px_1px_2px_rgba(255,255,255,0.85),0_2px_8px_rgba(31,28,70,0.03)] dark:shadow-[inset_1px_1px_1px_rgba(255,255,255,0.12),0_4px_14px_rgba(0,0,0,0.22)] transition-all cursor-pointer"
+          className="w-full flex items-center justify-between gap-2.5 rounded-[12px] bg-white/55 dark:bg-white/[0.06] hover:bg-white/85 dark:hover:bg-white/[0.11] border border-white/80 dark:border-white/12 px-3 py-2.5 text-left shadow-[inset_1px_1px_2px_rgba(255,255,255,0.85),0_2px_8px_rgba(31,28,70,0.03)] dark:shadow-[inset_1px_1px_1px_rgba(255,255,255,0.12),0_4px_14px_rgba(0,0,0,0.22)] transition-all cursor-pointer"
         >
           <div className="flex items-center gap-2.5 min-w-0">
             <span className="h-[34px] w-[34px] rounded-[8px] bg-[#262626] dark:bg-[#6531F7] inline-flex items-center justify-center text-[13px] font-bold text-[#FFFFFF] shrink-0 shadow-sm">
@@ -273,7 +273,7 @@ export default function Sidebar({
                 onSelectProject('');
                 onCloseMobile?.();
               }}
-              className={`relative w-full flex items-center justify-between px-2.5 py-1.5 rounded-[9px] text-left transition-all cursor-pointer ${
+              className={`relative w-full flex items-center justify-between px-2.5 py-2 rounded-[9px] text-left transition-all cursor-pointer ${
                 !selectedProjectId
                   ? 'text-[#111216] dark:text-[#F5F6FA] font-semibold bg-white/60 dark:bg-white/[0.08]'
                   : 'text-[#111216]/60 dark:text-[#F5F6FA]/60 hover:text-[#111216] dark:hover:text-[#F5F6FA] hover:bg-white/40 dark:hover:bg-white/[0.04]'
@@ -310,7 +310,7 @@ export default function Sidebar({
                     onSelectProject(isSelected ? '' : proj.id);
                     onCloseMobile?.();
                   }}
-                  className={`relative w-full flex items-center justify-between px-2.5 py-1.5 rounded-[9px] text-left transition-all cursor-pointer ${
+                  className={`relative w-full flex items-center justify-between px-2.5 py-2 rounded-[9px] text-left transition-all cursor-pointer ${
                     isSelected
                       ? 'text-[#111216] dark:text-[#F5F6FA] font-semibold bg-white/60 dark:bg-white/[0.08]'
                       : 'text-[#111216]/60 dark:text-[#F5F6FA]/60 hover:text-[#111216] dark:hover:text-[#F5F6FA] hover:bg-white/40 dark:hover:bg-white/[0.04]'
@@ -377,7 +377,7 @@ export default function Sidebar({
                 <div
                   key={member.id}
                   title={`${member.name} · ${member.email}`}
-                  className="flex items-center justify-between gap-2 rounded-[9px] px-2 py-1.5 hover:bg-white/55 dark:hover:bg-white/[0.06] transition-colors"
+                  className="flex items-center justify-between gap-2.5 rounded-[9px] px-2.5 py-2 hover:bg-white/55 dark:hover:bg-white/[0.06] transition-colors"
                 >
                   <div className="flex items-center gap-2 min-w-0">
                     <div className="relative shrink-0">
