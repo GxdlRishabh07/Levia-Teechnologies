@@ -29,6 +29,8 @@ Checking/**
 .env.*.local
 !**/.env.example
 !.env.example
+*.txt
+flowspace/sqllocalval.txt
 
 # OS & Editor files
 **/.DS_Store
