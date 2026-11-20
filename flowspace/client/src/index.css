@@ -266,32 +266,19 @@ html.dark {
 }
 
 html.dark .glass-ambient-bg {
-  background-color: #020617;
-  background-image:
-    radial-gradient(ellipse 90% 55% at 50% -10%, rgba(30, 58, 138, 0.35) 0%, transparent 68%),
-    radial-gradient(ellipse 65% 55% at 10% 90%, rgba(14, 165, 233, 0.20) 0%, rgba(29, 78, 216, 0.15) 40%, transparent 70%),
-    radial-gradient(ellipse 70% 60% at 90% 85%, rgba(30, 64, 175, 0.25) 0%, rgba(37, 99, 235, 0.12) 45%, transparent 72%),
-    linear-gradient(180deg, #020617 0%, #06112C 40%, #03081A 100%);
+  background-color: #02040A;
+  background-image: url('/dark-bg.jpg');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
-html.dark .glass-ambient-top-sky {
-  background: radial-gradient(ellipse, rgba(37, 99, 235, 0.35) 0%, rgba(30, 58, 138, 0.18) 50%, transparent 72%);
-  filter: blur(140px);
-}
-
-html.dark .glass-ambient-left-orchid {
-  background: radial-gradient(ellipse, rgba(14, 165, 233, 0.25) 0%, rgba(29, 78, 216, 0.18) 45%, transparent 70%);
-  filter: blur(140px);
-}
-
-html.dark .glass-ambient-right-indigo {
-  background: radial-gradient(ellipse, rgba(30, 64, 175, 0.32) 0%, rgba(37, 99, 235, 0.16) 45%, transparent 70%);
-  filter: blur(140px);
-}
-
+html.dark .glass-ambient-top-sky,
+html.dark .glass-ambient-left-orchid,
+html.dark .glass-ambient-right-indigo,
 html.dark .glass-ambient-bottom-sheen {
-  background: radial-gradient(ellipse, rgba(56, 189, 248, 0.12) 0%, rgba(37, 99, 235, 0.08) 50%, transparent 75%);
-  filter: blur(75px);
+  display: none !important;
 }
 
 /* ==========================================================================

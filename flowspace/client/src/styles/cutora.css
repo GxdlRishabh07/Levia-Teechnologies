@@ -68,6 +68,19 @@ html.dark .cutora-root {
   --c-blue-bright: #93C5FD;
 }
 
+html.dark .cutora-gradient-stage {
+  background-color: #02040A;
+  background-image: url('/dark-bg.jpg');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+html.dark .cutora-gradient-stage::before,
+html.dark .cutora-gradient-stage::after {
+  display: none !important;
+}
+
 /* ==================================================================
    Background: Deep Sapphire & Electric Blue Cinematic Gradient Mesh
    Replacing yellow sunset with executive deep oceanic & midnight blue

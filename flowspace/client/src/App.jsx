@@ -87,7 +87,7 @@ function ProtectedRoute({ children }) {
   const { user, isLoading } = useAuth();
   if (isLoading) {
     return (
-      <div className="relative min-h-screen flex items-center justify-center bg-[#FFFFFF] dark:bg-[#020617] text-[#111216] dark:text-[#F5F6FA]">
+      <div className="relative min-h-screen flex items-center justify-center bg-[#FFFFFF] dark:bg-[#02040A] text-[#111216] dark:text-[#F5F6FA]">
         <GlassAmbientCanvas />
         <div className="relative z-10 linear-panel px-5 py-3.5 flex items-center gap-3">
           <FlowSpaceLogo size={22} />
