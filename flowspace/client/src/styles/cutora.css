@@ -249,10 +249,20 @@ html.dark .cutora-gradient-stage::after {
 .cutora-pitch {
   max-width: calc(720 * var(--u));
   margin-top: auto;
+  min-height: calc(230 * var(--u));
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.cutora-pitch-content {
+  display: flex;
+  flex-direction: column;
 }
 
 .cutora-headline-clip {
   overflow: hidden;
+  display: block;
 }
 
 .cutora-headline {
@@ -263,6 +273,7 @@ html.dark .cutora-gradient-stage::after {
   font-weight: 700;
   letter-spacing: calc(-2.2 * var(--u));
   color: #FFFFFF;
+  will-change: transform, opacity;
 }
 
 .cutora-subline {
@@ -273,9 +284,10 @@ html.dark .cutora-gradient-stage::after {
   font-weight: 400;
   color: rgba(241, 245, 249, 0.88);
   max-width: calc(640 * var(--u));
+  will-change: transform, opacity;
 }
 
-/* Interactive Slider Dots */
+/* Interactive Slider Dots with Smooth Progress Fill */
 .cutora-dots {
   display: flex;
   align-items: center;
@@ -284,20 +296,52 @@ html.dark .cutora-gradient-stage::after {
 }
 
 .cutora-dot-btn {
+  position: relative;
   background: none;
   border: 0;
   padding: 0;
   cursor: pointer;
   outline: none;
-  transition: all 0.25s cubic-bezier(0.2, 0.8, 0.3, 1);
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+
+.cutora-dot-btn:focus-visible {
+  outline: 2px solid var(--c-blue-bright);
+  outline-offset: 2px;
 }
 
 .cutora-dot-active {
-  width: calc(34.5 * var(--u));
+  width: calc(36 * var(--u));
   height: calc(9 * var(--u));
   border-radius: calc(4.5 * var(--u));
+  background: rgba(255, 255, 255, 0.22);
+  box-shadow: 0 0 calc(14 * var(--u)) var(--c-blue-glow);
+  overflow: hidden;
+  position: relative;
+}
+
+.cutora-dot-progress {
+  position: absolute;
+  inset: 0;
   background: var(--c-blue-bright);
-  box-shadow: 0 0 calc(12 * var(--u)) var(--c-blue-glow);
+  border-radius: inherit;
+  transform-origin: left center;
+  animation-name: cutora-progress-fill;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+.cutora-dot-btn.is-paused .cutora-dot-progress {
+  animation-play-state: paused;
+}
+
+@keyframes cutora-progress-fill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
 }
 
 .cutora-dot-inactive {
@@ -308,8 +352,8 @@ html.dark .cutora-gradient-stage::after {
 }
 
 .cutora-dot-inactive:hover {
-  background: rgba(255, 255, 255, 0.85);
-  transform: scale(1.15);
+  background: rgba(255, 255, 255, 0.9);
+  transform: scale(1.25);
 }
 
 /* ---------------- Right Card Column ---------------- */
@@ -648,6 +692,93 @@ html.dark .cutora-card-footer a {
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* ==================================================================
+   Smooth Scrolling Carousel Transitions (Directional Staggered Scroll)
+   ================================================================== */
+@keyframes cutora-scroll-in-up {
+  0% {
+    opacity: 0;
+    transform: translateY(105%);
+    filter: blur(4px);
+  }
+  60% {
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0px);
+  }
+}
+
+@keyframes cutora-scroll-in-down {
+  0% {
+    opacity: 0;
+    transform: translateY(-105%);
+    filter: blur(4px);
+  }
+  60% {
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0px);
+  }
+}
+
+@keyframes cutora-fade-scroll-up {
+  0% {
+    opacity: 0;
+    transform: translateY(22px);
+    filter: blur(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0px);
+  }
+}
+
+@keyframes cutora-fade-scroll-down {
+  0% {
+    opacity: 0;
+    transform: translateY(-22px);
+    filter: blur(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0px);
+  }
+}
+
+/* Direction: Next (Scrolling Upwards) */
+.cutora-scroll-in-up-1 {
+  animation: cutora-scroll-in-up 0.72s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.cutora-scroll-in-up-2 {
+  animation: cutora-scroll-in-up 0.72s cubic-bezier(0.16, 1, 0.3, 1) 0.08s both;
+}
+
+.cutora-scroll-in-up-sub {
+  animation: cutora-fade-scroll-up 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.16s both;
+}
+
+/* Direction: Prev (Scrolling Downwards) */
+.cutora-scroll-in-down-1 {
+  animation: cutora-scroll-in-down 0.72s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.cutora-scroll-in-down-2 {
+  animation: cutora-scroll-in-down 0.72s cubic-bezier(0.16, 1, 0.3, 1) 0.08s both;
+}
+
+.cutora-scroll-in-down-sub {
+  animation: cutora-fade-scroll-down 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.16s both;
+}
+
 .cutora-enter-card {
   animation: cutora-rise-card 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
@@ -730,6 +861,7 @@ html.dark .cutora-card-footer a {
   .cutora-pitch {
     max-width: 640px;
     margin-top: 24px;
+    min-height: 180px;
   }
 
   .cutora-headline {

@@ -1,33 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="description" content="FlowSpace — AI-native multi-tenant team task workspace with voice compilation, real-time Kanban sync, and automated daily standups." />
-    <meta name="theme-color" content="#02040A" media="(prefers-color-scheme: dark)" />
-    <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>FlowSpace — AI-Native Team Task Workspace</title>
-    <script>
-      (function () {
-        try {
-          var params = new URLSearchParams(window.location.search);
-          var t = params.get('theme') || window.localStorage.getItem('flowspace-theme');
-          if (t === 'dark') {
-            document.documentElement.classList.add('dark');
-          }
-        } catch (e) {}
-      })();
-    </script>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
-  </head>
-  <body class="bg-[#FFFFFF] dark:bg-[#07080D] text-[#111216] dark:text-[#F5F6FA] antialiased selection:bg-[#6531F7]/20 selection:text-[#6531F7] dark:selection:text-[#C4B5FD]">
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description"
+    content="FlowSpace — AI-native multi-tenant team task workspace with voice compilation, real-time Kanban sync, and automated daily standups." />
+  <meta name="theme-color" content="#02040A" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <title>FlowSpace — AI-Native Team Task Workspace</title>
+  <script>
+    (function () {
+      try {
+        var params = new URLSearchParams(window.location.search);
+        var t = params.get('theme') || window.localStorage.getItem('flowspace-theme');
+        if (t === 'dark') {
+          document.documentElement.classList.add('dark');
+        }
+      } catch (e) { }
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+    rel="stylesheet" />
+</head>
+
+<body
+  class="bg-[#FFFFFF] dark:bg-[#07080D] text-[#111216] dark:text-[#F5F6FA] antialiased selection:bg-[#6531F7]/20 selection:text-[#6531F7] dark:selection:text-[#C4B5FD]">
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+
 </html>

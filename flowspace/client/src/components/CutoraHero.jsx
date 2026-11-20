@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 
 const SLIDES = [
@@ -19,8 +19,85 @@ const SLIDES = [
   },
 ];
 
+const AUTOPLAY_INTERVAL = 5000;
+
 export default function CutoraHero({ backTo = '/', backLabel = '← Back to Workspace' }) {
   const [activeSlide, setActiveSlide] = useState(0);
+  const [direction, setDirection] = useState('next'); // 'next' | 'prev'
+  const [isPaused, setIsPaused] = useState(false);
+  const isScrollingRef = useRef(false);
+  const touchStartYRef = useRef(0);
+
+  const goToSlide = useCallback((nextIdx, explicitDir) => {
+    setActiveSlide((current) => {
+      if (nextIdx === current) return current;
+      const computedDir = explicitDir || (nextIdx > current ? 'next' : 'prev');
+      setDirection(computedDir);
+      return nextIdx;
+    });
+  }, []);
+
+  const nextSlide = useCallback(() => {
+    setDirection('next');
+    setActiveSlide((prev) => (prev + 1) % SLIDES.length);
+  }, []);
+
+  const prevSlide = useCallback(() => {
+    setDirection('prev');
+    setActiveSlide((prev) => (prev - 1 + SLIDES.length) % SLIDES.length);
+  }, []);
+
+  // Smooth Auto-scrolling Carousel: Cycles through all 3 titles continuously
+  useEffect(() => {
+    if (isPaused) return;
+    const timer = setInterval(() => {
+      nextSlide();
+    }, AUTOPLAY_INTERVAL);
+    return () => clearInterval(timer);
+  }, [isPaused, nextSlide, activeSlide]);
+
+  // Trackpad / Mouse Wheel Scroll over the text area: scroll up/down changes slide smoothly
+  const handleWheel = (e) => {
+    if (isScrollingRef.current) return;
+    if (Math.abs(e.deltaY) > 25) {
+      isScrollingRef.current = true;
+      if (e.deltaY > 0) {
+        nextSlide();
+      } else {
+        prevSlide();
+      }
+      setTimeout(() => {
+        isScrollingRef.current = false;
+      }, 650);
+    }
+  };
+
+  // Mobile Touch Swipe support
+  const handleTouchStart = (e) => {
+    touchStartYRef.current = e.touches[0].clientY;
+  };
+
+  const handleTouchEnd = (e) => {
+    const deltaY = e.changedTouches[0].clientY - touchStartYRef.current;
+    if (Math.abs(deltaY) > 35) {
+      if (deltaY < 0) {
+        nextSlide();
+      } else {
+        prevSlide();
+      }
+    }
+  };
+
+  // Keyboard navigation for dots
+  const handleKeyDown = (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      nextSlide();
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      prevSlide();
+    }
+  };
 
   const current = SLIDES[activeSlide];
 
@@ -56,26 +133,55 @@ export default function CutoraHero({ backTo = '/', backLabel = '← Back to Work
         </Link>
       </div>
 
-      {/* Inspirational Pitch (Bottom Left): Headlines + Subline + Interactive Dots */}
-      <div className="cutora-pitch">
-        <div className="cutora-headline-clip">
-          <h1 key={`l1-${activeSlide}`} className="cutora-headline cutora-enter-wipe-1">
-            {current.line1}
-          </h1>
-        </div>
-        <div className="cutora-headline-clip">
-          <h2 key={`l2-${activeSlide}`} className="cutora-headline cutora-enter-wipe-2">
-            {current.line2}
-          </h2>
+      {/* Inspirational Pitch: Auto-scrolling Titles + Subline + Interactive Dots */}
+      <div
+        className="cutora-pitch"
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+        onWheel={handleWheel}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+        role="region"
+        aria-roledescription="carousel"
+        aria-label="Product value propositions"
+      >
+        <div className="cutora-pitch-content" key={`slide-${activeSlide}`}>
+          <div className="cutora-headline-clip">
+            <h1
+              className={`cutora-headline ${
+                direction === 'next' ? 'cutora-scroll-in-up-1' : 'cutora-scroll-in-down-1'
+              }`}
+            >
+              {current.line1}
+            </h1>
+          </div>
+          <div className="cutora-headline-clip">
+            <h2
+              className={`cutora-headline ${
+                direction === 'next' ? 'cutora-scroll-in-up-2' : 'cutora-scroll-in-down-2'
+              }`}
+            >
+              {current.line2}
+            </h2>
+          </div>
+
+          <p
+            className={`cutora-subline ${
+              direction === 'next' ? 'cutora-scroll-in-up-sub' : 'cutora-scroll-in-down-sub'
+            }`}
+          >
+            {current.sub}
+          </p>
         </div>
 
-        <p key={`sub-${activeSlide}`} className="cutora-subline cutora-enter-sub">
-          {current.sub}
-        </p>
-
-        {/* Slider dots: 34.5x9u blue pill for active, 9u white dots at 55% */}
-        <div className="cutora-dots cutora-enter-dots" role="tablist" aria-label="Product highlights">
-          {SLIDES.map((_, idx) => {
+        {/* Slider dots: Active pill with smooth progress indicator + interactive navigation */}
+        <div
+          className="cutora-dots"
+          role="tablist"
+          aria-label="Product highlights"
+          onKeyDown={handleKeyDown}
+        >
+          {SLIDES.map((slide, idx) => {
             const isActive = idx === activeSlide;
             return (
               <button
@@ -83,10 +189,20 @@ export default function CutoraHero({ backTo = '/', backLabel = '← Back to Work
                 type="button"
                 role="tab"
                 aria-selected={isActive}
-                aria-label={`Slide ${idx + 1}`}
-                onClick={() => setActiveSlide(idx)}
-                className={`cutora-dot-btn ${isActive ? 'cutora-dot-active' : 'cutora-dot-inactive'}`}
-              />
+                aria-label={`Slide ${idx + 1} of ${SLIDES.length}: ${slide.line1}`}
+                onClick={() => goToSlide(idx)}
+                className={`cutora-dot-btn ${isActive ? 'cutora-dot-active' : 'cutora-dot-inactive'} ${
+                  isPaused ? 'is-paused' : ''
+                }`}
+              >
+                {isActive && (
+                  <span
+                    className="cutora-dot-progress"
+                    key={`progress-${activeSlide}`}
+                    style={{ animationDuration: `${AUTOPLAY_INTERVAL}ms` }}
+                  />
+                )}
+              </button>
             );
           })}
         </div>
