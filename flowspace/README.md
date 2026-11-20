@@ -1,327 +1,309 @@
-# FlowSpace — AI-Native Multi-Tenant Team Task Workspace
+# FlowSpace: AI-Native Team Task Workspace
 
-FlowSpace is a multi-tenant team task workspace where teammates can type or speak in plain English or Hinglish to compile structured tasks, move items across a live Kanban board, and generate daily standup reports from real team activity.
+FlowSpace is a multi-tenant project management and task execution workspace designed to remove the friction of traditional issue trackers. Instead of manually filling out repetitive forms and clicking through dropdown menus, team members can speak or type in natural language to create, update, organize, and track tasks in real time.
 
-- **Frontend:** React 18 (Vite), Tailwind CSS, `@tanstack/react-query`, `@dnd-kit/core`, `pusher-js`
-- **Backend:** Node.js + Express (stateless serverless entry on Vercel via `api/index.js`)
-- **Database:** MySQL 8 (local) / TiDB Cloud Serverless (production) using `mysql2/promise` with hand-written parameterized SQL and ACID transactions (no ORM)
-- **Realtime:** Pusher Channels (`presence-workspace-<wid>`) with server-verified channel authorization and automatic 15-second polling fallback
-- **AI:** Groq (`llama-3.3-70b-versatile` JSON mode at `temperature: 0` + `whisper-large-v3` for voice transcription) with strict Zod output contracts
+The system combines a reactive single-page frontend, a stateless serverless backend, a relational database with strict ACID transaction guarantees, and an intelligent natural language processing pipeline powered by Groq and the FlowVoice speech engine.
 
 ---
 
-## Live Deployment & Demo Credentials
+## What the Project Is
 
-- **Live Application:** `https://flowspace-workspace.vercel.app` *(replace with your deployed Vercel URL)*
-- **Workspace:** `FlowSpace Engineering` (`slug: flowspace-eng`)
+FlowSpace is an engineering-first workspace operating system built to streamline how software teams capture and manage work. It brings together conversational natural language processing, voice transcription, real-time multi-user synchronization, and a modern glassmorphism interface.
 
-| Name | Email | Password | Role | Capabilities |
-|---|---|---|---|---|
-| **Arjun Mehta** | `arjun@flowspace.dev` | `Demo@1234` | `OWNER` | Full workspace access, invite members, create projects, manage tasks, AI command bar & standup |
-| **Priya Sharma** | `priya@flowspace.dev` | `Demo@1234` | `MEMBER` | Create, edit, filter, and drag tasks, use AI command bar, voice input & standup |
-| **Rahul Verma** | `rahul@flowspace.dev` | `Demo@1234` | `MEMBER` | Create, edit, filter, and drag tasks, use AI command bar, voice input & standup |
-
-> **Tip for testing live sync:** Open two browser windows (one signed in as **Arjun**, one in Incognito signed in as **Priya**). Drag a card across the Kanban board or execute an AI command in one window to observe live board and activity updates in the second window.
+Traditional project management platforms such as Jira, Asana, and Trello are built around heavy forms, rigid configuration trees, and multi-step manual data entry. FlowSpace approaches task management from a voice-first, intent-driven perspective: team members can communicate naturally in English or Hinglish, while the underlying AI compiler translates human intent into structured, validated database records.
 
 ---
 
-## Key Features
+## Architectural Tech Stack
 
-1. **Multi-Tenant Workspaces & RBAC:**
-   - Every user signup provisions an isolated workspace and default project inside a database transaction.
-   - Workspace owners (`OWNER`) can add registered teammates (`MEMBER`) by email.
-   - Every workspace endpoint and Pusher presence subscription enforces membership verification against `memberships (user_id, workspace_id)`.
-2. **AI Command Bar (`Cmd+K`):**
-   - Accepts plain English or Hinglish prompts (e.g., *"Create 2 high priority backend tasks for Stripe webhook retry and Redis rate limiting assigned to Priya"* or *"Rahul ke liye kal tak login validation bug fix task banao high priority"*).
-   - Never mutates the database directly from an LLM response: follows a strict **Parse → Zod Validate → Interactive Preview → User Confirm → Transactional Execute** workflow.
-   - Supports three structured intents: `CREATE_TASKS`, `UPDATE_STATUS` (with candidate disambiguation when multiple tasks match), and `FILTER_TASKS`.
-3. **Voice Capture (`MediaRecorder` + Groq Whisper):**
-   - Click the **Voice** button (or hold **Right Option / AltRight**) to record up to 60 seconds of speech with a live 5-bar Web Audio waveform.
-   - Audio is sent to `POST /api/workspaces/:wid/ai/transcribe` (capped at 4 MB to stay within Vercel's 4.5 MB serverless body limit), transcribed via `whisper-large-v3`, and routed into the same AI preview flow with `source: 'AI_VOICE'`.
-4. **AI Daily Standup Generator:**
-   - Queries the workspace's last 24 hours of `activities` alongside current task states to produce a structured standup digest (`summary`, `done`, `inProgress`, `blockers`, `overdue`) with one-click Markdown copy.
-5. **Kanban Board, List View & Dashboard Analytics:**
-   - **Board View:** Drag-and-drop cards across `BACKLOG`, `IN_PROGRESS`, `IN_REVIEW`, and `DONE` with optimistic React Query cache updates and automatic rollback on failure.
-   - **List View:** Filter by status, priority, assignee, project, tag, or search text (`title LIKE ?`), with offset pagination.
-   - **Dashboard & Activity Feed:** SQL `GROUP BY` status/priority breakdowns, overdue counter, completion rate, and a keyset-paginated live audit trail.
+### Frontend
+- **Framework:** React 18 with Vite for fast HMR and optimized production bundles.
+- **State Management & Data Synchronization:** TanStack React Query (v5) for server-state caching, background revalidation, and optimistic UI mutations.
+- **Styling & Design System:** Tailwind CSS with custom glassmorphism utilities, backdrop-filter blurs, and hardware-accelerated CSS variables.
+- **Drag-and-Drop:** @dnd-kit/core and @dnd-kit/sortable for touch- and pointer-accessible Kanban reordering.
+- **Realtime Client:** pusher-js for WebSocket presence subscriptions and cross-client event synchronization.
+- **Icons:** Lucide React for consistent, lightweight iconography.
+
+### Backend
+- **Runtime & Framework:** Node.js (v20+) with Express.js running as stateless serverless functions compatible with Vercel.
+- **Authentication & Security:** JSON Web Tokens (JWT) signed with HMAC-SHA256 and transmitted exclusively via httpOnly, SameSite=Lax cookies with bcrypt password hashing (12 salt rounds).
+- **Rate Limiting:** express-rate-limit protecting authentication endpoints and AI inference endpoints against abuse.
+- **Validation:** Zod schemas enforcing strict runtime contracts for all API inputs, database payloads, and LLM structured outputs.
+
+### Database & Persistence
+- **Engine:** MySQL 8 locally and TiDB Cloud Serverless in production.
+- **Driver:** mysql2/promise using parameterized queries for SQL injection prevention.
+- **Connection Management:** Cached global connection pool with warm-instance connection reuse and concurrency limits.
+- **Transactions:** Hand-written SQL with explicit ACID transactions (BEGIN, COMMIT, ROLLBACK) and row-level locks for sequential counter generation. No bulky ORM layer.
+
+### AI & Speech Processing
+- **Language Models:** Groq Llama 3.3 70B Versatile in deterministic JSON mode (temperature: 0) with automatic retry and graceful fallback to Llama 3.1 8B Instant.
+- **Speech Recognition:** Groq Whisper Large v3 for multilingual voice transcription.
+- **FlowVoice Engine Integration:** Custom speech-to-intent pipeline performing filler word removal, Hinglish translation, fuzzy assignee matching, and relative date resolution.
 
 ---
 
-## System Architecture
+## Integration with Flow and FlowVoice
 
-```mermaid
-flowchart LR
-    subgraph Client["React SPA (Vite)"]
-        UI["Board / List / Dashboard / Cmd+K"]
-        RQ["React Query Cache"]
-        PJS["pusher-js Client"]
-    end
+A central component of this platform is the integration between the web workspace and the Flow / FlowVoice speech processing architecture.
 
-    subgraph Vercel["Vercel Serverless (Same Origin)"]
-        API["Express API (/api/*)"]
-        PUB["Realtime Publisher Interface"]
-    end
+FlowVoice is engineered to solve a common failure in voice-to-text systems: raw transcription captures spoken hesitation, verbal fillers (such as "um", "uh", "matlab", "basically"), and mixed colloquial phrasing that degrades database record quality.
 
-    subgraph External["Managed Backing Services"]
-        DB[("MySQL 8 (Local)\nTiDB Cloud (Prod)")]
-        PUSHER["Pusher Channels\n(presence-workspace-wid)"]
-        GROQ["Groq API\n(Llama 3.3 70B & Whisper)"]
-    end
+### How FlowVoice Enhances the Workflow:
 
-    UI -->|REST Writes & Reads\nhttpOnly JWT Cookie| API
-    API -->|Parameterized SQL\nmysql2 Pool| DB
-    API -->|Parse / Transcribe / Standup| GROQ
-    API -->|After DB Commit| PUB
-    PUB -->|pusher.trigger\nExclude X-Socket-Id| PUSHER
-    PJS -->|POST /api/realtime/auth| API
-    PUSHER -->|WebSocket Push| PJS
-    PJS -->|Patch / Invalidate| RQ
-    RQ --> UI
+1. **Vocal Cleanup and Normalization:** FlowVoice removes vocal pauses, stuttered words, and spoken filler phrases while preserving the technical intent of the user.
+2. **Bilingual Speech Understanding:** Team members often speak in mixed vernacular, such as Hinglish ("Rahul ke liye urgent bug fix kal tak schedule karo"). FlowVoice accurately transcribes the Romanized Hinglish phonetics, interprets "kal tak" as tomorrow's calendar date, identifies "urgent" as a priority level, and resolves "Rahul" to the correct workspace user ID.
+3. **Context Injection:** When an audio payload is received, FlowVoice injects active workspace metadata (project keys, member names, and open task titles) into the compilation prompt. This allows the model to match fuzzy speech ("assign to Priya") with exact user records, dramatically increasing data entry speed and accuracy.
+4. **Single-Action Hardware Hotkey:** FlowVoice is bound to a dedicated push-to-talk hotkey (Right Alt / AltRight), allowing developers and managers to record voice inputs with one keypress without lifting their hands from the keyboard.
+
+---
+
+## The Frosted Glass UI Effect (CSS Architecture)
+
+FlowSpace features a custom-engineered Glass UI (Glassmorphism) designed to replace the flat, sterile, and outdated visual patterns common in legacy enterprise software.
+
+### Design Principles:
+
+- **Depth Through Translucency:** Interfaces use multi-layered semi-transparent surfaces (`rgba(255, 255, 255, 0.7)` in light mode, and `rgba(15, 23, 42, 0.75)` in dark mode) combined with CSS `backdrop-filter: blur(12px)`. This creates a sense of physical depth where underlying content is softly visible without sacrificing readability.
+- **Specular Highlights:** Card borders use subtle gradients with varying opacities (`border: 1px solid rgba(255, 255, 255, 0.2)`), simulating light catching the bevelled edge of a physical pane of glass.
+- **Dark Mode Spotlight Gradient:** The dark mode interface avoids dull monochrome greys. It incorporates a deep blue spotlight gradient background (`dark-bg.jpg`) that provides vibrant focal illumination behind translucent workspace panels, keeping users visually engaged during extended working sessions.
+- **Tactile Micro-Interactions:** Hover states, active buttons, and modal dialogs feature smooth transitions, subtle scaling, and glow shifts that provide clear visual feedback for every user interaction.
+
+---
+
+## How the Database Stores Values: Step-by-Step Lifecycle
+
+The database uses a normalized schema with 7 relational tables: `users`, `workspaces`, `memberships`, `projects`, `tasks`, `task_tags`, and `activities`. Data is stored and updated through strict, step-by-step transactional workflows.
+
+```
++-----------+       +---------------+       +------------+
+|   users   |----<--|  memberships  |-->----| workspaces |
++-----------+       +---------------+       +------------+
+      |                                           |
+      | (assignee / creator)                      | (contains)
+      v                                           v
++-----------+       +---------------+       +------------+
+|   tasks   |----<--|   task_tags   |       |  projects  |
++-----------+       +---------------+       +------------+
+      |
+      | (audit log reference)
+      v
++-----------+
+|activities |
++-----------+
 ```
 
-### Realtime Write & Broadcast Sequence
+### Step 1: User Signup and Workspace Scaffolding
+1. The user submits their name, email, password, and optional workspace name to `/api/auth/signup`.
+2. The server hashes the password with bcrypt (12 rounds) and opens a database transaction via `mysql2/promise`.
+3. The server inserts a new record into `users`.
+4. The server creates a default workspace in `workspaces` (with `task_counter = 0`).
+5. An entry is added to `memberships` linking the user to the workspace with the role `OWNER`.
+6. A default project (key: `FLOW`) is inserted into `projects`.
+7. The transaction is committed. If any insert fails, the transaction is rolled back completely, preventing orphan records.
 
-```mermaid
-sequenceDiagram
-    participant A as Browser A (Arjun)
-    participant API as Express API (Vercel)
-    participant DB as MySQL / TiDB Cloud
-    participant P as Pusher Channels
-    participant B as Browser B (Priya)
+### Step 2: Atomic Task Creation with Concurrency Safety
+A major challenge in multi-user task software is generating clean, sequential task codes (such as `FLOW-1`, `FLOW-2`) without race conditions when two teammates create tasks at the exact same millisecond.
 
-    A->>API: PATCH /api/workspaces/1/tasks/5 { status: "IN_REVIEW" } (X-Socket-Id)
-    API->>DB: BEGIN -> UPDATE tasks -> INSERT activities -> COMMIT
-    DB-->>API: Transaction Committed
-    API->>P: trigger("presence-workspace-1", "task.updated", task, { socket_id })
-    API-->>A: 200 OK { task }
-    P-->>B: task.updated + activity.new
-    B->>B: React Query cache updated in place
-```
+FlowSpace resolves this using row-level database locks:
+1. When a task creation request arrives (via manual form or confirmed AI preview), the server initiates `START TRANSACTION`.
+2. The server executes:
+   ```sql
+   SELECT task_counter FROM workspaces WHERE id = ? FOR UPDATE;
+   ```
+   The `FOR UPDATE` clause places an exclusive lock on that specific workspace row. Concurrent requests must wait their turn.
+3. The server increments the counter in memory, updates `workspaces SET task_counter = task_counter + 1`, and formats the task code (for example, `FLOW-5`).
+4. The task is inserted into `tasks` with `workspace_id`, `project_id`, `code`, `title`, `description`, `status`, `priority`, `due_date`, `assignee_id`, `created_by`, `source` (`MANUAL`, `AI_TEXT`, or `AI_VOICE`), and `position`.
+5. If tags are provided, each tag is inserted into `task_tags` (`task_id`, `tag`).
+6. An entry is written to `activities` (`workspace_id`, `actor_id`, `task_id`, `type = 'task.created'`, `meta = JSON`).
+7. The transaction is committed.
+8. Only after the database commit succeeds does the server broadcast the `task.created` event through Pusher Channels to all connected teammates.
 
----
+### Step 3: Status Transitions and Optimistic Reordering
+1. When a user drags a card on the Kanban board from `IN_PROGRESS` to `DONE`, the client updates its local React Query cache immediately for zero-latency interaction.
+2. The client fires a `PATCH /api/workspaces/:wid/tasks/:id` request containing `{ status: "DONE" }` and the client's `X-Socket-Id`.
+3. The server verifies that the user is an active member of the workspace via `memberships`.
+4. The server executes an `UPDATE tasks SET status = ?, updated_at = NOW() WHERE id = ? AND workspace_id = ?`.
+5. An audit entry is inserted into `activities` with `{ previousStatus: "IN_PROGRESS", newStatus: "DONE" }`.
+6. The server triggers a Pusher broadcast. By passing `socket_id`, Pusher excludes the sender, preventing duplicate re-renders on the author's screen while updating all other connected clients in real time.
+7. If the network fails or the server returns an error, React Query rolls back the drag action to its previous position automatically.
 
-## Database Schema & SQL Design (`server/db/schema.sql`)
+### Step 4: Keyset Pagination and Historical Audit Trail
+1. The activity feed avoids inefficient `OFFSET` queries that slow down as data grows.
+2. Instead, it queries with cursor-based keyset pagination:
+   ```sql
+   SELECT a.*, u.name as actor_name, t.code as task_code
+   FROM activities a
+   LEFT JOIN users u ON a.actor_id = u.id
+   LEFT JOIN tasks t ON a.task_id = t.id
+   WHERE a.workspace_id = ? AND a.id < ?
+   ORDER BY a.id DESC LIMIT 20;
+   ```
+   This ensures `O(log N)` index lookups regardless of how many thousands of events exist in the history.
 
-```mermaid
-erDiagram
-    USERS ||--o{ MEMBERSHIPS : has
-    WORKSPACES ||--o{ MEMBERSHIPS : has
-    WORKSPACES ||--o{ PROJECTS : contains
-    PROJECTS ||--o{ TASKS : contains
-    USERS ||--o{ TASKS : "assigned to"
-    USERS ||--o{ TASKS : "created by"
-    TASKS ||--o{ TASK_TAGS : has
-    WORKSPACES ||--o{ ACTIVITIES : logs
-    USERS ||--o{ ACTIVITIES : performs
-    TASKS ||--o{ ACTIVITIES : references
-
-    USERS {
-        int id PK
-        varchar name
-        varchar email UK
-        varchar password_hash
-        datetime created_at
-    }
-    WORKSPACES {
-        int id PK
-        varchar name
-        varchar slug UK
-        int task_counter
-        datetime created_at
-    }
-    MEMBERSHIPS {
-        int user_id PK, FK
-        int workspace_id PK, FK
-        enum role "OWNER | MEMBER"
-        datetime created_at
-    }
-    PROJECTS {
-        int id PK
-        int workspace_id FK
-        varchar name
-        varchar key "UK(workspace_id, key)"
-        text description
-        datetime created_at
-    }
-    TASKS {
-        int id PK
-        int workspace_id FK
-        int project_id FK
-        varchar code "UK(workspace_id, code)"
-        varchar title
-        text description
-        enum status "BACKLOG | IN_PROGRESS | IN_REVIEW | DONE"
-        enum priority "LOW | MEDIUM | HIGH | URGENT"
-        date due_date
-        int assignee_id FK
-        int created_by FK
-        enum source "MANUAL | AI_TEXT | AI_VOICE"
-        int position
-        datetime created_at
-        datetime updated_at
-    }
-    TASK_TAGS {
-        int task_id PK, FK
-        varchar tag PK
-    }
-    ACTIVITIES {
-        int id PK
-        int workspace_id FK
-        int actor_id FK
-        int task_id FK
-        varchar type
-        json meta
-        datetime created_at
-    }
-```
-
-### Key Database Design Choices
-
-1. **Atomic Human-Readable Task Codes (`FLOW-1`, `FLOW-2`):**
-   - Generating sequential codes with `MAX(id) + 1` causes race conditions under concurrent requests.
-   - Inside `withTransaction`, `workspaceRepo.incrementTaskCounter` executes `SELECT task_counter FROM workspaces WHERE id = ? FOR UPDATE`, increments `task_counter`, inserts the task and its tags, and logs the activity record before committing.
-2. **Composite Indexes Matched to Access Patterns:**
-   - `idx_tasks_workspace_status_pos (workspace_id, status, position)`: Covers Kanban column queries and status filtering ordered by position.
-   - `idx_tasks_workspace_assignee (workspace_id, assignee_id)`: Accelerates assignee filtering within a workspace.
-   - `uq_tasks_workspace_code (workspace_id, code)`: Enforces per-workspace uniqueness and supports `O(log N)` lookup when the AI Command Bar updates a task by code (`Move FLOW-5 to In Review`).
-   - `idx_activities_workspace_created (workspace_id, created_at)`: Supports both the 24-hour AI Standup window query and keyset activity pagination.
-3. **Referential Integrity & Cascades:**
-   - Deleting a task cascades to `task_tags` (`ON DELETE CASCADE`) while setting `activities.task_id` to `NULL` (`ON DELETE SET NULL`) so historical audit logs (`task.deleted`) remain intact.
+### Step 5: Referential Integrity and Cascading Rules
+- When a task is deleted, foreign key constraints automatically delete its associated tags (`ON DELETE CASCADE` on `task_tags.task_id`).
+- For audit logging, the `activities` table references `tasks.id` with `ON DELETE SET NULL`. When a task is removed, the audit trail retains the historical log entry (`task.deleted`) with the user who deleted it, while nullifying the deleted task foreign key.
 
 ---
 
-## REST API Reference (Base path: `/api`)
+## What Features Have Been Built
 
-| Method | Endpoint | Auth / Guard | Description |
+### 1. Multi-Tenant Workspace System
+- User registration, authentication, and session validation using encrypted JWT cookies.
+- Role-Based Access Control distinguishing workspace `OWNER` privileges (inviting users, managing projects) from `MEMBER` privileges.
+- Multi-workspace switching for users belonging to several teams.
+
+### 2. Dual-View Task Board
+- **Kanban Board:** Smooth, accessible drag-and-drop between Backlog, In Progress, In Review, and Done.
+- **List View:** Dense, structured table view with column sorting and multi-attribute filters.
+- **Live Search:** Instant keyword matching across task titles and descriptions.
+
+### 3. Voice-Driven Task Compilation (Push-to-Talk)
+- Integrated Web Audio recording with live frequency visualizer.
+- Dedicated `Right Alt` push-to-talk shortcut.
+- Fast audio transcription using Groq Whisper Large v3.
+- Natural conversion of spoken sentences into structured database items.
+
+### 4. Safe AI Command Compiler
+- Support for complex natural language prompts in English and Hinglish.
+- **5-Stage Execution Gate:**
+  1. *Prompt Reception:* Captures typed or spoken instruction.
+  2. *Semantic Parsing:* LLM parses intent and extracts parameters using workspace context.
+  3. *Zod Contract Validation:* Validates raw model output against strict schemas.
+  4. *Interactive Preview Card:* Displays the parsed ticket for user review and editing.
+  5. *Transactional Database Write:* Executes the verified payload inside an ACID transaction.
+- **Disambiguation Logic:** If a user says "Move the auth task to Done" and multiple auth tasks exist, the AI halts and presents candidate options for manual selection.
+
+### 5. Automated Daily Standup Synthesizer
+- Inspects the workspace's last 24 hours of actual database activity records.
+- Synthesizes a factual, structured summary covering:
+  - Work Completed (Done)
+  - Work In Progress
+  - Potential Blockers
+  - Overdue Items
+- Includes a one-click Markdown copy button for posting directly to Slack, Teams, or email.
+
+### 6. Workspace Analytics & Metrics
+- Live task completion percentages.
+- Overdue counter tracking deadlines against current time.
+- Priority distribution charts (Low, Medium, High, Urgent).
+- Real-time online team presence indicators.
+
+---
+
+## What Makes FlowSpace Different from Other Apps
+
+### 1. Voice and Vernacular First
+Most task management software expects users to adapt to rigid forms. FlowSpace adapts to how human beings communicate. Whether a user speaks English or colloquial Hinglish, the FlowVoice pipeline translates casual phrases into clean titles, assigns tasks to the right people, and calculates exact dates.
+
+### 2. Guaranteed AI Safety (No Blind Database Writes)
+Many AI-enabled tools allow language models to execute database operations directly, leading to corrupted data, hallucinated records, and unintended deletions. FlowSpace implements a mandatory preview and validation gate. Every AI action is previewed, confirmed by a human, and executed through validated SQL transactions.
+
+### 3. Factual, Data-Grounded Standups
+Typical standup bots simply prompt team members with questions like "What did you do today?", leading to forgotten work and subjective reporting. FlowSpace analyzes the actual relational activity log from the preceding 24 hours to generate completely objective, verifiable standup digests.
+
+### 4. Zero-Friction Concurrency
+Unlike simple task tools that suffer from race conditions or ID collisions under load, FlowSpace pairs row-level database locking with WebSocket presence broadcasting. Team members see updates appear dynamically on their screens without collisions or reloads.
+
+### 5. Modern Glassmorphism Aesthetic
+Rather than relying on flat monochrome tables, FlowSpace uses a glassmorphism interface with depth, specular lighting, backdrop blurs, and an engaging dark blue spotlight gradient. The design is modern, distraction-free, and engaging.
+
+---
+
+## REST API Reference
+
+All application endpoints are served under `/api` with JSON request and response payloads.
+
+| Method | Endpoint | Access | Purpose |
 |---|---|---|---|
-| `GET` | `/health` | Public | Returns API status, DB ping latency, and AI/Pusher configuration flags |
-| `POST` | `/auth/signup` | `authLimiter` | Creates user, default workspace (`OWNER`), default project, sets `flowspace_token` cookie |
-| `POST` | `/auth/login` | `authLimiter` | Verifies bcrypt password hash and sets `httpOnly` JWT cookie |
-| `POST` | `/auth/logout` | Public | Clears `flowspace_token` cookie |
-| `GET` | `/auth/me` | `requireAuth` | Returns current user, workspaces list, and public Pusher config |
-| `GET` | `/workspaces` | `requireAuth` | Lists all workspaces the authenticated user belongs to |
-| `POST` | `/workspaces` | `requireAuth` | Creates an additional workspace with the current user as `OWNER` |
-| `GET` | `/workspaces/:wid/members` | `requireMembership` | Lists members in workspace `:wid` |
-| `POST` | `/workspaces/:wid/members` | `requireMembership`, `requireOwner` | Adds a registered user by email as `MEMBER` or `OWNER` |
-| `GET` | `/workspaces/:wid/projects` | `requireMembership` | Lists projects in workspace `:wid` |
-| `POST` | `/workspaces/:wid/projects` | `requireMembership` | Creates a new project with a unique key (e.g., `AI`, `CORE`) |
-| `GET` | `/workspaces/:wid/tasks` | `requireMembership` | Lists tasks with optional `?status=&priority=&assignee=&projectId=&tag=&q=&page=&limit=` |
-| `POST` | `/workspaces/:wid/tasks` | `requireMembership` | Creates a task inside a transaction and broadcasts `task.created` |
-| `PATCH` | `/workspaces/:wid/tasks/:id` | `requireMembership` | Updates task fields/status/tags and broadcasts `task.updated` |
-| `DELETE` | `/workspaces/:wid/tasks/:id` | `requireMembership` | Deletes task, logs `task.deleted` activity, broadcasts `task.deleted` |
-| `GET` | `/workspaces/:wid/stats` | `requireMembership` | Returns total, completed, overdue counts, completion %, and status/priority distributions |
-| `GET` | `/workspaces/:wid/activity` | `requireMembership` | Keyset-paginated activity feed (`?before=<id>&limit=20`) |
-| `POST` | `/workspaces/:wid/ai/parse` | `aiLimiter`, `requireMembership` | Parses English/Hinglish text into a Zod-validated preview (no DB write) |
-| `POST` | `/workspaces/:wid/ai/execute` | `aiLimiter`, `requireMembership` | Executes a user-confirmed AI preview inside a DB transaction |
-| `POST` | `/workspaces/:wid/ai/transcribe` | `aiLimiter`, `requireMembership` | Transcribes `multipart/form-data` audio (`<= 4 MB`) via Groq Whisper |
-| `POST` | `/workspaces/:wid/ai/standup` | `aiLimiter`, `requireMembership` | Generates a structured daily standup report from the last 24h of activity |
-| `POST` | `/realtime/auth` | `requireAuth` | Verifies workspace membership in MySQL and signs Pusher `presence-workspace-<wid>` auth |
+| GET | `/api/health` | Public | Returns server health, DB latency, and feature flags |
+| POST | `/api/auth/signup` | Public | Creates user, workspace, and owner session cookie |
+| POST | `/api/auth/login` | Public | Authenticates credentials and sets session cookie |
+| POST | `/api/auth/logout` | Public | Clears session cookie |
+| GET | `/api/auth/me` | Authenticated | Retrieves current user profile and workspaces |
+| GET | `/api/workspaces` | Authenticated | Lists workspaces accessible by the user |
+| POST | `/api/workspaces` | Authenticated | Creates a new workspace |
+| GET | `/api/workspaces/:wid/members` | Member | Lists members in the specified workspace |
+| POST | `/api/workspaces/:wid/members` | Owner | Adds a registered user to the workspace |
+| GET | `/api/workspaces/:wid/projects` | Member | Lists all projects within the workspace |
+| POST | `/api/workspaces/:wid/projects` | Member | Creates a new project with a unique prefix |
+| GET | `/api/workspaces/:wid/tasks` | Member | Queries tasks with filtering, search, and pagination |
+| POST | `/api/workspaces/:wid/tasks` | Member | Inserts a new task and logs activity |
+| PATCH | `/api/workspaces/:wid/tasks/:id` | Member | Updates task details, status, or assignee |
+| DELETE | `/api/workspaces/:wid/tasks/:id` | Member | Removes a task and logs deletion audit record |
+| GET | `/api/workspaces/:wid/stats` | Member | Computes workspace metrics and distributions |
+| GET | `/api/workspaces/:wid/activity` | Member | Fetches keyset-paginated audit trail |
+| POST | `/api/workspaces/:wid/ai/parse` | Member | Parses text/speech intent into a structured preview |
+| POST | `/api/workspaces/:wid/ai/execute` | Member | Commits a confirmed AI preview to the database |
+| POST | `/api/workspaces/:wid/ai/transcribe` | Member | Transcribes audio via Groq Whisper Large v3 |
+| POST | `/api/workspaces/:wid/ai/standup` | Member | Synthesizes 24h standup report from activity log |
+| POST | `/api/realtime/auth` | Authenticated | Authorizes Pusher presence channel subscription |
 
 ---
 
-## Pusher Realtime Events (`presence-workspace-<wid>`)
+## Local Setup Guide
 
-| Event | Payload | Triggered When | Client Cache Behavior |
-|---|---|---|---|
-| `task.created` | Full `task` object | Manual task creation or single-task AI creation | Prepends task to active queries and invalidates stats |
-| `tasks.bulkCreated` | `{ ids: number[], count: number }` | AI bulk task creation (`> 1` task, keeps payload under Pusher's 10 KB limit) | Invalidates workspace tasks and stats queries |
-| `task.updated` | Updated `task` object | Task edit, status change, or Kanban drag-and-drop | Patches task in React Query cache in place |
-| `task.deleted` | `{ id: number, code: string }` | Task deletion | Removes task from React Query cache and refreshes stats |
-| `activity.new` | Enriched `activity` object | Any task, project, or member mutation | Prepends activity item to live activity feed |
-| `pusher:member_added` / `member_removed` | `{ id, info: { name, email } }` | Teammate opens or closes the workspace | Updates live online avatar indicators in TopBar and Sidebar |
+### Prerequisites
+- Node.js version 20 or higher
+- MySQL version 8 running locally (`brew services start mysql` on macOS)
 
----
-
-## How the AI Command Compiler Works
-
-1. **Workspace Context Injection (`/ai/parse`):**
-   - The backend loads the workspace's active projects, member list, today's UTC date, and candidate tasks matching any task codes or keywords in the user's prompt.
-2. **Deterministic LLM Compilation with Fallback:**
-   - Calls Groq `llama-3.3-70b-versatile` in JSON object mode (`temperature: 0`) with an 8-second `AbortController` timeout, 2 exponential backoff retries on `429`/`5xx`, and model fallback to `llama-3.1-8b-instant`.
-   - Translates Hindi/Hinglish phrases (e.g., *"kal tak"*, *"banao"*, *"zaroori"*) into clean English task titles and ISO `YYYY-MM-DD` due dates.
-   - If `GROQ_API_KEY` is omitted during local evaluation, a deterministic rule-based compiler (`compileFallbackIntent`) parses the command so the preview/confirm workflow still operates offline.
-3. **Zod Contract Validation & Disambiguation:**
-   - Raw output is normalized (matching member names to `assigneeId` and project keys to `projectId`) and validated against `aiPreviewContractSchema` (`CREATE_TASKS`, `UPDATE_STATUS`, or `FILTER_TASKS`).
-   - If an `UPDATE_STATUS` prompt matches multiple tasks (e.g., *"Move the webhook task to Done"*), the response sets `needsClarification: true` with an array of matching candidate tasks.
-4. **Interactive Preview & Transactional Execution (`/ai/execute`):**
-   - The user reviews the structured preview modal, optionally edits titles/assignees/priorities/dates or selects a disambiguated task, and clicks **Confirm & Execute**.
-   - `/ai/execute` re-validates the payload with Zod and commits all writes inside a single MySQL transaction before broadcasting via Pusher.
-
----
-
-## Scalability Architecture
-
-1. **Stateless Serverless Compute:**
-   - The Express application stores zero session or WebSocket state in memory. Authentication uses signed `httpOnly` JWT cookies (`SameSite=Lax`, `Secure` in production), enabling horizontal auto-scaling across Vercel serverless instances.
-2. **Offloaded Realtime Transport & Swappable Publisher:**
-   - Vercel serverless functions terminate after each HTTP response and cannot hold persistent Socket.io connections. Browser clients maintain persistent WebSocket connections to Pusher Channels, while the API triggers events post-commit.
-   - All realtime calls go through `server/src/services/realtime/publisher.js` (`publish`, `authorizePresenceChannel`). Moving to a long-running container environment (ECS/Fly.io/Railway) only requires swapping this single adapter to Socket.io with `@socket.io/redis-adapter`.
-3. **Global Connection Pool Caching:**
-   - `server/src/config/db.js` caches the `mysql2/promise` pool on `globalThis.__flowspacePool` with `connectionLimit: 5`. Warm serverless invocations reuse existing TLS connections rather than opening a new connection per request.
-4. **Query Indexing & Pagination:**
-   - Every table is partitioned logically by `workspace_id` with composite indexes (`(workspace_id, status, position)`, `(workspace_id, assignee_id)`, `(workspace_id, created_at)`).
-   - Task lists use bounded `LIMIT / OFFSET` pagination (`max 200`), and the activity stream uses cursor/keyset pagination (`WHERE a.id < ? ORDER BY a.id DESC LIMIT ?`) for `O(log N)` performance at arbitrary history depth.
-5. **Path to 10,000+ Workspaces:**
-   - **Database Horizontal Scaling:** TiDB Cloud separates stateless SQL compute from distributed TiKV storage and scales horizontally while speaking the MySQL protocol. Because every core table carries `workspace_id`, data can be sharded or range-partitioned by `workspace_id`.
-   - **Distributed Rate Limiting & Async Queues:** In-memory `express-rate-limit` is per serverless instance; at high traffic, replace the store with **Upstash Redis** (HTTP-based serverless Redis) and offload long batch AI jobs or email notifications to **BullMQ / Upstash QStash**.
-
----
-
-## Local Setup (5 Commands)
-
-**Prerequisites:** Node.js 20+ and MySQL 8 running locally (`brew services start mysql`).
-
+### 1. Clone the Repository
 ```bash
-git clone <your-repo-url> flowspace && cd flowspace
-cp .env.example .env                       # Set your local MySQL DB_PASSWORD (plus optional GROQ_API_KEY & PUSHER_* keys)
-npm install && npm --prefix client install
-npm run db:setup && npm run db:seed        # Creates tables and seeds demo users + 8 sprint tasks
-npm run dev                                # Starts Express API (:4000) + Vite React client (:5173)
+git clone https://github.com/GxdlRishabh07/Levia-Teechnologies.git
+cd Levia-Teechnologies/flowspace
 ```
 
-Run the automated Supertest integration suite:
+### 2. Configure Environment Variables
+Copy the template configuration:
+```bash
+cp .env.example .env
+```
+Update `.env` with your database password and optional API keys:
+```env
+PORT=4000
+NODE_ENV=development
+CLIENT_URL=http://localhost:5173
 
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_USER=root
+DB_PASSWORD=your_mysql_password
+DB_NAME=flowspace
+DB_SSL=false
+
+JWT_SECRET=flowspace-dev-jwt-secret-change-in-production-2026
+
+# Optional: Add Groq API Key for live AI compilation and Whisper voice transcription
+GROQ_API_KEY=
+
+# Optional: Add Pusher credentials for multi-device realtime sync
+PUSHER_APP_ID=
+PUSHER_KEY=
+PUSHER_SECRET=
+PUSHER_CLUSTER=ap2
+```
+
+### 3. Install Dependencies
+```bash
+npm install && npm --prefix client install
+```
+
+### 4. Initialize Database and Seed Sample Data
+```bash
+npm run db:setup && npm run db:seed
+```
+This runs the DDL schema and seeds demo accounts and starter sprint tasks.
+
+### 5. Launch the Development Environment
+```bash
+npm run dev
+```
+- API Server: `http://localhost:4000`
+- React Client: `http://localhost:5173`
+
+### 6. Run the Test Suite
+Execute the 22 automated integration tests:
 ```bash
 npm test
 ```
-
----
-
-## Deploying to Production (Vercel + TiDB Cloud + Pusher + Groq)
-
-### 1. Provision Free TiDB Cloud Serverless (MySQL-Compatible)
-1. Create a free **TiDB Cloud Serverless** cluster at [tidbcloud.com](https://tidbcloud.com).
-2. Click **Connect**, generate a password, and note `DB_HOST`, `DB_PORT` (`4000`), `DB_USER`, and `DB_PASSWORD`.
-3. Temporarily point your local `.env` at your TiDB cluster with `DB_SSL=true` and initialize the production schema and demo seed data from your machine:
-   ```bash
-   npm run db:setup && npm run db:seed
-   ```
-
-### 2. Provision Free Pusher Channels Sandbox & Groq API Key
-1. In [pusher.com](https://pusher.com), create a Channels app (e.g., cluster `ap2`). Keep **Client Events** disabled so only the authenticated server can broadcast. Copy `app_id`, `key`, `secret`, and `cluster`.
-2. In [console.groq.com](https://console.groq.com), create an API key (`GROQ_API_KEY`).
-
-### 3. Deploy Single Project to Vercel
-1. Push the `flowspace` repository to GitHub and import it into **Vercel**.
-2. `vercel.json` is pre-configured to build `client/dist` and route `/api/*` requests to `api/index.js` (`maxDuration: 30`).
-3. Add the following **Environment Variables** in Vercel Project Settings:
-
-| Variable | Production Value |
-|---|---|
-| `NODE_ENV` | `production` |
-| `DB_HOST` | `<your-tidb-host>.tidbcloud.com` |
-| `DB_PORT` | `4000` |
-| `DB_USER` | `<your-tidb-user>` |
-| `DB_PASSWORD` | `<your-tidb-password>` |
-| `DB_NAME` | `flowspace` |
-| `DB_SSL` | `true` |
-| `JWT_SECRET` | `<32+ char random secret>` |
-| `GROQ_API_KEY` | `gsk_...` |
-| `PUSHER_APP_ID` | `<your-pusher-app-id>` |
-| `PUSHER_KEY` | `<your-pusher-key>` |
-| `PUSHER_SECRET` | `<your-pusher-secret>` |
-| `PUSHER_CLUSTER` | `ap2` |
-| `VITE_PUSHER_KEY` | `<your-pusher-key>` |
-| `VITE_PUSHER_CLUSTER` | `ap2` |
-
-4. Trigger a deploy and verify `https://<your-vercel-domain>/api/health` returns `"status": "ok"`.
