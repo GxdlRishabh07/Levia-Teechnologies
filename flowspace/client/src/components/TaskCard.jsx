@@ -39,10 +39,10 @@ export default function TaskCard({ task, onClick, isOverlay = false }) {
   const priorityLabel = PRIORITY_LABELS[task.priority] || task.priority;
 
   const surfaceClasses = isOverlay
-    ? 'bg-[#18191a] border-[#5e6ad2] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]'
+    ? 'bg-white/95 border-[#6531F7] shadow-[0_18px_40px_rgba(101,49,247,0.18)] backdrop-blur-xl'
     : isDragging
-      ? 'bg-[#0f1011] opacity-35 border-dashed border-[#5e6ad2]'
-      : 'bg-[#0f1011] hover:bg-[#141516] border-[#23252a] hover:border-[#34343a] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]';
+      ? 'bg-white/40 opacity-40 border-dashed border-[#6531F7]'
+      : 'bg-white/72 hover:bg-white/95 border-white/90 hover:border-white shadow-[inset_1.5px_1.5px_2px_rgba(255,255,255,0.9),0_4px_14px_rgba(31,28,70,0.04)] hover:shadow-[inset_1.5px_1.5px_2px_rgba(255,255,255,1),0_8px_22px_rgba(101,49,247,0.08)]';
 
   return (
     <div
@@ -51,11 +51,11 @@ export default function TaskCard({ task, onClick, isOverlay = false }) {
       {...(isOverlay ? {} : listeners)}
       {...(isOverlay ? {} : attributes)}
       onClick={() => onClick?.(task)}
-      className={`rounded-[10px] border p-3.5 select-none cursor-grab active:cursor-grabbing transition-colors duration-150 ${surfaceClasses}`}
+      className={`rounded-[14px] border p-3.5 select-none cursor-grab active:cursor-grabbing transition-all duration-150 ${surfaceClasses}`}
     >
       {/* Top Row: Monospace Code left, Priority Icon + Assignee Avatar right */}
       <div className="flex items-center justify-between gap-2 mb-2">
-        <span className="type-mono text-[13px] font-medium text-[#8a8f98] leading-none">
+        <span className="type-mono text-[12.5px] font-medium text-[#111216]/50 leading-none">
           {task.code}
         </span>
 
@@ -67,7 +67,7 @@ export default function TaskCard({ task, onClick, isOverlay = false }) {
           {task.assigneeName && (
             <span
               title={`Assigned to ${task.assigneeName}`}
-              className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-[#18191a] border border-[#34343a] text-[12px] font-semibold text-[#d0d6e0] shrink-0"
+              className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-[#262626] text-[11px] font-semibold text-white shrink-0 shadow-2xs"
             >
               {task.assigneeName.charAt(0).toUpperCase()}
             </span>
@@ -76,20 +76,20 @@ export default function TaskCard({ task, onClick, isOverlay = false }) {
       </div>
 
       {/* Middle: Crisp Issue Title */}
-      <h4 className="text-[15.5px] font-semibold text-[#f7f8f8] leading-[1.4] tracking-[-0.1px] m-0 line-clamp-2">
+      <h4 className="text-[14.5px] font-semibold text-[#111216] leading-[1.4] tracking-[-0.015em] m-0 line-clamp-2">
         {task.title}
       </h4>
 
       {/* Optional compact description preview */}
       {task.description && (
-        <p className="text-[13.5px] text-[#62666d] leading-[1.45] m-0 mt-1 line-clamp-1">
+        <p className="text-[13px] text-[#111216]/55 leading-[1.45] m-0 mt-1 line-clamp-1">
           {task.description}
         </p>
       )}
 
       {/* Bottom Row: Tags, AI/Voice micro-tag, Due Date */}
       {showFooter && (
-        <div className="flex items-center justify-between gap-2 mt-3 pt-2.5 border-t border-[#23252a]/70">
+        <div className="flex items-center justify-between gap-2 mt-3 pt-2.5 border-t border-[#111216]/8">
           <div className="flex items-center flex-wrap gap-1.5 min-w-0">
             {hasAiSource && (
               <span
@@ -98,7 +98,7 @@ export default function TaskCard({ task, onClick, isOverlay = false }) {
                     ? 'Created via AI Voice Command'
                     : 'Created via AI Command Bar'
                 }
-                className="inline-flex items-center gap-1 rounded-[6px] border border-[#7a7fad]/25 bg-[#7a7fad]/10 px-2 py-0.5 text-[12px] font-medium leading-[1.2] text-[#7a7fad]"
+                className="inline-flex items-center gap-1 rounded-[6px] border border-[#6531F7]/20 bg-[#6531F7]/8 px-2 py-0.5 text-[11.5px] font-semibold leading-[1.2] text-[#6531F7]"
               >
                 {task.source === 'AI_VOICE' ? (
                   <>
@@ -116,13 +116,13 @@ export default function TaskCard({ task, onClick, isOverlay = false }) {
 
             {hasTags &&
               task.tags.slice(0, 3).map((tag) => (
-                <span key={tag} className="linear-tag">
+                <span key={tag} className="linear-tag !bg-white/80 !border-[#111216]/8 !text-[#111216]/65">
                   #{tag}
                 </span>
               ))}
 
             {hasTags && task.tags.length > 3 && (
-              <span className="type-mono text-[12px] text-[#62666d] px-0.5">
+              <span className="type-mono text-[11.5px] text-[#111216]/45 px-0.5">
                 +{task.tags.length - 3}
               </span>
             )}
@@ -130,8 +130,8 @@ export default function TaskCard({ task, onClick, isOverlay = false }) {
 
           {task.dueDate && (
             <span
-              className={`type-mono text-[12.5px] inline-flex items-center gap-1.5 shrink-0 ${
-                overdue ? 'text-[#e5484d]' : 'text-[#62666d]'
+              className={`type-mono text-[12px] inline-flex items-center gap-1.5 shrink-0 ${
+                overdue ? 'text-[#E11D48] font-semibold' : 'text-[#111216]/50'
               }`}
               title={overdue ? 'Overdue' : `Due ${formatShortDate(task.dueDate)}`}
             >

@@ -18,14 +18,26 @@ const queryClient = new QueryClient({
   },
 });
 
+export function GlassAmbientCanvas() {
+  return (
+    <div className="glass-ambient-bg" aria-hidden="true">
+      <div className="glass-ambient-top-sky" />
+      <div className="glass-ambient-left-orchid" />
+      <div className="glass-ambient-right-indigo" />
+      <div className="glass-ambient-bottom-sheen" />
+    </div>
+  );
+}
+
 function ProtectedRoute({ children }) {
   const { user, isLoading } = useAuth();
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#010102]">
-        <div className="flex items-center gap-3">
-          <FlowSpaceLogo size={20} />
-          <span className="text-[13.5px] font-medium text-[#8a8f98] tracking-[-0.05px]">
+      <div className="relative min-h-screen flex items-center justify-center bg-[#FFFFFF] text-[#111216]">
+        <GlassAmbientCanvas />
+        <div className="relative z-10 linear-panel px-5 py-3.5 flex items-center gap-3">
+          <FlowSpaceLogo size={22} />
+          <span className="text-[14px] font-medium text-[#111216]/70 tracking-[-0.01em]">
             Initializing workspace…
           </span>
         </div>
@@ -84,26 +96,29 @@ export default function App() {
           toastOptions={{
             duration: 3200,
             style: {
-              background: '#141516',
-              color: '#f7f8f8',
-              border: '1px solid #34343a',
-              borderRadius: '8px',
+              background: 'rgba(255, 255, 255, 0.88)',
+              backdropFilter: 'blur(24px) saturate(160%)',
+              WebkitBackdropFilter: 'blur(24px) saturate(160%)',
+              color: '#111216',
+              border: '1px solid rgba(255, 255, 255, 0.9)',
+              borderRadius: '14px',
               padding: '10px 14px',
-              fontFamily: "'Geist', -apple-system, BlinkMacSystemFont, sans-serif",
-              fontSize: '13px',
+              fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
+              fontSize: '13.5px',
               fontWeight: 500,
-              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.05)',
+              boxShadow:
+                'inset 2px 2px 3px rgba(255,255,255,0.85), 0 12px 32px rgba(31,28,70,0.08)',
             },
             success: {
               iconTheme: {
-                primary: '#27a644',
-                secondary: '#0f1011',
+                primary: '#059669',
+                secondary: '#FFFFFF',
               },
             },
             error: {
               iconTheme: {
-                primary: '#e5484d',
-                secondary: '#0f1011',
+                primary: '#E11D48',
+                secondary: '#FFFFFF',
               },
             },
           }}

@@ -15,17 +15,17 @@ import {
 } from './LinearIcons';
 
 const STATUS_BAR_COLORS = {
-  BACKLOG: 'bg-[#62666d]',
-  IN_PROGRESS: 'bg-[#5e6ad2]',
-  IN_REVIEW: 'bg-[#5e6ad2]',
-  DONE: 'bg-[#27a644]',
+  BACKLOG: 'bg-[#111216]/30',
+  IN_PROGRESS: 'bg-[#D97706]',
+  IN_REVIEW: 'bg-[#6531F7]',
+  DONE: 'bg-[#059669]',
 };
 
 const PRIORITY_BAR_COLORS = {
-  URGENT: 'bg-[#e5484d]',
-  HIGH: 'bg-[#d9a536]',
-  MEDIUM: 'bg-[#8a8f98]',
-  LOW: 'bg-[#62666d]',
+  URGENT: 'bg-[#E11D48]',
+  HIGH: 'bg-[#D97706]',
+  MEDIUM: 'bg-[#6531F7]',
+  LOW: 'bg-[#111216]/30',
 };
 
 export default function StatsCards({ stats, isLoading = false, onOpenStandup }) {
@@ -68,11 +68,11 @@ export default function StatsCards({ stats, isLoading = false, onOpenStandup }) 
       <div className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="linear-panel p-6 h-[138px] flex flex-col justify-between">
-              <div className="h-3.5 w-24 rounded-[4px] bg-[#18191a] animate-pulse" />
+            <div key={i} className="linear-panel p-6 h-[142px] flex flex-col justify-between">
+              <div className="h-3.5 w-24 rounded-[6px] bg-white/75 animate-pulse" />
               <div className="space-y-2">
-                <div className="h-8 w-16 rounded-[6px] bg-[#18191a] animate-pulse" />
-                <div className="h-3 w-36 rounded-[4px] bg-[#141516] animate-pulse" />
+                <div className="h-8 w-16 rounded-[8px] bg-white/75 animate-pulse" />
+                <div className="h-3 w-36 rounded-[6px] bg-white/60 animate-pulse" />
               </div>
             </div>
           ))}
@@ -83,18 +83,20 @@ export default function StatsCards({ stats, isLoading = false, onOpenStandup }) 
 
   return (
     <div className="space-y-5">
-      {/* Top 4 Engineering Telemetry Panels */}
+      {/* Top 4 Frosted Bento Telemetry Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="linear-panel p-6 flex flex-col justify-between">
           <div className="flex items-center justify-between">
-            <span className="text-[14px] font-semibold text-[#8a8f98]">Total Issues</span>
-            <Layers className="h-4 w-4 text-[#62666d]" />
+            <span className="text-[13.5px] font-semibold text-[#111216]/60">Total Issues</span>
+            <span className="h-8 w-8 rounded-[10px] bg-white/80 border border-white inline-flex items-center justify-center shadow-2xs">
+              <Layers className="h-4 w-4 text-[#111216]/65" />
+            </span>
           </div>
           <div className="mt-4">
-            <div className="text-[36px] font-bold leading-[1.1] tracking-[-1px] text-[#f7f8f8] tabular-nums">
+            <div className="text-[34px] font-bold leading-[1.1] tracking-[-0.03em] text-[#111216] tabular-nums">
               {safeStats.total}
             </div>
-            <div className="text-[13.5px] text-[#62666d] mt-2">
+            <div className="text-[13px] text-[#111216]/50 mt-2 font-medium">
               Across active workspace projects
             </div>
           </div>
@@ -102,17 +104,19 @@ export default function StatsCards({ stats, isLoading = false, onOpenStandup }) 
 
         <div className="linear-panel p-6 flex flex-col justify-between">
           <div className="flex items-center justify-between">
-            <span className="text-[14px] font-semibold text-[#8a8f98]">Completion Rate</span>
-            <CheckCircle2 className="h-4 w-4 text-[#27a644]" />
+            <span className="text-[13.5px] font-semibold text-[#111216]/60">Completion Rate</span>
+            <span className="h-8 w-8 rounded-[10px] bg-[#059669]/10 border border-[#059669]/20 inline-flex items-center justify-center">
+              <CheckCircle2 className="h-4 w-4 text-[#059669]" />
+            </span>
           </div>
           <div className="mt-4">
-            <div className="text-[36px] font-bold leading-[1.1] tracking-[-1px] text-[#f7f8f8] tabular-nums">
+            <div className="text-[34px] font-bold leading-[1.1] tracking-[-0.03em] text-[#111216] tabular-nums">
               {safeStats.completionPercentage}%
             </div>
-            <div className="mt-3.5 h-[4px] w-full rounded-full bg-[#23252a] overflow-hidden">
+            <div className="mt-3.5 h-[5px] w-full rounded-full bg-[#111216]/8 overflow-hidden">
               <div
                 style={{ width: `${Math.min(100, safeStats.completionPercentage || 0)}%` }}
-                className="h-full rounded-full bg-[#27a644] transition-all duration-300"
+                className="h-full rounded-full bg-[#059669] transition-all duration-300"
               />
             </div>
           </div>
@@ -120,14 +124,16 @@ export default function StatsCards({ stats, isLoading = false, onOpenStandup }) 
 
         <div className="linear-panel p-6 flex flex-col justify-between">
           <div className="flex items-center justify-between">
-            <span className="text-[14px] font-semibold text-[#8a8f98]">In Flight</span>
-            <Clock className="h-4 w-4 text-[#5e6ad2]" />
+            <span className="text-[13.5px] font-semibold text-[#111216]/60">In Flight</span>
+            <span className="h-8 w-8 rounded-[10px] bg-[#6531F7]/10 border border-[#6531F7]/20 inline-flex items-center justify-center">
+              <Clock className="h-4 w-4 text-[#6531F7]" />
+            </span>
           </div>
           <div className="mt-4">
-            <div className="text-[36px] font-bold leading-[1.1] tracking-[-1px] text-[#f7f8f8] tabular-nums">
+            <div className="text-[34px] font-bold leading-[1.1] tracking-[-0.03em] text-[#111216] tabular-nums">
               {inFlightCount}
             </div>
-            <div className="type-mono text-[13px] text-[#62666d] mt-2">
+            <div className="type-mono text-[12.5px] text-[#111216]/50 mt-2">
               {safeStats.byStatus?.IN_PROGRESS || 0} active · {safeStats.byStatus?.IN_REVIEW || 0}{' '}
               in review
             </div>
@@ -136,34 +142,42 @@ export default function StatsCards({ stats, isLoading = false, onOpenStandup }) 
 
         <div className="linear-panel p-6 flex flex-col justify-between">
           <div className="flex items-center justify-between">
-            <span className="text-[14px] font-semibold text-[#8a8f98]">Overdue</span>
-            <AlertTriangle
-              className={`h-4 w-4 ${safeStats.overdue > 0 ? 'text-[#e5484d]' : 'text-[#62666d]'}`}
-            />
+            <span className="text-[13.5px] font-semibold text-[#111216]/60">Overdue</span>
+            <span
+              className={`h-8 w-8 rounded-[10px] border inline-flex items-center justify-center ${
+                safeStats.overdue > 0
+                  ? 'bg-[#E11D48]/10 border-[#E11D48]/20'
+                  : 'bg-white/80 border-white'
+              }`}
+            >
+              <AlertTriangle
+                className={`h-4 w-4 ${safeStats.overdue > 0 ? 'text-[#E11D48]' : 'text-[#111216]/45'}`}
+              />
+            </span>
           </div>
           <div className="mt-4">
             <div
-              className={`text-[36px] font-bold leading-[1.1] tracking-[-1px] tabular-nums ${
-                safeStats.overdue > 0 ? 'text-[#e5484d]' : 'text-[#f7f8f8]'
+              className={`text-[34px] font-bold leading-[1.1] tracking-[-0.03em] tabular-nums ${
+                safeStats.overdue > 0 ? 'text-[#E11D48]' : 'text-[#111216]'
               }`}
             >
               {safeStats.overdue}
             </div>
-            <div className="text-[13.5px] text-[#62666d] mt-2">
+            <div className="text-[13px] text-[#111216]/50 mt-2 font-medium">
               {safeStats.overdue > 0 ? 'Requires immediate triage' : 'Zero overdue items'}
             </div>
           </div>
         </div>
       </div>
 
-      {/* Distribution Breakdown Grid */}
+      {/* Distribution Breakdown Bento Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div className="linear-panel p-6">
           <div className="flex items-center justify-between mb-5">
-            <h3 className="text-[16px] font-semibold tracking-[-0.1px] text-[#f7f8f8] m-0">
+            <h3 className="text-[15.5px] font-semibold tracking-[-0.015em] text-[#111216] m-0">
               Issues by Status
             </h3>
-            <span className="type-mono text-[13px] text-[#62666d]">
+            <span className="type-mono text-[12.5px] text-[#111216]/45">
               {safeStats.total} total
             </span>
           </div>
@@ -176,17 +190,17 @@ export default function StatsCards({ stats, isLoading = false, onOpenStandup }) 
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2.5">
                       <StatusIcon status={row.key} size={15} />
-                      <span className="text-[14.5px] font-medium text-[#d0d6e0]">{row.label}</span>
+                      <span className="text-[14px] font-medium text-[#111216]/85">{row.label}</span>
                     </div>
-                    <span className="type-mono text-[13.5px] text-[#8a8f98]">
-                      {row.count} <span className="text-[#62666d]">({pct}%)</span>
+                    <span className="type-mono text-[13px] text-[#111216]/75">
+                      {row.count} <span className="text-[#111216]/40">({pct}%)</span>
                     </span>
                   </div>
-                  <div className="h-[4px] w-full rounded-full bg-[#23252a] overflow-hidden">
+                  <div className="h-[5px] w-full rounded-full bg-[#111216]/8 overflow-hidden">
                     <div
                       style={{ width: `${pct}%` }}
                       className={`h-full rounded-full transition-all duration-300 ${
-                        STATUS_BAR_COLORS[row.key] || 'bg-[#5e6ad2]'
+                        STATUS_BAR_COLORS[row.key] || 'bg-[#6531F7]'
                       }`}
                     />
                   </div>
@@ -198,10 +212,10 @@ export default function StatsCards({ stats, isLoading = false, onOpenStandup }) 
 
         <div className="linear-panel p-6">
           <div className="flex items-center justify-between mb-5">
-            <h3 className="text-[16px] font-semibold tracking-[-0.1px] text-[#f7f8f8] m-0">
+            <h3 className="text-[15.5px] font-semibold tracking-[-0.015em] text-[#111216] m-0">
               Issues by Priority
             </h3>
-            <span className="type-mono text-[13px] text-[#62666d]">
+            <span className="type-mono text-[12.5px] text-[#111216]/45">
               {safeStats.byPriority?.URGENT || 0} urgent
             </span>
           </div>
@@ -214,17 +228,17 @@ export default function StatsCards({ stats, isLoading = false, onOpenStandup }) 
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2.5">
                       <PriorityIcon priority={row.key} size={15} />
-                      <span className="text-[14.5px] font-medium text-[#d0d6e0]">{row.label}</span>
+                      <span className="text-[14px] font-medium text-[#111216]/85">{row.label}</span>
                     </div>
-                    <span className="type-mono text-[13.5px] text-[#8a8f98]">
-                      {row.count} <span className="text-[#62666d]">({pct}%)</span>
+                    <span className="type-mono text-[13px] text-[#111216]/75">
+                      {row.count} <span className="text-[#111216]/40">({pct}%)</span>
                     </span>
                   </div>
-                  <div className="h-[4px] w-full rounded-full bg-[#23252a] overflow-hidden">
+                  <div className="h-[5px] w-full rounded-full bg-[#111216]/8 overflow-hidden">
                     <div
                       style={{ width: `${pct}%` }}
                       className={`h-full rounded-full transition-all duration-300 ${
-                        PRIORITY_BAR_COLORS[row.key] || 'bg-[#8a8f98]'
+                        PRIORITY_BAR_COLORS[row.key] || 'bg-[#6531F7]'
                       }`}
                     />
                   </div>
@@ -235,17 +249,17 @@ export default function StatsCards({ stats, isLoading = false, onOpenStandup }) 
         </div>
       </div>
 
-      {/* AI Daily Standup CTA Panel */}
+      {/* AI Daily Standup CTA Glass Panel */}
       <div className="linear-panel-elevated p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="min-w-0">
-          <div className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-[#7a7fad] mb-1.5">
+          <div className="inline-flex items-center gap-1.5 text-[12.5px] font-semibold text-[#6531F7] mb-1.5">
             <Sparkles className="h-4 w-4" />
             <span>AI Daily Standup</span>
           </div>
-          <h3 className="text-[18px] font-semibold tracking-[-0.2px] text-[#f7f8f8] m-0 mb-1">
+          <h3 className="text-[17.5px] font-semibold tracking-[-0.02em] text-[#111216] m-0 mb-1">
             Synthesize the last 24 hours of workspace activity in one click.
           </h3>
-          <p className="text-[14.5px] text-[#8a8f98] leading-[1.55] m-0 max-w-2xl">
+          <p className="text-[14px] text-[#111216]/60 leading-[1.55] m-0 max-w-2xl">
             Groups completed work, active issues, blockers, and overdue items directly from your
             live activity stream.
           </p>

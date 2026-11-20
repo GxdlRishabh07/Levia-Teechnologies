@@ -109,18 +109,18 @@ export default function TaskModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-[4px] p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#11121c]/20 backdrop-blur-[8px] p-4">
       <div className="w-full max-w-lg linear-modal overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-[#23252a] px-5 py-3.5 bg-[#0f1011]">
+        <div className="flex items-center justify-between border-b border-[#111216]/8 px-5 py-4 bg-white/55">
           <div className="flex items-center gap-2.5 min-w-0">
             <StatusIcon status={status} size={16} className="shrink-0" />
             {isEditing && initialTask?.code ? (
-              <span className="type-mono !text-[13px] rounded-[6px] bg-[#141516] border border-[#23252a] px-2 py-0.5 text-[#d0d6e0]">
+              <span className="type-mono !text-[12.5px] rounded-[6px] bg-white border border-[#111216]/10 px-2 py-0.5 text-[#111216]">
                 {initialTask.code}
               </span>
             ) : null}
-            <h3 className="text-[17px] font-semibold tracking-[-0.2px] text-[#f7f8f8] m-0 truncate">
+            <h3 className="text-[16.5px] font-semibold tracking-[-0.02em] text-[#111216] m-0 truncate">
               {isEditing ? 'Edit Issue' : 'New Issue'}
             </h3>
           </div>
@@ -137,8 +137,8 @@ export default function TaskModal({
         {/* Form */}
         <form onSubmit={handleSubmit} className="p-5 space-y-4">
           <div>
-            <label className="text-[14px] font-semibold text-[#d0d6e0] block mb-1.5">
-              Issue Title <span className="text-[#62666d]">*</span>
+            <label className="text-[13.5px] font-semibold text-[#111216]/85 block mb-1.5">
+              Issue Title <span className="text-[#E11D48]">*</span>
             </label>
             <input
               type="text"
@@ -146,13 +146,13 @@ export default function TaskModal({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g., Implement webhook signature verification"
-              className="linear-input"
+              className="linear-input !bg-white/90"
               autoFocus
             />
           </div>
 
           <div>
-            <label className="text-[14px] font-semibold text-[#d0d6e0] block mb-1.5">
+            <label className="text-[13.5px] font-semibold text-[#111216]/85 block mb-1.5">
               Description
             </label>
             <textarea
@@ -160,20 +160,20 @@ export default function TaskModal({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Add acceptance criteria, technical notes, or context..."
-              className="linear-input resize-none"
+              className="linear-input !bg-white/90 resize-none"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-[14px] font-semibold text-[#d0d6e0] block mb-1.5">
+              <label className="text-[13.5px] font-semibold text-[#111216]/85 block mb-1.5">
                 Project
               </label>
               <select
                 value={projectId}
                 onChange={(e) => setProjectId(e.target.value)}
                 disabled={isEditing}
-                className="linear-input disabled:opacity-55"
+                className="linear-input !bg-white/90 disabled:opacity-55"
               >
                 {projects.map((p) => (
                   <option key={p.id} value={p.id}>
@@ -184,14 +184,14 @@ export default function TaskModal({
             </div>
 
             <div>
-              <label className="text-[14px] font-semibold text-[#d0d6e0] flex items-center gap-1.5 mb-1.5">
+              <label className="text-[13.5px] font-semibold text-[#111216]/85 flex items-center gap-1.5 mb-1.5">
                 <StatusIcon status={status} size={15} />
                 <span>Status</span>
               </label>
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
-                className="linear-input"
+                className="linear-input !bg-white/90"
               >
                 {STATUS_OPTIONS.map((s) => (
                   <option key={s} value={s}>
@@ -202,14 +202,14 @@ export default function TaskModal({
             </div>
 
             <div>
-              <label className="text-[14px] font-semibold text-[#d0d6e0] flex items-center gap-1.5 mb-1.5">
+              <label className="text-[13.5px] font-semibold text-[#111216]/85 flex items-center gap-1.5 mb-1.5">
                 <PriorityIcon priority={priority} size={15} />
                 <span>Priority</span>
               </label>
               <select
                 value={priority}
                 onChange={(e) => setPriority(e.target.value)}
-                className="linear-input"
+                className="linear-input !bg-white/90"
               >
                 {PRIORITY_OPTIONS.map((p) => (
                   <option key={p} value={p}>
@@ -220,13 +220,13 @@ export default function TaskModal({
             </div>
 
             <div>
-              <label className="text-[14px] font-semibold text-[#d0d6e0] block mb-1.5">
+              <label className="text-[13.5px] font-semibold text-[#111216]/85 block mb-1.5">
                 Assignee
               </label>
               <select
                 value={assigneeId}
                 onChange={(e) => setAssigneeId(e.target.value)}
-                className="linear-input"
+                className="linear-input !bg-white/90"
               >
                 <option value="">Unassigned</option>
                 {members.map((m) => (
@@ -238,19 +238,19 @@ export default function TaskModal({
             </div>
 
             <div>
-              <label className="text-[14px] font-semibold text-[#d0d6e0] block mb-1.5">
+              <label className="text-[13.5px] font-semibold text-[#111216]/85 block mb-1.5">
                 Due Date
               </label>
               <input
                 type="date"
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
-                className="linear-input"
+                className="linear-input !bg-white/90"
               />
             </div>
 
             <div>
-              <label className="text-[14px] font-semibold text-[#d0d6e0] block mb-1.5">
+              <label className="text-[13.5px] font-semibold text-[#111216]/85 block mb-1.5">
                 Tags
               </label>
               <input
@@ -258,19 +258,19 @@ export default function TaskModal({
                 value={tagsInput}
                 onChange={(e) => setTagsInput(e.target.value)}
                 placeholder="backend, security, api"
-                className="linear-input"
+                className="linear-input !bg-white/90"
               />
             </div>
           </div>
 
           {/* Footer Actions */}
-          <div className="flex items-center justify-between pt-4 border-t border-[#23252a]">
+          <div className="flex items-center justify-between pt-4 border-t border-[#111216]/8">
             {isEditing ? (
               <button
                 type="button"
                 onClick={handleDelete}
                 disabled={submitting}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[14px] font-medium text-[#e5484d] hover:bg-[#e5484d]/10 rounded-[8px] transition-colors cursor-pointer disabled:opacity-45"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[13.5px] font-medium text-[#E11D48] hover:bg-[#E11D48]/10 rounded-[8px] transition-colors cursor-pointer disabled:opacity-45"
               >
                 <Trash2 className="h-3.5 w-3.5" />
                 <span>Delete</span>

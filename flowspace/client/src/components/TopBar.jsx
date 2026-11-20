@@ -35,26 +35,29 @@ export default function TopBar({
   const onlineCount = Math.max(1, onlineMembers.length);
 
   return (
-    <header className="sticky top-0 z-30 h-[56px] bg-[#010102] border-b border-[#23252a] px-4 lg:px-5 flex items-center justify-between gap-3">
+    <header className="sticky top-3 z-30 linear-panel rounded-[18px] px-3.5 py-2 flex items-center justify-between gap-2 overflow-x-auto">
       {/* Left: Brand Mark, Workspace Name & View Switcher */}
-      <div className="flex items-center gap-3 min-w-0">
-        <div className="flex items-center gap-2.5 min-w-0">
+      <div className="flex items-center gap-2.5 min-w-0 shrink-0">
+        <div className="flex items-center gap-2 min-w-0">
           <FlowSpaceLogo size={22} className="shrink-0" />
-          <span className="text-[#34343a] text-[15px] select-none hidden sm:inline">/</span>
-          <h1 className="m-0 text-[16px] font-semibold tracking-[-0.2px] text-[#f7f8f8] truncate max-w-[150px] md:max-w-[220px]">
+          <span className="text-[#111216]/20 text-[14px] select-none hidden sm:inline">/</span>
+          <h1 className="m-0 text-[14.5px] font-semibold tracking-[-0.02em] text-[#111216] truncate max-w-[110px] xl:max-w-[145px]">
             {activeWorkspace ? activeWorkspace.name : 'Workspace'}
           </h1>
           {activeWorkspace?.role && (
-            <span className="hidden xl:inline-flex items-center rounded-[4px] bg-[#141516] border border-[#23252a] px-2 py-0.5 text-[12px] font-medium tracking-[0.35px] text-[#8a8f98] uppercase shrink-0">
+            <span className="hidden 2xl:inline-flex items-center rounded-[6px] bg-white/75 border border-white px-2 py-0.5 text-[11px] font-semibold tracking-[0.05em] text-[#6531F7] uppercase shrink-0 shadow-2xs">
               {activeWorkspace.role}
             </span>
           )}
         </div>
 
-        <div className="h-4 w-px bg-[#23252a] mx-1 hidden sm:block shrink-0" />
+        <div className="h-4 w-px bg-[#111216]/10 mx-0.5 hidden sm:block shrink-0" />
 
-        {/* View Switcher Pills (Linear pricing-tab-default / pricing-tab-selected spec) */}
-        <nav className="flex items-center gap-0.5 overflow-x-auto" aria-label="Workspace views">
+        {/* View Switcher Glass Capsule */}
+        <nav
+          className="flex items-center gap-0.5 rounded-full bg-white/45 border border-white/70 p-0.5 shrink-0"
+          aria-label="Workspace views"
+        >
           {TABS.map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -63,10 +66,10 @@ export default function TopBar({
                 key={tab.id}
                 type="button"
                 onClick={() => setActiveTab(tab.id)}
-                className={`linear-tab shrink-0 ${isActive ? 'linear-tab-active' : ''}`}
+                className={`linear-tab !px-3 !py-1.5 !text-[13px] shrink-0 ${isActive ? 'linear-tab-active' : ''}`}
               >
                 <Icon
-                  className={`h-3.5 w-3.5 ${isActive ? 'text-[#f7f8f8]' : 'text-[#8a8f98]'}`}
+                  className={`h-3.5 w-3.5 ${isActive ? 'text-[#6531F7]' : 'text-[#111216]/50'}`}
                 />
                 <span className="hidden sm:inline">{tab.label}</span>
               </button>
@@ -76,10 +79,10 @@ export default function TopBar({
       </div>
 
       {/* Right: Live Presence, Command, Standup, New Issue, Sign Out */}
-      <div className="flex items-center gap-2 shrink-0">
+      <div className="flex items-center gap-1.5 shrink-0">
         {/* Live Presence Indicator */}
         <div
-          className="hidden lg:flex items-center gap-2 rounded-full bg-[#0f1011] border border-[#23252a] px-2.5 py-1"
+          className="hidden xl:flex items-center gap-1.5 rounded-full bg-white/70 border border-white px-2.5 py-1 shadow-2xs"
           title={
             isLivePusher
               ? 'Connected via Pusher Channels live presence'
@@ -87,20 +90,20 @@ export default function TopBar({
           }
         >
           <span
-            className={`h-1.5 w-1.5 rounded-full shrink-0 ${
-              isLivePusher ? 'bg-[#27a644]' : 'bg-[#27a644]/75'
+            className={`h-2 w-2 rounded-full shrink-0 ${
+              isLivePusher ? 'bg-[#059669]' : 'bg-[#059669]/80'
             }`}
           />
-          <span className="text-[13px] font-medium text-[#8a8f98] tabular-nums whitespace-nowrap">
+          <span className="text-[12px] font-medium text-[#111216]/65 tabular-nums whitespace-nowrap">
             {isLivePusher ? 'Live' : 'Sync'} · {onlineCount}
           </span>
           {onlineMembers.length > 0 && (
             <div className="flex -space-x-1 pl-0.5">
-              {onlineMembers.slice(0, 4).map((member) => (
+              {onlineMembers.slice(0, 3).map((member) => (
                 <span
                   key={member.id}
                   title={`${member.name} (${member.email || 'online'})`}
-                  className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-[#18191a] text-[12px] font-semibold text-[#d0d6e0] ring-1 ring-[#34343a]"
+                  className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-[#262626] text-[10.5px] font-semibold text-white ring-2 ring-white"
                 >
                   {(member.name || 'U').charAt(0).toUpperCase()}
                 </span>
@@ -113,9 +116,9 @@ export default function TopBar({
         <button
           type="button"
           onClick={onFocusCommandBar}
-          className="btn-secondary !py-1.5 !px-3 !text-[13.5px] hidden md:inline-flex"
+          className="btn-secondary !py-1.5 !px-2.5 !text-[13px] hidden md:inline-flex whitespace-nowrap"
         >
-          <Command className="h-4 w-4 text-[#8a8f98]" />
+          <Command className="h-3.5 w-3.5 text-[#111216]/60" />
           <span>Command</span>
           <kbd className="linear-kbd ml-0.5">⌘K</kbd>
         </button>
@@ -124,10 +127,10 @@ export default function TopBar({
         <button
           type="button"
           onClick={onOpenStandup}
-          className="btn-secondary !py-1.5 !px-3 !text-[13.5px]"
+          className="btn-secondary !py-1.5 !px-2.5 !text-[13px] whitespace-nowrap"
           title="AI Daily Standup"
         >
-          <FileText className="h-4 w-4 text-[#8a8f98]" />
+          <FileText className="h-3.5 w-3.5 text-[#111216]/60" />
           <span className="hidden sm:inline">Standup</span>
         </button>
 
@@ -135,7 +138,7 @@ export default function TopBar({
         <button
           type="button"
           onClick={onOpenNewTask}
-          className="btn-primary !py-1.5 !px-3.5 !text-[14px]"
+          className="btn-primary !py-1.5 !px-3 !text-[13px] whitespace-nowrap"
         >
           <Plus className="h-4 w-4" />
           <span>New Issue</span>
@@ -143,10 +146,10 @@ export default function TopBar({
 
         {/* User Avatar & Sign Out */}
         {user && (
-          <div className="flex items-center gap-2 pl-2 ml-0.5 border-l border-[#23252a]">
+          <div className="flex items-center gap-1 pl-1.5 ml-0.5 border-l border-[#111216]/10">
             <span
               title={`${user.name}${user.email ? ` (${user.email})` : ''}`}
-              className="hidden xl:inline-flex h-7 w-7 items-center justify-center rounded-full bg-[#18191a] border border-[#34343a] text-[12px] font-semibold text-[#f7f8f8] select-none"
+              className="hidden 2xl:inline-flex h-7 w-7 items-center justify-center rounded-full bg-[#262626] text-[11.5px] font-semibold text-white select-none shadow-xs"
             >
               {(user.name || 'U').charAt(0).toUpperCase()}
             </span>

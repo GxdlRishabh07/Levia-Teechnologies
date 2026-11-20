@@ -5,6 +5,7 @@ import { RotateCcw, Filter } from 'lucide-react';
 import { api } from '../api/client';
 import { useAuth } from '../hooks/useAuth';
 import { useWorkspaceRealtime } from '../hooks/useWorkspaceRealtime';
+import { GlassAmbientCanvas } from '../App';
 import TopBar from '../components/TopBar';
 import Sidebar from '../components/Sidebar';
 import CommandBar from '../components/CommandBar';
@@ -275,26 +276,13 @@ export default function Workspace() {
   );
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#010102] text-[#f7f8f8]">
-      {/* Architectural 56px Linear TopBar */}
-      <TopBar
-        user={user}
-        activeWorkspace={activeWorkspace}
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        onlineMembers={onlineMembers}
-        realtimeMode={realtimeMode}
-        isConnected={isConnected}
-        onFocusCommandBar={() => commandInputRef.current?.focus()}
-        onOpenNewTask={() =>
-          setTaskModalState({ isOpen: true, task: null, defaultStatus: 'BACKLOG' })
-        }
-        onOpenStandup={() => setIsStandupOpen(true)}
-        onLogout={logout}
-      />
+    <div className="relative min-h-screen bg-[#FFFFFF] text-[#111216]">
+      {/* Fixed Luminous Ambient Canvas (Sky-blue + Lavender/Violet Blurs) */}
+      <GlassAmbientCanvas />
 
-      {/* Workspace Body: Left Rail + Main Near-Black Canvas */}
-      <div className="flex-1 flex min-h-[calc(100vh-56px)]">
+      {/* Outer Floating Viewport Frame: 12px outer padding, 16px layout gap */}
+      <div className="relative z-10 min-h-screen flex flex-col lg:flex-row items-stretch gap-4 p-3 max-w-[1680px] mx-auto">
+        {/* Floating Left Glass Panel */}
         <Sidebar
           workspaces={workspaces}
           activeWorkspace={activeWorkspace}
@@ -312,128 +300,147 @@ export default function Workspace() {
           onOpenMemberModal={() => setIsMemberModalOpen(true)}
         />
 
-        <main className="flex-1 min-w-0 px-6 py-5 max-w-[1440px] w-full mx-auto">
-          {/* Persistent AI Command Bar (Cmd+K + Voice Capture) */}
-          <CommandBar
-            workspaceId={wid}
-            inputRef={commandInputRef}
-            onPreviewReady={(data) => setAiPreviewData(data)}
+        {/* Right Main Column: Floating TopBar + AI Command Bar + View Canvas */}
+        <div className="flex-1 min-w-0 flex flex-col gap-4">
+          <TopBar
+            user={user}
+            activeWorkspace={activeWorkspace}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            onlineMembers={onlineMembers}
+            realtimeMode={realtimeMode}
+            isConnected={isConnected}
+            onFocusCommandBar={() => commandInputRef.current?.focus()}
+            onOpenNewTask={() =>
+              setTaskModalState({ isOpen: true, task: null, defaultStatus: 'BACKLOG' })
+            }
+            onOpenStandup={() => setIsStandupOpen(true)}
+            onLogout={logout}
           />
 
-          {/* Active AI / Workspace Filters Banner */}
-          {hasActiveFilters && activeTab === 'board' && (
-            <div className="mb-4 flex flex-wrap items-center justify-between gap-2 rounded-[10px] bg-[#141516] border border-[#23252a] border-l-2 border-l-[#5e6ad2] px-3.5 py-2.5">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="text-[13.5px] font-semibold text-[#d0d6e0] flex items-center gap-1.5">
-                  <Filter className="h-4 w-4 text-[#5e6ad2]" />
-                  <span>Active Filters</span>
-                </span>
-                {Object.entries(filters)
-                  .filter(([, val]) => Boolean(val))
-                  .map(([key, val]) => (
-                    <span
-                      key={key}
-                      className="linear-tag !bg-[#18191a] !border-[#34343a] !text-[#d0d6e0]"
-                    >
-                      <span className="text-[#8a8f98]">{key}:</span>
-                      <span className="text-[#f7f8f8] font-medium">{val}</span>
-                    </span>
-                  ))}
-              </div>
-              <button
-                type="button"
-                onClick={handleResetFilters}
-                className="btn-tertiary !py-1.5 !px-2.5 !text-[13px]"
-              >
-                <RotateCcw className="h-3.5 w-3.5" />
-                <span>Reset</span>
-              </button>
-            </div>
-          )}
+          <main className="flex-1 min-w-0 flex flex-col">
+            {/* Persistent AI Command Bar (Cmd+K + Voice Capture) */}
+            <CommandBar
+              workspaceId={wid}
+              inputRef={commandInputRef}
+              onPreviewReady={(data) => setAiPreviewData(data)}
+            />
 
-          {/* Workspace Loading Skeleton before workspace ID initializes */}
-          {!wid ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-2">
-              {[0, 1, 2, 3].map((col) => (
-                <div
-                  key={col}
-                  className="rounded-[12px] bg-[#0f1011] border border-[#23252a] p-3 space-y-3"
-                >
-                  <div className="h-4 w-24 rounded bg-[#141516] animate-pulse" />
-                  <div className="h-24 rounded-[8px] bg-[#141516] border border-[#23252a] animate-pulse" />
-                  <div className="h-20 rounded-[8px] bg-[#141516] border border-[#23252a] animate-pulse" />
+            {/* Active AI / Workspace Filters Banner */}
+            {hasActiveFilters && activeTab === 'board' && (
+              <div className="mb-4 flex flex-wrap items-center justify-between gap-2 rounded-[16px] linear-panel-elevated border-l-[3px] border-l-[#6531F7] px-4 py-2.5">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-[13.5px] font-semibold text-[#111216] flex items-center gap-1.5">
+                    <Filter className="h-4 w-4 text-[#6531F7]" />
+                    <span>Active Filters</span>
+                  </span>
+                  {Object.entries(filters)
+                    .filter(([, val]) => Boolean(val))
+                    .map(([key, val]) => (
+                      <span
+                        key={key}
+                        className="linear-tag !bg-white/85 !border-[#111216]/10 !text-[#111216]"
+                      >
+                        <span className="text-[#111216]/50">{key}:</span>
+                        <span className="text-[#111216] font-semibold">{val}</span>
+                      </span>
+                    ))}
                 </div>
-              ))}
-            </div>
-          ) : (
-            <>
-              {/* TAB 1: KANBAN BOARD */}
-              {activeTab === 'board' && (
-                <KanbanBoard
-                  tasks={tasks}
-                  isLoading={isTasksLoading}
-                  onTaskClick={(task) =>
-                    setTaskModalState({ isOpen: true, task, defaultStatus: task.status })
-                  }
-                  onStatusChange={handleStatusChange}
-                  onOpenNewTaskWithStatus={(status) =>
-                    setTaskModalState({ isOpen: true, task: null, defaultStatus: status })
-                  }
-                />
-              )}
+                <button
+                  type="button"
+                  onClick={handleResetFilters}
+                  className="btn-tertiary !py-1.5 !px-2.5 !text-[13px]"
+                >
+                  <RotateCcw className="h-3.5 w-3.5" />
+                  <span>Reset</span>
+                </button>
+              </div>
+            )}
 
-              {/* TAB 2: LIST VIEW */}
-              {activeTab === 'list' && (
-                <TaskList
-                  tasks={tasks}
-                  total={totalTasks}
-                  page={page}
-                  totalPages={totalPages}
-                  filters={filters}
-                  onUpdateFilter={handleUpdateFilter}
-                  onResetFilters={handleResetFilters}
-                  onPageChange={setPage}
-                  members={members}
-                  onTaskClick={(task) =>
-                    setTaskModalState({ isOpen: true, task, defaultStatus: task.status })
-                  }
-                  onStatusChange={handleStatusChange}
-                  isLoading={isTasksLoading}
-                />
-              )}
-
-              {/* TAB 3: DASHBOARD (STATS + RECENT ACTIVITY) */}
-              {activeTab === 'dashboard' && (
-                <div className="space-y-6">
-                  <StatsCards
-                    stats={statsData?.stats}
-                    isLoading={isStatsLoading}
-                    onOpenStandup={() => setIsStandupOpen(true)}
+            {/* Workspace Loading Skeleton before workspace ID initializes */}
+            {!wid ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-2">
+                {[0, 1, 2, 3].map((col) => (
+                  <div
+                    key={col}
+                    className="linear-panel p-4 space-y-3"
+                  >
+                    <div className="h-4 w-24 rounded-md bg-white/70 animate-pulse" />
+                    <div className="h-24 rounded-[12px] bg-white/60 animate-pulse" />
+                    <div className="h-20 rounded-[12px] bg-white/60 animate-pulse" />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <>
+                {/* TAB 1: KANBAN BOARD */}
+                {activeTab === 'board' && (
+                  <KanbanBoard
+                    tasks={tasks}
+                    isLoading={isTasksLoading}
+                    onTaskClick={(task) =>
+                      setTaskModalState({ isOpen: true, task, defaultStatus: task.status })
+                    }
+                    onStatusChange={handleStatusChange}
+                    onOpenNewTaskWithStatus={(status) =>
+                      setTaskModalState({ isOpen: true, task: null, defaultStatus: status })
+                    }
                   />
+                )}
+
+                {/* TAB 2: LIST VIEW */}
+                {activeTab === 'list' && (
+                  <TaskList
+                    tasks={tasks}
+                    total={totalTasks}
+                    page={page}
+                    totalPages={totalPages}
+                    filters={filters}
+                    onUpdateFilter={handleUpdateFilter}
+                    onResetFilters={handleResetFilters}
+                    onPageChange={setPage}
+                    members={members}
+                    onTaskClick={(task) =>
+                      setTaskModalState({ isOpen: true, task, defaultStatus: task.status })
+                    }
+                    onStatusChange={handleStatusChange}
+                    isLoading={isTasksLoading}
+                  />
+                )}
+
+                {/* TAB 3: DASHBOARD (STATS + RECENT ACTIVITY) */}
+                {activeTab === 'dashboard' && (
+                  <div className="space-y-5">
+                    <StatsCards
+                      stats={statsData?.stats}
+                      isLoading={isStatsLoading}
+                      onOpenStandup={() => setIsStandupOpen(true)}
+                    />
+                    <ActivityFeed
+                      activities={combinedActivities}
+                      hasMore={hasMoreActivity}
+                      isLoading={isActivityLoading}
+                      isFetchingMore={isFetchingMoreActivity}
+                      onLoadMore={handleLoadMoreActivity}
+                      compact
+                    />
+                  </div>
+                )}
+
+                {/* TAB 4: FULL LIVE ACTIVITY FEED */}
+                {activeTab === 'activity' && (
                   <ActivityFeed
                     activities={combinedActivities}
                     hasMore={hasMoreActivity}
                     isLoading={isActivityLoading}
                     isFetchingMore={isFetchingMoreActivity}
                     onLoadMore={handleLoadMoreActivity}
-                    compact
                   />
-                </div>
-              )}
-
-              {/* TAB 4: FULL LIVE ACTIVITY FEED */}
-              {activeTab === 'activity' && (
-                <ActivityFeed
-                  activities={combinedActivities}
-                  hasMore={hasMoreActivity}
-                  isLoading={isActivityLoading}
-                  isFetchingMore={isFetchingMoreActivity}
-                  onLoadMore={handleLoadMoreActivity}
-                />
-              )}
-            </>
-          )}
-        </main>
+                )}
+              </>
+            )}
+          </main>
+        </div>
       </div>
 
       {/* AI Structured Preview Modal */}

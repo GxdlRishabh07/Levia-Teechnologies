@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAuth } from '../hooks/useAuth';
+import { GlassAmbientCanvas } from '../App';
 import { FlowSpaceLogo } from '../components/LinearIcons';
 
 export default function Signup() {
@@ -37,42 +38,44 @@ export default function Signup() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#010102] text-[#f7f8f8]">
-      {/* 56px Minimal Linear Top Nav */}
-      <header className="h-[56px] border-b border-[#23252a] bg-[#010102] px-6 flex items-center justify-between">
+    <div className="relative min-h-screen flex flex-col bg-[#FFFFFF] text-[#111216] p-3">
+      <GlassAmbientCanvas />
+
+      {/* Floating Frosted Glass Top Nav */}
+      <header className="relative z-10 h-[56px] linear-panel !rounded-[18px] px-5 flex items-center justify-between max-w-[1440px] w-full mx-auto">
         <div className="flex items-center gap-2.5">
-          <FlowSpaceLogo size={22} />
-          <span className="text-[15.5px] font-semibold tracking-[-0.2px] text-[#f7f8f8]">
+          <FlowSpaceLogo size={24} />
+          <span className="text-[15.5px] font-semibold tracking-[-0.02em] text-[#111216]">
             FlowSpace
           </span>
         </div>
 
         <div className="flex items-center gap-4">
-          <Link to="/login" className="btn-secondary !py-2 !px-3.5 !text-[14px] no-underline">
+          <Link to="/login" className="btn-secondary !py-2 !px-3.5 !text-[13.5px] no-underline">
             Sign in
           </Link>
         </div>
       </header>
 
-      {/* Centered Linear Auth Canvas */}
-      <main className="flex-1 flex items-center justify-center px-4 py-12">
-        <div className="w-full max-w-[440px] space-y-6">
-          <div className="text-center space-y-2.5">
-            <div className="flex justify-center mb-3">
+      {/* Centered Frosted Glass Auth Canvas */}
+      <main className="relative z-10 flex-1 flex items-center justify-center px-4 py-6">
+        <div className="w-full max-w-[440px] space-y-5">
+          <div className="text-center space-y-2">
+            <div className="flex justify-center mb-2">
               <FlowSpaceLogo size={32} />
             </div>
-            <h1 className="type-headline m-0 text-[#f7f8f8]">Create your workspace</h1>
-            <p className="type-body text-[#8a8f98] m-0">
+            <h1 className="type-headline m-0 text-[#111216]">Create your workspace</h1>
+            <p className="type-body-sm text-[#111216]/60 m-0">
               Start an isolated multi-tenant team workspace in seconds.
             </p>
           </div>
 
-          <div className="linear-panel p-[30px]">
+          <div className="linear-panel p-6 sm:p-[26px]">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label
                   htmlFor="signup-name"
-                  className="block text-[14px] font-semibold text-[#d0d6e0] mb-1.5"
+                  className="block text-[13.5px] font-semibold text-[#111216]/85 mb-1.5"
                 >
                   Full name
                 </label>
@@ -83,7 +86,7 @@ export default function Signup() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Arjun Mehta"
-                  className="linear-input"
+                  className="linear-input !bg-white/85"
                   autoFocus
                 />
               </div>
@@ -91,7 +94,7 @@ export default function Signup() {
               <div>
                 <label
                   htmlFor="signup-email"
-                  className="block text-[14px] font-semibold text-[#d0d6e0] mb-1.5"
+                  className="block text-[13.5px] font-semibold text-[#111216]/85 mb-1.5"
                 >
                   Work email
                 </label>
@@ -102,7 +105,7 @@ export default function Signup() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="arjun@company.com"
-                  className="linear-input"
+                  className="linear-input !bg-white/85"
                 />
               </div>
 
@@ -110,11 +113,11 @@ export default function Signup() {
                 <div className="flex items-center justify-between mb-1.5">
                   <label
                     htmlFor="signup-password"
-                    className="block text-[14px] font-semibold text-[#d0d6e0]"
+                    className="block text-[13.5px] font-semibold text-[#111216]/85"
                   >
                     Password
                   </label>
-                  <span className="text-[13px] text-[#62666d]">Min 8 characters</span>
+                  <span className="text-[12.5px] text-[#111216]/45">Min 8 characters</span>
                 </div>
                 <input
                   id="signup-password"
@@ -124,7 +127,7 @@ export default function Signup() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="At least 8 characters"
-                  className="linear-input"
+                  className="linear-input !bg-white/85"
                 />
               </div>
 
@@ -132,11 +135,11 @@ export default function Signup() {
                 <div className="flex items-center justify-between mb-1.5">
                   <label
                     htmlFor="signup-workspace"
-                    className="block text-[14px] font-semibold text-[#d0d6e0]"
+                    className="block text-[13.5px] font-semibold text-[#111216]/85"
                   >
                     Team workspace name
                   </label>
-                  <span className="text-[13px] text-[#62666d]">Optional</span>
+                  <span className="text-[12.5px] text-[#111216]/45">Optional</span>
                 </div>
                 <input
                   id="signup-workspace"
@@ -144,7 +147,7 @@ export default function Signup() {
                   value={workspaceName}
                   onChange={(e) => setWorkspaceName(e.target.value)}
                   placeholder="e.g., Levia Product Engineering"
-                  className="linear-input"
+                  className="linear-input !bg-white/85"
                 />
               </div>
 
@@ -159,11 +162,11 @@ export default function Signup() {
             </form>
           </div>
 
-          <p className="text-center text-[14.5px] text-[#8a8f98] m-0">
+          <p className="text-center text-[14px] text-[#111216]/60 m-0">
             Already have a FlowSpace account?{' '}
             <Link
               to="/login"
-              className="text-[#f7f8f8] hover:text-[#828fff] font-medium transition-colors no-underline"
+              className="text-[#6531F7] hover:text-[#5524DF] font-semibold transition-colors no-underline"
             >
               Sign in instead
             </Link>
