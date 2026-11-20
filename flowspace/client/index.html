@@ -4,6 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FlowSpace — Issue & Task Workspace</title>
+    <script>
+      (function () {
+        try {
+          var params = new URLSearchParams(window.location.search);
+          var t = params.get('theme') || window.localStorage.getItem('flowspace-theme');
+          if (t === 'dark') {
+            document.documentElement.classList.add('dark');
+          }
+        } catch (e) {}
+      })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -11,7 +22,7 @@
       rel="stylesheet"
     />
   </head>
-  <body class="bg-[#FFFFFF] text-[#111216] antialiased selection:bg-[#6531F7]/15 selection:text-[#6531F7]">
+  <body class="bg-[#FFFFFF] dark:bg-[#07080D] text-[#111216] dark:text-[#F5F6FA] antialiased selection:bg-[#6531F7]/20 selection:text-[#6531F7] dark:selection:text-[#C4B5FD]">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

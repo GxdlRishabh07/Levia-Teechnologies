@@ -20,13 +20,13 @@ export function FlowSpaceLogo({ size = 22, className = '' }) {
         strokeWidth="2"
         strokeLinecap="round"
       />
-      <circle cx="16.5" cy="15.75" r="1.75" fill="#6531F7" />
+      <circle cx="16.5" cy="15.75" r="1.75" fill="#7242FF" />
     </svg>
   );
 }
 
 /**
- * Precision geometric task status icons tailored for light frosted glass surfaces.
+ * Precision geometric task status icons adaptive for Light & Dark Frosted Glass.
  */
 export function StatusIcon({ status, size = 14, className = '' }) {
   switch (status) {
@@ -46,8 +46,8 @@ export function StatusIcon({ status, size = 14, className = '' }) {
     case 'IN_REVIEW':
       return (
         <svg width={size} height={size} viewBox="0 0 16 16" fill="none" className={className}>
-          <circle cx="8" cy="8" r="6" stroke="#6531F7" strokeWidth="1.5" />
-          <circle cx="8" cy="8" r="2.75" fill="#6531F7" />
+          <circle cx="8" cy="8" r="6" stroke="#7242FF" strokeWidth="1.5" />
+          <circle cx="8" cy="8" r="2.75" fill="#7242FF" />
         </svg>
       );
     case 'IN_PROGRESS':
@@ -65,7 +65,7 @@ export function StatusIcon({ status, size = 14, className = '' }) {
             cx="8"
             cy="8"
             r="6"
-            stroke="rgba(17, 18, 22, 0.4)"
+            stroke="var(--color-status-backlog)"
             strokeWidth="1.5"
             strokeDasharray="2.5 2.5"
           />
@@ -75,7 +75,7 @@ export function StatusIcon({ status, size = 14, className = '' }) {
 }
 
 /**
- * Crisp signal-bar / alert priority glyphs tuned for light frosted cards.
+ * Crisp signal-bar / alert priority glyphs adaptive for Light & Dark Frosted Glass.
  */
 export function PriorityIcon({ priority, size = 14, className = '' }) {
   if (priority === 'URGENT') {
@@ -93,9 +93,9 @@ export function PriorityIcon({ priority, size = 14, className = '' }) {
     priority === 'HIGH'
       ? '#D97706'
       : priority === 'MEDIUM'
-        ? '#6531F7'
-        : 'rgba(17, 18, 22, 0.42)';
-  const inactiveColor = 'rgba(17, 18, 22, 0.14)';
+        ? '#7242FF'
+        : 'var(--color-priority-low)';
+  const inactiveColor = 'var(--color-priority-inactive)';
 
   return (
     <svg width={size} height={size} viewBox="0 0 16 16" fill="none" className={className}>

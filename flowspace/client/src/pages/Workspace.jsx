@@ -276,7 +276,7 @@ export default function Workspace() {
   );
 
   return (
-    <div className="relative min-h-screen bg-[#FFFFFF] text-[#111216]">
+    <div className="relative min-h-screen bg-[#FFFFFF] dark:bg-[#07080D] text-[#111216] dark:text-[#F5F6FA]">
       {/* Fixed Luminous Ambient Canvas (Sky-blue + Lavender/Violet Blurs) */}
       <GlassAmbientCanvas />
 
@@ -328,10 +328,10 @@ export default function Workspace() {
 
             {/* Active AI / Workspace Filters Banner */}
             {hasActiveFilters && activeTab === 'board' && (
-              <div className="mb-4 flex flex-wrap items-center justify-between gap-2 rounded-[16px] linear-panel-elevated border-l-[3px] border-l-[#6531F7] px-4 py-2.5">
+              <div className="mb-4 flex flex-wrap items-center justify-between gap-2 rounded-[16px] linear-panel-elevated border-l-[3px] border-l-[#6531F7] dark:border-l-[#855BFF] px-4 py-2.5">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-[13.5px] font-semibold text-[#111216] flex items-center gap-1.5">
-                    <Filter className="h-4 w-4 text-[#6531F7]" />
+                  <span className="text-[13.5px] font-semibold text-[#111216] dark:text-[#F5F6FA] flex items-center gap-1.5">
+                    <Filter className="h-4 w-4 text-[#6531F7] dark:text-[#9D7AFF]" />
                     <span>Active Filters</span>
                   </span>
                   {Object.entries(filters)
@@ -339,10 +339,10 @@ export default function Workspace() {
                     .map(([key, val]) => (
                       <span
                         key={key}
-                        className="linear-tag !bg-white/85 !border-[#111216]/10 !text-[#111216]"
+                        className="linear-tag !bg-white/85 dark:!bg-white/10 !border-[#111216]/10 dark:!border-white/15 !text-[#111216] dark:!text-[#F5F6FA]"
                       >
-                        <span className="text-[#111216]/50">{key}:</span>
-                        <span className="text-[#111216] font-semibold">{val}</span>
+                        <span className="text-[#111216]/50 dark:text-[#F5F6FA]/55">{key}:</span>
+                        <span className="text-[#111216] dark:text-[#F5F6FA] font-semibold">{val}</span>
                       </span>
                     ))}
                 </div>
@@ -365,9 +365,9 @@ export default function Workspace() {
                     key={col}
                     className="linear-panel p-4 space-y-3"
                   >
-                    <div className="h-4 w-24 rounded-md bg-white/70 animate-pulse" />
-                    <div className="h-24 rounded-[12px] bg-white/60 animate-pulse" />
-                    <div className="h-20 rounded-[12px] bg-white/60 animate-pulse" />
+                    <div className="h-4 w-24 rounded-md bg-white/70 dark:bg-white/10 animate-pulse" />
+                    <div className="h-24 rounded-[12px] bg-white/60 dark:bg-white/8 animate-pulse" />
+                    <div className="h-20 rounded-[12px] bg-white/60 dark:bg-white/8 animate-pulse" />
                   </div>
                 ))}
               </div>

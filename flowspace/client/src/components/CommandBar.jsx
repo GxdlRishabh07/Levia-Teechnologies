@@ -100,13 +100,15 @@ export default function CommandBar({
       {/* Frosted Glass AI Command Capsule */}
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 linear-panel-elevated !rounded-[16px] px-3.5 py-2.5 transition-all focus-within:border-[#6531F7]/50 focus-within:ring-4 focus-within:ring-[#6531F7]/12"
+        className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 linear-panel-elevated !rounded-[16px] px-3.5 py-2.5 transition-all focus-within:border-[#6531F7]/50 dark:focus-within:border-[#855BFF]/60 focus-within:ring-4 focus-within:ring-[#6531F7]/12 dark:focus-within:ring-[#7242FF]/20"
       >
         {/* Left: Quiet Command Icon + Input */}
         <div className="flex flex-1 items-center gap-2.5 min-w-0">
           <Terminal
             className={`h-4 w-4 shrink-0 transition-colors ${
-              isParsing ? 'text-[#6531F7]' : 'text-[#111216]/45'
+              isParsing
+                ? 'text-[#6531F7] dark:text-[#A78BFA]'
+                : 'text-[#111216]/45 dark:text-[#F5F6FA]/45'
             }`}
           />
           <input
@@ -116,7 +118,7 @@ export default function CommandBar({
             onChange={(e) => setCommandText(e.target.value)}
             disabled={isParsing || isTranscribing}
             placeholder='Command workspace in English or Hinglish — "Move FLOW-5 to In Review" or "Create 2 backend tasks for Priya"'
-            className="w-full min-w-0 bg-transparent text-[15px] text-[#111216] placeholder-[#111216]/40 outline-none disabled:opacity-50"
+            className="w-full min-w-0 bg-transparent text-[15px] text-[#111216] dark:text-[#F5F6FA] placeholder-[#111216]/40 dark:placeholder-[#F5F6FA]/35 outline-none disabled:opacity-50"
           />
         </div>
 
@@ -131,35 +133,35 @@ export default function CommandBar({
             title="Click to record voice or hold Right Option (AltRight)"
             className={
               isRecording
-                ? 'btn-secondary !bg-white !border-[#6531F7] !py-1.5 !px-3 !text-[13.5px]'
+                ? 'btn-secondary !bg-white dark:!bg-[#7242FF]/20 !border-[#6531F7] dark:!border-[#855BFF] !py-1.5 !px-3 !text-[13.5px]'
                 : 'btn-secondary !py-1.5 !px-3 !text-[13.5px]'
             }
           >
             {isTranscribing ? (
               <>
-                <Loader2 className="h-3.5 w-3.5 animate-spin text-[#6531F7]" />
-                <span className="text-[#111216]">Transcribing</span>
+                <Loader2 className="h-3.5 w-3.5 animate-spin text-[#6531F7] dark:text-[#A78BFA]" />
+                <span className="text-[#111216] dark:text-[#F5F6FA]">Transcribing</span>
               </>
             ) : isRecording ? (
               <>
-                <Square className="h-3 w-3 fill-[#6531F7] text-[#6531F7]" />
+                <Square className="h-3 w-3 fill-[#6531F7] dark:fill-[#A78BFA] text-[#6531F7] dark:text-[#A78BFA]" />
                 <div className="flex items-center gap-[2px] h-3.5 px-0.5">
                   {levels.map((lvl, idx) => (
                     <span
                       key={idx}
                       style={{ height: `${Math.max(3, Math.round(lvl * 14))}px` }}
-                      className="w-[2px] rounded-full bg-[#6531F7] transition-all duration-75"
+                      className="w-[2px] rounded-full bg-[#6531F7] dark:bg-[#A78BFA] transition-all duration-75"
                     />
                   ))}
                 </div>
-                <span className="type-mono !text-[12.5px] text-[#111216]">
+                <span className="type-mono !text-[12.5px] text-[#111216] dark:text-[#F5F6FA]">
                   {formatMonoTimer(durationSec)}
                 </span>
               </>
             ) : (
               <>
-                <Mic className="h-3.5 w-3.5 text-[#111216]/60" />
-                <span className="text-[#111216]">Voice</span>
+                <Mic className="h-3.5 w-3.5 text-[#111216]/60 dark:text-[#F5F6FA]/65" />
+                <span className="text-[#111216] dark:text-[#F5F6FA]">Voice</span>
               </>
             )}
           </button>
@@ -186,7 +188,7 @@ export default function CommandBar({
 
       {/* Single-Line Frosted Quick Prompt Chips */}
       <div className="mt-2.5 flex items-center gap-2 overflow-x-auto pb-0.5">
-        <span className="type-eyebrow !text-[11.5px] text-[#111216]/45 shrink-0 mr-1">
+        <span className="type-eyebrow !text-[11.5px] text-[#111216]/45 dark:text-[#F5F6FA]/45 shrink-0 mr-1">
           Try
         </span>
         {EXAMPLE_PROMPTS.map((sample, idx) => (
@@ -197,10 +199,10 @@ export default function CommandBar({
               setCommandText(sample);
               runParse(sample, 'AI_TEXT');
             }}
-            className="linear-tag !rounded-full !bg-white/65 !border-white/90 !text-[#111216]/70 hover:!bg-white hover:!text-[#111216] !py-1 !px-3 !text-[12.5px] shadow-[0_2px_6px_rgba(31,28,70,0.03)] transition-all shrink-0 max-w-[320px] cursor-pointer"
+            className="linear-tag !rounded-full !bg-white/65 dark:!bg-white/[0.06] !border-white/90 dark:!border-white/12 !text-[#111216]/70 dark:!text-[#F5F6FA]/75 hover:!bg-white dark:hover:!bg-white/12 hover:!text-[#111216] dark:hover:!text-[#F5F6FA] !py-1 !px-3 !text-[12.5px] shadow-[0_2px_6px_rgba(31,28,70,0.03)] dark:shadow-none transition-all shrink-0 max-w-[320px] cursor-pointer"
           >
             <span className="truncate">{sample}</span>
-            <ArrowRight className="h-3 w-3 text-[#6531F7] shrink-0" />
+            <ArrowRight className="h-3 w-3 text-[#6531F7] dark:text-[#A78BFA] shrink-0" />
           </button>
         ))}
       </div>
@@ -208,8 +210,8 @@ export default function CommandBar({
       {/* Floating Glass Voice HUD Capsule when Holding Right-Option or Recording */}
       {isRecording && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3.5 linear-modal !rounded-full px-5 py-2.5">
-          <span className="h-2.5 w-2.5 rounded-full bg-[#6531F7] animate-pulse shrink-0 shadow-[0_0_8px_rgba(101,49,247,0.6)]" />
-          <span className="text-[14px] font-semibold text-[#111216] whitespace-nowrap">
+          <span className="h-2.5 w-2.5 rounded-full bg-[#6531F7] dark:bg-[#A78BFA] animate-pulse shrink-0 shadow-[0_0_8px_rgba(101,49,247,0.6)]" />
+          <span className="text-[14px] font-semibold text-[#111216] dark:text-[#F5F6FA] whitespace-nowrap">
             Listening (English / Hinglish)
           </span>
           <div className="flex items-center gap-[3px] h-5 px-1">
@@ -217,11 +219,11 @@ export default function CommandBar({
               <span
                 key={idx}
                 style={{ height: `${Math.max(4, Math.round(lvl * 20))}px` }}
-                className="w-[3px] rounded-full bg-[#6531F7] transition-all duration-75"
+                className="w-[3px] rounded-full bg-[#6531F7] dark:bg-[#A78BFA] transition-all duration-75"
               />
             ))}
           </div>
-          <span className="type-mono !text-[13px] text-[#111216]/75">
+          <span className="type-mono !text-[13px] text-[#111216]/75 dark:text-[#F5F6FA]/80">
             {formatMonoTimer(durationSec)}
           </span>
           <button

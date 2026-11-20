@@ -62,7 +62,7 @@ export default function TaskList({
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-2.5 items-center">
           {/* Search query */}
           <div className="relative lg:col-span-2">
-            <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#111216]/40" />
+            <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#111216]/40 dark:text-[#F5F6FA]/40" />
             <input
               type="text"
               value={filters.q || ''}
@@ -77,7 +77,7 @@ export default function TaskList({
             value={filters.status || ''}
             onChange={(e) => onUpdateFilter('status', e.target.value)}
             aria-label="Filter by status"
-            className="linear-input !py-2 !text-[13.5px] text-[#111216] cursor-pointer"
+            className="linear-input !py-2 !text-[13.5px] text-[#111216] dark:text-[#F5F6FA] cursor-pointer"
           >
             {STATUS_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -91,7 +91,7 @@ export default function TaskList({
             value={filters.priority || ''}
             onChange={(e) => onUpdateFilter('priority', e.target.value)}
             aria-label="Filter by priority"
-            className="linear-input !py-2 !text-[13.5px] text-[#111216] cursor-pointer"
+            className="linear-input !py-2 !text-[13.5px] text-[#111216] dark:text-[#F5F6FA] cursor-pointer"
           >
             {PRIORITY_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -105,7 +105,7 @@ export default function TaskList({
             value={filters.assignee || ''}
             onChange={(e) => onUpdateFilter('assignee', e.target.value)}
             aria-label="Filter by assignee"
-            className="linear-input !py-2 !text-[13.5px] text-[#111216] cursor-pointer"
+            className="linear-input !py-2 !text-[13.5px] text-[#111216] dark:text-[#F5F6FA] cursor-pointer"
           >
             <option value="">All Assignees</option>
             {members.map((m) => (
@@ -132,7 +132,7 @@ export default function TaskList({
                 aria-label="Clear all filters"
                 className="btn-secondary !px-3 !py-2 shrink-0"
               >
-                <RotateCcw className="h-4 w-4 text-[#111216]/60" />
+                <RotateCcw className="h-4 w-4 text-[#111216]/60 dark:text-[#F5F6FA]/65" />
               </button>
             )}
           </div>
@@ -144,7 +144,7 @@ export default function TaskList({
         <div className="overflow-x-auto">
           <table className="w-full border-collapse text-left">
             <thead>
-              <tr className="border-b border-[#111216]/8 bg-white/40">
+              <tr className="border-b border-[#111216]/8 dark:border-white/10 bg-white/40 dark:bg-white/[0.04]">
                 <th className="py-3 pl-4 pr-2 type-eyebrow w-9">Pri</th>
                 <th className="py-3 px-2 type-eyebrow whitespace-nowrap">ID</th>
                 <th className="py-3 px-2 type-eyebrow whitespace-nowrap">Status</th>
@@ -154,22 +154,22 @@ export default function TaskList({
                 <th className="py-3 pl-2.5 pr-4 type-eyebrow whitespace-nowrap text-right">Due</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#111216]/6">
+            <tbody className="divide-y divide-[#111216]/6 dark:divide-white/[0.06]">
               {isLoading ? (
                 [1, 2, 3, 4, 5].map((row) => (
                   <tr key={row} className="h-[48px]">
                     <td colSpan={7} className="px-5 py-2.5">
-                      <div className="h-4 w-full rounded-[6px] bg-white/75 animate-pulse" />
+                      <div className="h-4 w-full rounded-[6px] bg-white/75 dark:bg-white/10 animate-pulse" />
                     </td>
                   </tr>
                 ))
               ) : tasks.length === 0 ? (
                 <tr>
                   <td colSpan={7} className="py-14 px-4 text-center">
-                    <p className="text-[15px] font-semibold text-[#111216] m-0 mb-1">
+                    <p className="text-[15px] font-semibold text-[#111216] dark:text-[#F5F6FA] m-0 mb-1">
                       No matching issues
                     </p>
-                    <p className="text-[13.5px] text-[#111216]/50 m-0">
+                    <p className="text-[13.5px] text-[#111216]/50 dark:text-[#F5F6FA]/50 m-0">
                       Adjust your active filters or create an issue via the Command Bar.
                     </p>
                   </td>
@@ -183,10 +183,10 @@ export default function TaskList({
                     <tr
                       key={task.id}
                       onClick={() => onTaskClick?.(task)}
-                      className="h-[50px] hover:bg-white/65 cursor-pointer transition-colors duration-100"
+                      className="h-[50px] hover:bg-white/65 dark:hover:bg-white/[0.06] cursor-pointer transition-colors duration-100"
                     >
                       {/* Priority Icon */}
-                      <td className="pl-5 pr-2 whitespace-nowrap">
+                      <td className="pl-4 pr-2 whitespace-nowrap">
                         <span
                           title={`Priority: ${priorityLabel}`}
                           className="inline-flex items-center justify-center"
@@ -196,18 +196,24 @@ export default function TaskList({
                       </td>
 
                       {/* Monospace Task Code + AI/Voice micro-glyph */}
-                      <td className="px-2.5 whitespace-nowrap">
+                      <td className="px-2 whitespace-nowrap">
                         <div className="inline-flex items-center gap-1.5">
-                          <span className="type-mono text-[12.5px] font-medium text-[#111216]/55">
+                          <span className="type-mono text-[12.5px] font-medium text-[#111216]/55 dark:text-[#F5F6FA]/55">
                             {task.code}
                           </span>
                           {task.source === 'AI_TEXT' && (
-                            <span title="Created via AI Command Bar" className="inline-flex text-[#6531F7]">
+                            <span
+                              title="Created via AI Command Bar"
+                              className="inline-flex text-[#6531F7] dark:text-[#A78BFA]"
+                            >
                               <Sparkles className="h-3.5 w-3.5" />
                             </span>
                           )}
                           {task.source === 'AI_VOICE' && (
-                            <span title="Created via AI Voice Command" className="inline-flex text-[#6531F7]">
+                            <span
+                              title="Created via AI Voice Command"
+                              className="inline-flex text-[#6531F7] dark:text-[#A78BFA]"
+                            >
                               <Mic className="h-3.5 w-3.5" />
                             </span>
                           )}
@@ -216,16 +222,16 @@ export default function TaskList({
 
                       {/* Status Icon + Compact Status Selector */}
                       <td
-                        className="px-2.5 whitespace-nowrap"
+                        className="px-2 whitespace-nowrap"
                         onClick={(e) => e.stopPropagation()}
                       >
-                        <div className="inline-flex items-center gap-1.5 rounded-[8px] border border-transparent hover:border-white hover:bg-white/80 px-2 py-1 transition-all">
+                        <div className="inline-flex items-center gap-1.5 rounded-[8px] border border-transparent hover:border-white dark:hover:border-white/15 hover:bg-white/80 dark:hover:bg-white/10 px-2 py-1 transition-all">
                           <StatusIcon status={task.status} size={14} className="shrink-0" />
                           <select
                             value={task.status}
                             onChange={(e) => onStatusChange?.(task, e.target.value)}
                             aria-label={`Change status for ${task.code}`}
-                            className="bg-transparent text-[13px] font-medium text-[#111216]/80 cursor-pointer focus:outline-none pr-1"
+                            className="bg-transparent text-[13px] font-medium text-[#111216]/80 dark:text-[#F5F6FA]/85 cursor-pointer focus:outline-none pr-1"
                           >
                             <option value="BACKLOG">{STATUS_LABELS.BACKLOG}</option>
                             <option value="IN_PROGRESS">{STATUS_LABELS.IN_PROGRESS}</option>
@@ -238,11 +244,11 @@ export default function TaskList({
                       {/* Crisp Issue Title */}
                       <td className="px-2.5 max-w-[300px] 2xl:max-w-[420px]">
                         <div className="flex items-baseline gap-2 min-w-0">
-                          <span className="text-[14px] font-semibold text-[#111216] tracking-[-0.01em] truncate">
+                          <span className="text-[14px] font-semibold text-[#111216] dark:text-[#F5F6FA] tracking-[-0.01em] truncate">
                             {task.title}
                           </span>
                           {task.description && (
-                            <span className="hidden 2xl:inline text-[12.5px] text-[#111216]/45 truncate">
+                            <span className="hidden 2xl:inline text-[12.5px] text-[#111216]/45 dark:text-[#F5F6FA]/45 truncate">
                               {task.description}
                             </span>
                           )}
@@ -258,7 +264,7 @@ export default function TaskList({
                             </span>
                           ))}
                           {(task.tags || []).length > 2 && (
-                            <span className="type-mono text-[11.5px] text-[#111216]/45">
+                            <span className="type-mono text-[11.5px] text-[#111216]/45 dark:text-[#F5F6FA]/45">
                               +{task.tags.length - 2}
                             </span>
                           )}
@@ -269,15 +275,17 @@ export default function TaskList({
                       <td className="px-2.5 whitespace-nowrap">
                         {task.assigneeName ? (
                           <div className="inline-flex items-center gap-2">
-                            <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-[#262626] text-[11px] font-semibold text-white shrink-0">
+                            <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-[#262626] dark:bg-[#7242FF] text-[11px] font-semibold text-white shrink-0">
                               {task.assigneeName.charAt(0).toUpperCase()}
                             </span>
-                            <span className="text-[13px] font-medium text-[#111216]/75 max-w-[110px] truncate">
+                            <span className="text-[13px] font-medium text-[#111216]/75 dark:text-[#F5F6FA]/75 max-w-[110px] truncate">
                               {task.assigneeName}
                             </span>
                           </div>
                         ) : (
-                          <span className="text-[13px] text-[#111216]/40">Unassigned</span>
+                          <span className="text-[13px] text-[#111216]/40 dark:text-[#F5F6FA]/40">
+                            Unassigned
+                          </span>
                         )}
                       </td>
 
@@ -286,7 +294,9 @@ export default function TaskList({
                         {task.dueDate ? (
                           <span
                             className={`type-mono text-[12.5px] inline-flex items-center justify-end gap-1.5 ${
-                              overdue ? 'text-[#E11D48] font-semibold' : 'text-[#111216]/50'
+                              overdue
+                                ? 'text-[#E11D48] dark:text-[#FB7185] font-semibold'
+                                : 'text-[#111216]/50 dark:text-[#F5F6FA]/50'
                             }`}
                             title={overdue ? 'Overdue' : `Due ${formatShortDate(task.dueDate)}`}
                           >
@@ -294,7 +304,9 @@ export default function TaskList({
                             <span>{formatShortDate(task.dueDate)}</span>
                           </span>
                         ) : (
-                          <span className="type-mono text-[12.5px] text-[#111216]/35">—</span>
+                          <span className="type-mono text-[12.5px] text-[#111216]/35 dark:text-[#F5F6FA]/35">
+                            —
+                          </span>
                         )}
                       </td>
                     </tr>
@@ -306,8 +318,8 @@ export default function TaskList({
         </div>
 
         {/* Clean Glass Pagination Footer */}
-        <div className="flex items-center justify-between border-t border-[#111216]/8 bg-white/35 px-5 py-3">
-          <span className="type-mono text-[12.5px] text-[#111216]/50">
+        <div className="flex items-center justify-between border-t border-[#111216]/8 dark:border-white/10 bg-white/35 dark:bg-white/[0.03] px-5 py-3">
+          <span className="type-mono text-[12.5px] text-[#111216]/50 dark:text-[#F5F6FA]/50">
             Showing {tasks.length} of {total} issue{total === 1 ? '' : 's'} · Page {page} /{' '}
             {Math.max(1, totalPages)}
           </span>

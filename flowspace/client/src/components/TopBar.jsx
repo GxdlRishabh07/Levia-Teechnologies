@@ -8,8 +8,11 @@ import {
   List,
   BarChart3,
   Activity,
+  Sun,
+  Moon,
 } from 'lucide-react';
 import { FlowSpaceLogo } from './LinearIcons';
+import { useTheme } from '../hooks/useTheme';
 
 const TABS = [
   { id: 'board', label: 'Board', icon: LayoutGrid },
@@ -31,31 +34,34 @@ export default function TopBar({
   onOpenStandup,
   onLogout,
 }) {
+  const { isDark, toggleTheme } = useTheme();
   const isLivePusher = realtimeMode === 'pusher' && isConnected;
   const onlineCount = Math.max(1, onlineMembers.length);
 
   return (
-    <header className="sticky top-3 z-30 linear-panel rounded-[18px] px-3.5 py-2 flex items-center justify-between gap-2 overflow-x-auto">
+    <header className="sticky top-3 z-30 linear-panel rounded-[18px] px-3 py-2 flex items-center justify-between gap-2 overflow-x-auto">
       {/* Left: Brand Mark, Workspace Name & View Switcher */}
-      <div className="flex items-center gap-2.5 min-w-0 shrink-0">
+      <div className="flex items-center gap-2 min-w-0 shrink-0">
         <div className="flex items-center gap-2 min-w-0">
           <FlowSpaceLogo size={22} className="shrink-0" />
-          <span className="text-[#111216]/20 text-[14px] select-none hidden sm:inline">/</span>
-          <h1 className="m-0 text-[14.5px] font-semibold tracking-[-0.02em] text-[#111216] truncate max-w-[110px] xl:max-w-[145px]">
+          <span className="text-[#111216]/20 dark:text-white/20 text-[14px] select-none hidden sm:inline">
+            /
+          </span>
+          <h1 className="m-0 text-[14px] font-semibold tracking-[-0.02em] text-[#111216] dark:text-[#F5F6FA] truncate max-w-[100px] xl:max-w-[125px]">
             {activeWorkspace ? activeWorkspace.name : 'Workspace'}
           </h1>
           {activeWorkspace?.role && (
-            <span className="hidden 2xl:inline-flex items-center rounded-[6px] bg-white/75 border border-white px-2 py-0.5 text-[11px] font-semibold tracking-[0.05em] text-[#6531F7] uppercase shrink-0 shadow-2xs">
+            <span className="hidden 2xl:inline-flex items-center rounded-[6px] bg-white/75 dark:bg-white/10 border border-white dark:border-white/15 px-2 py-0.5 text-[11px] font-semibold tracking-[0.05em] text-[#6531F7] dark:text-[#C4B5FD] uppercase shrink-0 shadow-2xs">
               {activeWorkspace.role}
             </span>
           )}
         </div>
 
-        <div className="h-4 w-px bg-[#111216]/10 mx-0.5 hidden sm:block shrink-0" />
+        <div className="h-4 w-px bg-[#111216]/10 dark:bg-white/10 mx-0.5 hidden sm:block shrink-0" />
 
         {/* View Switcher Glass Capsule */}
         <nav
-          className="flex items-center gap-0.5 rounded-full bg-white/45 border border-white/70 p-0.5 shrink-0"
+          className="flex items-center gap-0.5 rounded-full bg-white/45 dark:bg-white/[0.05] border border-white/70 dark:border-white/10 p-0.5 shrink-0"
           aria-label="Workspace views"
         >
           {TABS.map((tab) => {
@@ -66,10 +72,14 @@ export default function TopBar({
                 key={tab.id}
                 type="button"
                 onClick={() => setActiveTab(tab.id)}
-                className={`linear-tab !px-3 !py-1.5 !text-[13px] shrink-0 ${isActive ? 'linear-tab-active' : ''}`}
+                className={`linear-tab !px-2.5 !py-1.5 !text-[13px] shrink-0 ${isActive ? 'linear-tab-active' : ''}`}
               >
                 <Icon
-                  className={`h-3.5 w-3.5 ${isActive ? 'text-[#6531F7]' : 'text-[#111216]/50'}`}
+                  className={`h-3.5 w-3.5 ${
+                    isActive
+                      ? 'text-[#6531F7] dark:text-[#A78BFA]'
+                      : 'text-[#111216]/50 dark:text-[#F5F6FA]/55'
+                  }`}
                 />
                 <span className="hidden sm:inline">{tab.label}</span>
               </button>
@@ -78,11 +88,11 @@ export default function TopBar({
         </nav>
       </div>
 
-      {/* Right: Live Presence, Command, Standup, New Issue, Sign Out */}
+      {/* Right: Live Presence, Command, Standup, New Issue, Theme Toggle, Sign Out */}
       <div className="flex items-center gap-1.5 shrink-0">
         {/* Live Presence Indicator */}
         <div
-          className="hidden xl:flex items-center gap-1.5 rounded-full bg-white/70 border border-white px-2.5 py-1 shadow-2xs"
+          className="hidden xl:flex items-center gap-1.5 rounded-full bg-white/70 dark:bg-white/[0.08] border border-white dark:border-white/12 px-2.5 py-1 shadow-2xs"
           title={
             isLivePusher
               ? 'Connected via Pusher Channels live presence'
@@ -94,7 +104,7 @@ export default function TopBar({
               isLivePusher ? 'bg-[#059669]' : 'bg-[#059669]/80'
             }`}
           />
-          <span className="text-[12px] font-medium text-[#111216]/65 tabular-nums whitespace-nowrap">
+          <span className="text-[12px] font-medium text-[#111216]/65 dark:text-[#F5F6FA]/75 tabular-nums whitespace-nowrap">
             {isLivePusher ? 'Live' : 'Sync'} · {onlineCount}
           </span>
           {onlineMembers.length > 0 && (
@@ -103,7 +113,7 @@ export default function TopBar({
                 <span
                   key={member.id}
                   title={`${member.name} (${member.email || 'online'})`}
-                  className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-[#262626] text-[10.5px] font-semibold text-white ring-2 ring-white"
+                  className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-[#262626] dark:bg-[#7242FF] text-[10.5px] font-semibold text-white ring-2 ring-white dark:ring-[#181A28]"
                 >
                   {(member.name || 'U').charAt(0).toUpperCase()}
                 </span>
@@ -118,7 +128,7 @@ export default function TopBar({
           onClick={onFocusCommandBar}
           className="btn-secondary !py-1.5 !px-2.5 !text-[13px] hidden md:inline-flex whitespace-nowrap"
         >
-          <Command className="h-3.5 w-3.5 text-[#111216]/60" />
+          <Command className="h-3.5 w-3.5 text-[#111216]/60 dark:text-[#F5F6FA]/65" />
           <span>Command</span>
           <kbd className="linear-kbd ml-0.5">⌘K</kbd>
         </button>
@@ -130,7 +140,7 @@ export default function TopBar({
           className="btn-secondary !py-1.5 !px-2.5 !text-[13px] whitespace-nowrap"
           title="AI Daily Standup"
         >
-          <FileText className="h-3.5 w-3.5 text-[#111216]/60" />
+          <FileText className="h-3.5 w-3.5 text-[#111216]/60 dark:text-[#F5F6FA]/65" />
           <span className="hidden sm:inline">Standup</span>
         </button>
 
@@ -144,26 +154,42 @@ export default function TopBar({
           <span>New Issue</span>
         </button>
 
-        {/* User Avatar & Sign Out */}
-        {user && (
-          <div className="flex items-center gap-1 pl-1.5 ml-0.5 border-l border-[#111216]/10">
-            <span
-              title={`${user.name}${user.email ? ` (${user.email})` : ''}`}
-              className="hidden 2xl:inline-flex h-7 w-7 items-center justify-center rounded-full bg-[#262626] text-[11.5px] font-semibold text-white select-none shadow-xs"
-            >
-              {(user.name || 'U').charAt(0).toUpperCase()}
-            </span>
-            <button
-              type="button"
-              onClick={onLogout}
-              title="Sign out"
-              aria-label="Sign out"
-              className="btn-tertiary !p-1.5"
-            >
-              <LogOut className="h-4 w-4" />
-            </button>
-          </div>
-        )}
+        {/* Theme Switcher + User Avatar & Sign Out */}
+        <div className="flex items-center gap-1 pl-1.5 ml-0.5 border-l border-[#111216]/10 dark:border-white/10">
+          <button
+            type="button"
+            onClick={toggleTheme}
+            title={isDark ? 'Switch to light glass mode' : 'Switch to dark glass mode'}
+            aria-label={isDark ? 'Switch to light glass mode' : 'Switch to dark glass mode'}
+            className="btn-tertiary !p-1.5"
+          >
+            {isDark ? (
+              <Sun className="h-4 w-4 text-[#FBBF24]" />
+            ) : (
+              <Moon className="h-4 w-4" />
+            )}
+          </button>
+
+          {user && (
+            <>
+              <span
+                title={`${user.name}${user.email ? ` (${user.email})` : ''}`}
+                className="hidden 2xl:inline-flex h-7 w-7 items-center justify-center rounded-full bg-[#262626] dark:bg-[#7242FF] text-[11.5px] font-semibold text-white select-none shadow-xs"
+              >
+                {(user.name || 'U').charAt(0).toUpperCase()}
+              </span>
+              <button
+                type="button"
+                onClick={onLogout}
+                title="Sign out"
+                aria-label="Sign out"
+                className="btn-tertiary !p-1.5"
+              >
+                <LogOut className="h-4 w-4" />
+              </button>
+            </>
+          )}
+        </div>
       </div>
     </header>
   );
