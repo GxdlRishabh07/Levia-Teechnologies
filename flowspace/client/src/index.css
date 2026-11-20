@@ -109,7 +109,7 @@ html.dark {
   --color-primary-focus: #5F2EF0;
   --color-brand-soft: rgba(114, 66, 255, 0.18);
 
-  --color-canvas: #07080D;
+  --color-canvas: #020617;
   --color-glass-panel: rgba(20, 22, 36, 0.56);
   --color-glass-surface: rgba(22, 25, 40, 0.62);
   --color-glass-card: rgba(30, 33, 52, 0.68);
@@ -265,24 +265,33 @@ html.dark {
   transition: background 260ms ease;
 }
 
+html.dark .glass-ambient-bg {
+  background-color: #020617;
+  background-image:
+    radial-gradient(ellipse 90% 55% at 50% -10%, rgba(30, 58, 138, 0.35) 0%, transparent 68%),
+    radial-gradient(ellipse 65% 55% at 10% 90%, rgba(14, 165, 233, 0.20) 0%, rgba(29, 78, 216, 0.15) 40%, transparent 70%),
+    radial-gradient(ellipse 70% 60% at 90% 85%, rgba(30, 64, 175, 0.25) 0%, rgba(37, 99, 235, 0.12) 45%, transparent 72%),
+    linear-gradient(180deg, #020617 0%, #06112C 40%, #03081A 100%);
+}
+
 html.dark .glass-ambient-top-sky {
-  background: rgba(82, 134, 255, 0.22);
-  filter: blur(145px);
+  background: radial-gradient(ellipse, rgba(37, 99, 235, 0.35) 0%, rgba(30, 58, 138, 0.18) 50%, transparent 72%);
+  filter: blur(140px);
 }
 
 html.dark .glass-ambient-left-orchid {
-  background: rgba(198, 102, 255, 0.22);
-  filter: blur(145px);
+  background: radial-gradient(ellipse, rgba(14, 165, 233, 0.25) 0%, rgba(29, 78, 216, 0.18) 45%, transparent 70%);
+  filter: blur(140px);
 }
 
 html.dark .glass-ambient-right-indigo {
-  background: rgba(101, 49, 247, 0.28);
-  filter: blur(145px);
+  background: radial-gradient(ellipse, rgba(30, 64, 175, 0.32) 0%, rgba(37, 99, 235, 0.16) 45%, transparent 70%);
+  filter: blur(140px);
 }
 
 html.dark .glass-ambient-bottom-sheen {
-  background: rgba(124, 92, 255, 0.10);
-  filter: blur(80px);
+  background: radial-gradient(ellipse, rgba(56, 189, 248, 0.12) 0%, rgba(37, 99, 235, 0.08) 50%, transparent 75%);
+  filter: blur(75px);
 }
 
 /* ==========================================================================

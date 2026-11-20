@@ -275,7 +275,7 @@ export default function Workspace() {
   );
 
   return (
-    <div className="relative min-h-screen bg-[#FFFFFF] dark:bg-[#07080D] text-[#111216] dark:text-[#F5F6FA]">
+    <div className="relative min-h-screen bg-[#FFFFFF] dark:bg-[#020617] text-[#111216] dark:text-[#F5F6FA]">
       {/* Fixed Luminous Ambient Canvas (Sky-blue + Lavender/Violet Blurs) */}
       <GlassAmbientCanvas />
 
