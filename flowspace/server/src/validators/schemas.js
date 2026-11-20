@@ -49,6 +49,19 @@ export const loginSchema = z.object({
   password: z.string().min(1, 'Password is required'),
 });
 
+export const forgotPasswordSchema = z.object({
+  email: z.string().trim().email('Valid email is required').toLowerCase(),
+});
+
+export const resetPasswordSchema = z.object({
+  token: z.string().min(1, 'Reset token is required'),
+  email: z.string().trim().email('Valid email is required').toLowerCase().optional(),
+  password: z
+    .string()
+    .min(6, 'Password must be at least 6 characters')
+    .max(128),
+});
+
 export const createWorkspaceSchema = z.object({
   name: z
     .string()
@@ -113,6 +126,8 @@ export default {
   WORKSPACE_ROLES,
   signupSchema,
   loginSchema,
+  forgotPasswordSchema,
+  resetPasswordSchema,
   createWorkspaceSchema,
   addMemberSchema,
   createProjectSchema,

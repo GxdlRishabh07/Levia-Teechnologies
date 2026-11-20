@@ -1,5 +1,9 @@
 # FlowSpace: AI-Native Team Task Workspace
 
+<p align="center">
+  <img src="assets/preview.jpg" alt="FlowSpace Workspace Interface Preview" width="100%" />
+</p>
+
 FlowSpace is a multi-tenant project management and task execution workspace designed to remove the friction of traditional issue trackers. Instead of manually filling out repetitive forms and clicking through dropdown menus, team members can speak or type in natural language to create, update, organize, and track tasks in real time.
 
 The system combines a reactive single-page frontend, a stateless serverless backend, a relational database with strict ACID transaction guarantees, and an intelligent natural language processing pipeline powered by Groq and the FlowVoice speech engine.

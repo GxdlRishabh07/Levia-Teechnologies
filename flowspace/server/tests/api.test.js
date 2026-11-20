@@ -121,6 +121,37 @@ describe('FlowSpace API Integration Suite (Auth, Multi-Tenant RBAC, Tasks CRUD, 
       const setCookieHeader = (res.headers['set-cookie'] || []).join('; ');
       assert.match(setCookieHeader, /flowspace_token=;/);
     });
+
+    it('POST /api/auth/forgot-password returns reset URL and POST /api/auth/reset-password updates password', async () => {
+      const forgotRes = await request(app)
+        .post('/api/auth/forgot-password')
+        .send({ email: 'arjun.test@flowspace.dev' });
+
+      assert.equal(forgotRes.status, 200);
+      assert.ok(forgotRes.body.resetUrl);
+      const url = new URL(forgotRes.body.resetUrl, 'http://localhost');
+      const token = url.searchParams.get('token');
+      assert.ok(token);
+
+      const resetRes = await request(app)
+        .post('/api/auth/reset-password')
+        .send({
+          token,
+          email: 'arjun.test@flowspace.dev',
+          password: 'NewPassword456!',
+        });
+
+      assert.equal(resetRes.status, 200);
+      assert.equal(resetRes.body.ok, true);
+
+      // Verify user can now log in with the new password
+      const loginRes = await request(app).post('/api/auth/login').send({
+        email: 'arjun.test@flowspace.dev',
+        password: 'NewPassword456!',
+      });
+      assert.equal(loginRes.status, 200);
+      assert.equal(loginRes.body.user.email, 'arjun.test@flowspace.dev');
+    });
   });
 
   describe('3. Projects & Tasks CRUD, Atomic Task Codes, Filters, Stats & Activity', () => {

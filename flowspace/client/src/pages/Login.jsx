@@ -171,9 +171,9 @@ export default function Login() {
                   <span className="cutora-check-label">Remember Me</span>
                 </label>
 
-                <a href="#forgot" onClick={(e) => { e.preventDefault(); toast('Password reset link sent to registered email'); }} className="cutora-forgot-link">
+                <Link to="/forgot-password" className="cutora-forgot-link">
                   Forgot Password?
-                </a>
+                </Link>
               </div>
 
               {/* Primary Action Button */}

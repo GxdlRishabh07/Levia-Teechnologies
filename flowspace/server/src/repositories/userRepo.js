@@ -78,8 +78,25 @@ export async function findById(id, conn = null) {
   return mapUserRow(rows[0], { includePassword: false });
 }
 
+/**
+ * Updates a user's password hash.
+ *
+ * @param {number} id
+ * @param {string} passwordHash
+ * @param {import('mysql2/promise').PoolConnection} [conn]
+ */
+export async function updatePassword(id, passwordHash, conn = null) {
+  await query(
+    `UPDATE users SET password_hash = ? WHERE id = ?`,
+    [passwordHash, Number(id)],
+    conn
+  );
+  return findById(id, conn);
+}
+
 export default {
   createUser,
   findByEmail,
   findById,
+  updatePassword,
 };

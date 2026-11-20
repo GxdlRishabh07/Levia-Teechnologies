@@ -17,12 +17,14 @@ function createInMemoryRelationalPool() {
     tasks: [],
     task_tags: [],
     activities: [],
+    password_reset_tokens: [],
     seq: {
       users: 1,
       workspaces: 1,
       projects: 1,
       tasks: 1,
       activities: 1,
+      password_reset_tokens: 1,
     },
   };
 
@@ -169,6 +171,13 @@ function createInMemoryRelationalPool() {
       const [id] = params;
       const found = state.users.find((u) => u.id === Number(id));
       return [found ? [{ ...found }] : [], []];
+    }
+
+    if (/UPDATE users SET password_hash = \? WHERE id = \?/i.test(norm)) {
+      const [passwordHash, id] = params;
+      const found = state.users.find((u) => u.id === Number(id));
+      if (found) found.password_hash = passwordHash;
+      return [{ affectedRows: found ? 1 : 0 }, []];
     }
 
     // 3. WORKSPACES & MEMBERSHIPS
@@ -619,6 +628,52 @@ function createInMemoryRelationalPool() {
       return [list.map(enrichActivityRow), []];
     }
 
+    // 7. PASSWORD RESET TOKENS
+    if (/^INSERT INTO password_reset_tokens/i.test(norm)) {
+      const [userId, tokenHash, expiresAt] = params;
+      const id = state.seq.password_reset_tokens++;
+      state.password_reset_tokens.push({
+        id,
+        user_id: Number(userId),
+        token_hash: tokenHash,
+        expires_at: expiresAt instanceof Date ? expiresAt.toISOString() : String(expiresAt),
+        used_at: null,
+        created_at: nowIso(),
+      });
+      return [{ insertId: id, affectedRows: 1 }, []];
+    }
+
+    if (/FROM password_reset_tokens WHERE token_hash = \?/i.test(norm)) {
+      const [tokenHash] = params;
+      const token = state.password_reset_tokens.find(
+        (t) => t.token_hash === tokenHash && t.used_at === null && new Date(t.expires_at) > new Date()
+      );
+      return [token ? [{ ...token }] : [], []];
+    }
+
+    if (/UPDATE password_reset_tokens SET used_at = UTC_TIMESTAMP\(\) WHERE id = \?/i.test(norm)) {
+      const [id] = params;
+      const t = state.password_reset_tokens.find((item) => item.id === Number(id));
+      if (t) t.used_at = nowIso();
+      return [{ affectedRows: t ? 1 : 0 }, []];
+    }
+
+    if (/UPDATE password_reset_tokens SET used_at = UTC_TIMESTAMP\(\) WHERE user_id = \?/i.test(norm)) {
+      const [userId] = params;
+      let count = 0;
+      state.password_reset_tokens.forEach((item) => {
+        if (item.user_id === Number(userId) && item.used_at === null) {
+          item.used_at = nowIso();
+          count++;
+        }
+      });
+      return [{ affectedRows: count }, []];
+    }
+
+    if (/DELETE FROM refresh_tokens WHERE user_id = \?/i.test(norm)) {
+      return [{ affectedRows: 0 }, []];
+    }
+
     throw new Error(`[InMemoryRelationalPool] Unhandled SQL query: ${norm}`);
   }
 
@@ -661,6 +716,7 @@ export async function initTestDatabase() {
     try {
       await conn.query('SET FOREIGN_KEY_CHECKS = 0');
       for (const table of [
+        'password_reset_tokens',
         'activities',
         'task_tags',
         'tasks',

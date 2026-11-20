@@ -7,6 +7,8 @@ import { ThemeProvider, useTheme } from './hooks/useTheme';
 import { FlowSpaceLogo } from './components/LinearIcons';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 import Workspace from './pages/Workspace';
 
 const queryClient = new QueryClient({
@@ -138,6 +140,8 @@ export default function App() {
                   </PublicOnlyRoute>
                 }
               />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
               <Route
                 path="/*"
                 element={
