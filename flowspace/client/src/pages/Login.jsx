@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Sun, Moon, Loader2, Zap } from 'lucide-react';
+import { Sun, Moon, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAuth } from '../hooks/useAuth';
 import { useTheme } from '../hooks/useTheme';
@@ -38,12 +38,6 @@ export default function Login() {
     performLogin(email.trim(), password);
   };
 
-  const handleDemoLogin = (demoEmail) => {
-    setEmail(demoEmail);
-    setPassword('Demo@1234');
-    performLogin(demoEmail, 'Demo@1234');
-  };
-
   return (
     <div className="cutora-root">
       {/* Cinematic Deep Blue Gradient Stage */}
@@ -72,28 +66,6 @@ export default function Login() {
             {/* Heading & Subtitle */}
             <h2 className="cutora-card-heading">Welcome Back!</h2>
             <p className="cutora-card-sub">Sign in to access your projects and collaborate live with your team.</p>
-
-            {/* Evaluator Quick-Access Demo Pills */}
-            <div className="cutora-demo-row">
-              <button
-                type="button"
-                className="cutora-demo-pill"
-                onClick={() => handleDemoLogin('arjun@flowspace.dev')}
-                title="1-Click Login as Arjun (Owner)"
-              >
-                <Zap className="h-3.5 w-3.5 text-[#2563EB] dark:text-[#60A5FA] shrink-0" />
-                <span>Arjun · Owner</span>
-              </button>
-              <button
-                type="button"
-                className="cutora-demo-pill"
-                onClick={() => handleDemoLogin('priya@flowspace.dev')}
-                title="1-Click Login as Priya (Member)"
-              >
-                <Zap className="h-3.5 w-3.5 text-[#2563EB] dark:text-[#60A5FA] shrink-0" />
-                <span>Priya · Member</span>
-              </button>
-            </div>
 
             {/* Login Form */}
             <form onSubmit={handleSubmit} className="cutora-form">

@@ -89,7 +89,7 @@ export default function Signup() {
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="e.g. Arjun Mehta"
+                    placeholder="e.g. Alex Morgan"
                     required
                     autoComplete="name"
                     className="cutora-input"
