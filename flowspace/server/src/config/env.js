@@ -49,8 +49,18 @@ const envSchema = z.object({
 const parsed = envSchema.safeParse(process.env);
 
 if (!parsed.success) {
-  console.error('❌ Invalid environment configuration:', parsed.error.flatten().fieldErrors);
+  console.error('Invalid environment configuration:', parsed.error.issues);
   throw new Error('Failed to validate environment variables');
+}
+
+const DEFAULT_DEV_JWT = 'flowspace-dev-jwt-secret-change-in-production-2026';
+if (
+  parsed.data.NODE_ENV === 'production' &&
+  parsed.data.JWT_SECRET === DEFAULT_DEV_JWT
+) {
+  console.warn(
+    '[FlowSpace Security Warning] JWT_SECRET is using the development default. Set a strong 32+ character JWT_SECRET in production environment variables.'
+  );
 }
 
 export const env = {

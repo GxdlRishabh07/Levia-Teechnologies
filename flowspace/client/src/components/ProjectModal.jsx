@@ -45,9 +45,14 @@ export default function ProjectModal({ isOpen, onClose, onCreateProject }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#11121c]/20 dark:bg-[#020308]/65 backdrop-blur-[8px] p-4">
-      <div className="w-full max-w-md linear-modal overflow-hidden">
-        <div className="flex items-center justify-between border-b border-[#111216]/8 dark:border-white/10 bg-white/55 dark:bg-white/[0.04] px-5 py-4">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[#11121c]/20 dark:bg-[#020308]/65 backdrop-blur-[8px] p-3 sm:p-4"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div className="w-full max-w-md max-h-[90dvh] flex flex-col linear-modal overflow-hidden">
+        <div className="shrink-0 flex items-center justify-between border-b border-[#111216]/8 dark:border-white/10 bg-white/55 dark:bg-white/[0.04] px-4 sm:px-5 py-3.5 sm:py-4">
           <div>
             <div className="type-eyebrow !text-[11.5px] !text-[#6531F7] dark:!text-[#A78BFA] mb-0.5">
               New Project

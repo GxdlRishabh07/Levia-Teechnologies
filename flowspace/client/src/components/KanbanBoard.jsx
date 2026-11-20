@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import {
   DndContext,
   PointerSensor,
+  TouchSensor,
   useSensor,
   useSensors,
   useDroppable,
@@ -27,7 +28,7 @@ function KanbanColumn({ column, tasks, onTaskClick, onQuickAdd }) {
   return (
     <div
       ref={setNodeRef}
-      className={`flex flex-col rounded-[20px] border p-3.5 min-h-[540px] transition-all duration-150 backdrop-blur-xl ${
+      className={`flex flex-col rounded-[18px] sm:rounded-[20px] border p-3 sm:p-3.5 min-h-[180px] sm:min-h-[340px] xl:min-h-[540px] transition-all duration-150 backdrop-blur-xl ${
         isOver
           ? 'bg-white/75 dark:bg-white/[0.12] border-[#6531F7] dark:border-[#855BFF] shadow-[0_8px_28px_rgba(101,49,247,0.12)] dark:shadow-[0_10px_32px_rgba(114,66,255,0.28)]'
           : 'linear-panel'
@@ -96,6 +97,12 @@ export default function KanbanBoard({
       activationConstraint: {
         distance: 6,
       },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 180,
+        tolerance: 6,
+      },
     })
   );
 
@@ -126,11 +133,11 @@ export default function KanbanBoard({
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3.5 sm:gap-4">
         {KANBAN_COLUMNS.map((col) => (
           <div
             key={col.id}
-            className="linear-panel p-3.5 h-[540px] space-y-2.5"
+            className="linear-panel p-3.5 h-[260px] sm:h-[380px] xl:h-[540px] space-y-2.5"
           >
             <div className="flex items-center gap-2 pb-3 mb-2 border-b border-[#111216]/8 dark:border-white/10">
               <div className="h-4 w-4 rounded-full bg-white/80 dark:bg-white/12 animate-pulse" />
@@ -151,7 +158,7 @@ export default function KanbanBoard({
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3.5 sm:gap-4">
         {KANBAN_COLUMNS.map((column) => {
           const columnTasks = tasks.filter((t) => t.status === column.id);
           return (

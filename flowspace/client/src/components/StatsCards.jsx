@@ -84,8 +84,8 @@ export default function StatsCards({ stats, isLoading = false, onOpenStandup }) 
   return (
     <div className="space-y-5">
       {/* Top 4 Frosted Bento Telemetry Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="linear-panel p-6 flex flex-col justify-between">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <div className="linear-panel p-4 sm:p-6 flex flex-col justify-between">
           <div className="flex items-center justify-between">
             <span className="text-[13.5px] font-semibold text-[#111216]/60 dark:text-[#F5F6FA]/65">
               Total Issues
@@ -104,9 +104,9 @@ export default function StatsCards({ stats, isLoading = false, onOpenStandup }) 
           </div>
         </div>
 
-        <div className="linear-panel p-6 flex flex-col justify-between">
+        <div className="linear-panel p-4 sm:p-6 flex flex-col justify-between">
           <div className="flex items-center justify-between">
-            <span className="text-[13.5px] font-semibold text-[#111216]/60 dark:text-[#F5F6FA]/65">
+            <span className="text-[13px] sm:text-[13.5px] font-semibold text-[#111216]/60 dark:text-[#F5F6FA]/65">
               Completion Rate
             </span>
             <span className="h-8 w-8 rounded-[10px] bg-[#059669]/10 dark:bg-[#059669]/20 border border-[#059669]/20 dark:border-[#059669]/35 inline-flex items-center justify-center">
@@ -126,9 +126,9 @@ export default function StatsCards({ stats, isLoading = false, onOpenStandup }) 
           </div>
         </div>
 
-        <div className="linear-panel p-6 flex flex-col justify-between">
+        <div className="linear-panel p-4 sm:p-6 flex flex-col justify-between">
           <div className="flex items-center justify-between">
-            <span className="text-[13.5px] font-semibold text-[#111216]/60 dark:text-[#F5F6FA]/65">
+            <span className="text-[13px] sm:text-[13.5px] font-semibold text-[#111216]/60 dark:text-[#F5F6FA]/65">
               In Flight
             </span>
             <span className="h-8 w-8 rounded-[10px] bg-[#6531F7]/10 dark:bg-[#7242FF]/20 border border-[#6531F7]/20 dark:border-[#855BFF]/35 inline-flex items-center justify-center">
@@ -146,9 +146,9 @@ export default function StatsCards({ stats, isLoading = false, onOpenStandup }) 
           </div>
         </div>
 
-        <div className="linear-panel p-6 flex flex-col justify-between">
+        <div className="linear-panel p-4 sm:p-6 flex flex-col justify-between">
           <div className="flex items-center justify-between">
-            <span className="text-[13.5px] font-semibold text-[#111216]/60 dark:text-[#F5F6FA]/65">
+            <span className="text-[13px] sm:text-[13.5px] font-semibold text-[#111216]/60 dark:text-[#F5F6FA]/65">
               Overdue
             </span>
             <span

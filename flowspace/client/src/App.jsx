@@ -46,9 +46,10 @@ function ThemedToaster() {
               border: '1px solid rgba(255, 255, 255, 0.14)',
               borderRadius: '14px',
               padding: '10px 14px',
-              fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
+              fontFamily: "'Inter', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
               fontSize: '13.5px',
               fontWeight: 500,
+              maxWidth: 'calc(100vw - 32px)',
               boxShadow:
                 'inset 1.5px 1.5px 2px rgba(255,255,255,0.14), 0 14px 36px rgba(0,0,0,0.5)',
             }
@@ -60,9 +61,10 @@ function ThemedToaster() {
               border: '1px solid rgba(255, 255, 255, 0.9)',
               borderRadius: '14px',
               padding: '10px 14px',
-              fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
+              fontFamily: "'Inter', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
               fontSize: '13.5px',
               fontWeight: 500,
+              maxWidth: 'calc(100vw - 32px)',
               boxShadow:
                 'inset 2px 2px 3px rgba(255,255,255,0.85), 0 12px 32px rgba(31,28,70,0.08)',
             },

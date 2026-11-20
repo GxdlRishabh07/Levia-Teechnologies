@@ -1,6 +1,6 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { runSetup } from './setup.js';
 import { closePool, query, withTransaction } from '../src/config/db.js';
 import * as userRepo from '../src/repositories/userRepo.js';
@@ -196,9 +196,9 @@ export async function runSeed({ silent = false } = {}) {
     {
       code: 'FLOW-6',
       projectId: flowProject.id,
-      title: 'Polish Apple-grade Kanban board drag-and-drop and Cmd+K modal',
+      title: 'Polish frosted glass Kanban board drag-and-drop and responsive layout',
       description:
-        'Apply DESIGN.md tokens (#1d1d1f ink, #f5f5f7 secondary surface, 1px #e0e0e0 hairlines, #0066cc accent) with keyboard shortcuts.',
+        'Apply frosted glassmorphism tokens, dark blue spotlight theme, mobile drawer navigation, and touch-friendly card reordering.',
       status: 'IN_PROGRESS',
       priority: 'MEDIUM',
       dueDate: offsetDate(3),

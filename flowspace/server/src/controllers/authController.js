@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { env } from '../config/env.js';
 import { withTransaction } from '../config/db.js';
 import userRepo from '../repositories/userRepo.js';

@@ -24,9 +24,32 @@ app.set('trust proxy', 1);
 
 // Security & request parsing middleware
 app.use(helmet());
+
+const allowedOrigins = new Set(
+  [
+    ...String(env.CLIENT_URL || '')
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean),
+    process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null,
+    process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : null,
+  ].filter(Boolean)
+);
+
 app.use(
   cors({
-    origin: env.CLIENT_URL,
+    origin(origin, callback) {
+      // Allow same-origin / server-to-server requests with no Origin header
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.has(origin)) return callback(null, true);
+      // Allow Vercel preview deployments when running on Vercel
+      if (process.env.VERCEL && /^https:\/\/[a-z0-9-]+\.vercel\.app$/i.test(origin)) {
+        return callback(null, true);
+      }
+      return callback(null, false);
+    },
     credentials: true,
   })
 );

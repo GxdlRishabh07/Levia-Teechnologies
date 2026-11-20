@@ -22,7 +22,8 @@
 
 .cutora-root {
   --u: var(--cutora-u);
-  --font-hero: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-hero: "Plus Jakarta Sans", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-ui: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
   /* Refined Professional Blue Palette */
   --c-ink: #0F172A;
@@ -44,15 +45,18 @@
 
   margin: 0;
   padding: 0;
-  width: 100vw;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
   height: 100vh;
   height: 100dvh;
   overflow: hidden;
   position: relative;
-  font-family: var(--font-hero);
+  font-family: var(--font-ui);
   color: var(--c-ink);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
 }
 
 html.dark .cutora-root {
@@ -217,6 +221,7 @@ html.dark .cutora-gradient-stage::after {
 }
 
 .cutora-logo-title {
+  font-family: var(--font-hero);
   font-size: calc(34 * var(--u));
   line-height: 1;
   font-weight: 700;
@@ -252,18 +257,20 @@ html.dark .cutora-gradient-stage::after {
 
 .cutora-headline {
   margin: 0;
+  font-family: var(--font-hero);
   font-size: calc(60 * var(--u));
   line-height: calc(68 * var(--u));
-  font-weight: 650;
-  letter-spacing: calc(-2.4 * var(--u));
+  font-weight: 700;
+  letter-spacing: calc(-2.2 * var(--u));
   color: #FFFFFF;
 }
 
 .cutora-subline {
   margin: calc(19 * var(--u)) 0 0;
-  font-size: calc(19 * var(--u));
-  line-height: calc(27 * var(--u));
-  font-weight: 440;
+  font-family: var(--font-ui);
+  font-size: calc(18.5 * var(--u));
+  line-height: calc(28 * var(--u));
+  font-weight: 400;
   color: rgba(241, 245, 249, 0.88);
   max-width: calc(640 * var(--u));
 }
@@ -333,10 +340,11 @@ html.dark .cutora-gradient-stage::after {
 /* Card Heading & Subtitle */
 .cutora-card-heading {
   margin: 0;
-  font-size: calc(48 * var(--u));
-  line-height: 1.1;
+  font-family: var(--font-hero);
+  font-size: calc(46 * var(--u));
+  line-height: 1.12;
   font-weight: 700;
-  letter-spacing: calc(-1.8 * var(--u));
+  letter-spacing: calc(-1.6 * var(--u));
   color: var(--c-ink);
 }
 
@@ -662,57 +670,275 @@ html.dark .cutora-card-footer a {
 
 /* ==================================================================
    Responsive Styles (Tablets & Phones)
+   Crisp readable sizing, zero horizontal overflow, iOS 16px input guard
    ================================================================== */
 @media (max-width: 1024px) {
-  .cutora-layout {
-    flex-direction: column;
+  .cutora-root {
+    height: auto;
+    min-height: 100dvh;
+    overflow-x: clip;
     overflow-y: auto;
   }
 
+  .cutora-gradient-stage,
+  .cutora-washes {
+    position: fixed;
+  }
+
+  .cutora-layout {
+    flex-direction: column;
+    min-height: 100dvh;
+    height: auto;
+    justify-content: flex-start;
+  }
+
   .cutora-hero {
-    padding: 28px 24px 24px;
+    padding: 28px 28px 20px;
     flex: none;
   }
 
   .cutora-topbar {
     padding-right: 0;
+    gap: 12px;
+  }
+
+  .cutora-logo {
+    gap: 12px;
+  }
+
+  .cutora-logo-tile {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+  }
+
+  .cutora-logo-tile svg {
+    width: 24px;
+    height: 24px;
   }
 
   .cutora-logo-title {
-    font-size: 26px;
+    font-size: 24px;
+    letter-spacing: -0.025em;
+  }
+
+  .cutora-back-link {
+    font-size: 14px;
+    white-space: nowrap;
   }
 
   .cutora-pitch {
+    max-width: 640px;
     margin-top: 24px;
   }
 
   .cutora-headline {
-    font-size: 38px;
-    line-height: 44px;
-    letter-spacing: -1px;
+    font-size: clamp(28px, 5vw, 40px);
+    line-height: 1.15;
+    letter-spacing: -0.03em;
   }
 
   .cutora-subline {
-    font-size: 16px;
-    line-height: 22px;
+    margin-top: 12px;
+    font-size: 15px;
+    line-height: 1.55;
+    max-width: 600px;
+  }
+
+  .cutora-dots {
+    margin-top: 20px;
+    gap: 8px;
+  }
+
+  .cutora-dot-active {
+    width: 28px;
+    height: 7px;
+    border-radius: 4px;
+  }
+
+  .cutora-dot-inactive {
+    width: 7px;
+    height: 7px;
   }
 
   .cutora-card-wrap {
     width: auto;
-    margin: 12px 16px 24px;
+    max-width: 560px;
+    width: calc(100% - 40px);
+    margin: 8px auto 32px;
+    flex: 1 0 auto;
   }
 
   .cutora-card {
-    padding: 32px 24px;
+    height: auto;
+    border-radius: 20px;
+    padding: 32px 28px;
+    overflow: visible;
+  }
+
+  .cutora-theme-toggle {
+    top: 20px;
+    right: 20px;
+    padding: 8px;
   }
 
   .cutora-card-heading {
-    font-size: 32px;
+    font-size: 30px;
+    letter-spacing: -0.03em;
+    padding-right: 36px;
   }
 
-  .cutora-input,
+  .cutora-card-sub {
+    margin-top: 6px;
+    font-size: 15px;
+    line-height: 1.45;
+  }
+
+  .cutora-demo-row {
+    gap: 10px;
+    margin-top: 18px;
+  }
+
+  .cutora-demo-pill {
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-size: 13.5px;
+  }
+
+  .cutora-form {
+    margin-top: 22px;
+  }
+
+  .cutora-field {
+    margin-bottom: 16px;
+  }
+
+  .cutora-label {
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+
+  .cutora-input {
+    height: 50px;
+    border-radius: 10px;
+    border-width: 1px;
+    padding: 0 16px;
+    font-size: 16px; /* Prevents iOS Safari zoom on input focus */
+  }
+
+  .cutora-input-with-eye {
+    padding-right: 48px;
+  }
+
+  .cutora-eye-btn {
+    right: 10px;
+    width: 36px;
+    height: 36px;
+  }
+
+  .cutora-eye-btn svg {
+    width: 19px;
+    height: 19px;
+  }
+
+  .cutora-options-row {
+    margin-top: 4px;
+    margin-bottom: 22px;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .cutora-check-wrap {
+    gap: 8px;
+  }
+
+  .cutora-check-box {
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+    border-width: 1.5px;
+  }
+
+  .cutora-check-box svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .cutora-check-label,
+  .cutora-forgot-link {
+    font-size: 14px;
+  }
+
   .cutora-btn-primary {
     height: 52px;
+    border-radius: 9999px;
+    font-size: 15.5px;
+  }
+
+  .cutora-card-footer {
+    margin-top: 22px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 640px) {
+  .cutora-hero {
+    padding: 20px 18px 16px;
+  }
+
+  .cutora-logo-tile {
+    width: 34px;
+    height: 34px;
+  }
+
+  .cutora-logo-tile svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .cutora-logo-title {
+    font-size: 21px;
+  }
+
+  .cutora-back-link {
+    font-size: 13px;
+  }
+
+  .cutora-pitch {
+    margin-top: 18px;
+  }
+
+  .cutora-headline {
+    font-size: 26px;
+    line-height: 1.18;
+  }
+
+  .cutora-subline {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .cutora-card-wrap {
+    width: calc(100% - 24px);
+    margin: 4px auto 24px;
+  }
+
+  .cutora-card {
+    padding: 24px 18px;
+    border-radius: 18px;
+  }
+
+  .cutora-card-heading {
+    font-size: 26px;
+  }
+
+  .cutora-card-sub {
+    font-size: 14px;
+  }
+
+  .cutora-demo-row {
+    flex-direction: column;
+    gap: 8px;
   }
 }
 

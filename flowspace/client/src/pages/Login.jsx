@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Sun, Moon, Loader2 } from 'lucide-react';
+import { Sun, Moon, Loader2, Zap } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAuth } from '../hooks/useAuth';
 import { useTheme } from '../hooks/useTheme';
@@ -81,7 +81,8 @@ export default function Login() {
                 onClick={() => handleDemoLogin('arjun@flowspace.dev')}
                 title="1-Click Login as Arjun (Owner)"
               >
-                <span>⚡ Arjun · Owner</span>
+                <Zap className="h-3.5 w-3.5 text-[#2563EB] dark:text-[#60A5FA] shrink-0" />
+                <span>Arjun · Owner</span>
               </button>
               <button
                 type="button"
@@ -89,7 +90,8 @@ export default function Login() {
                 onClick={() => handleDemoLogin('priya@flowspace.dev')}
                 title="1-Click Login as Priya (Member)"
               >
-                <span>⚡ Priya · Member</span>
+                <Zap className="h-3.5 w-3.5 text-[#2563EB] dark:text-[#60A5FA] shrink-0" />
+                <span>Priya · Member</span>
               </button>
             </div>
 

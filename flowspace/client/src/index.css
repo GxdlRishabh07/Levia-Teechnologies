@@ -3,7 +3,8 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Monaco, Consolas, monospace;
 }
 
@@ -49,9 +50,9 @@
   --color-priority-low: rgba(17, 18, 22, 0.42);
   --color-status-backlog: rgba(17, 18, 22, 0.4);
 
-  /* Typography Families (Plus Jakarta Sans + JetBrains Mono) */
-  --font-display: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-text: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  /* Typography Families (Plus Jakarta Sans Display + Inter UI + JetBrains Mono) */
+  --font-display: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-text: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Monaco, Consolas, monospace;
 
   /* Border Radius Scale */
@@ -174,6 +175,7 @@ html.dark {
     text-rendering: optimizeLegibility;
     font-optical-sizing: auto;
     font-synthesis-weight: none;
+    overflow-x: clip;
   }
 
   body {
@@ -181,11 +183,22 @@ html.dark {
     background-color: var(--color-canvas);
     color: var(--color-ink);
     font-family: var(--font-text);
-    font-size: 15px;
+    font-size: clamp(14px, 0.25vw + 13.5px, 15px);
     font-weight: 400;
     line-height: 1.55;
     letter-spacing: -0.011em;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    overflow-x: clip;
     transition: background-color 220ms ease, color 180ms ease;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
   }
 
   button, input, select, textarea {
@@ -271,7 +284,6 @@ html.dark .glass-ambient-bg {
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
-  background-attachment: fixed;
 }
 
 html.dark .glass-ambient-top-sky,
@@ -305,7 +317,7 @@ html.dark .glass-ambient-bottom-sheen {
 
 .type-headline {
   font-family: var(--font-display);
-  font-size: 26px;
+  font-size: clamp(20px, 2vw, 26px);
   font-weight: 700;
   line-height: 1.24;
   letter-spacing: -0.025em;
@@ -314,10 +326,10 @@ html.dark .glass-ambient-bottom-sheen {
 
 .type-card-title {
   font-family: var(--font-display);
-  font-size: 18px;
+  font-size: clamp(15.5px, 1.2vw, 18px);
   font-weight: 600;
-  line-height: 1.32;
-  letter-spacing: -0.015em;
+  line-height: 1.34;
+  letter-spacing: -0.018em;
   color: var(--color-ink);
 }
 
@@ -708,6 +720,16 @@ html.dark .btn-inverse {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--scrollbar-thumb-hover);
+}
+
+/* Hide scrollbar utility for clean horizontal swipe strips */
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
 }
 
 /* Native select options styling */

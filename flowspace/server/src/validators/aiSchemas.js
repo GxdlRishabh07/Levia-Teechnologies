@@ -6,7 +6,7 @@ export const AI_SOURCE_VALUES = ['AI_TEXT', 'AI_VOICE'];
 
 export const aiParseRequestSchema = z.object({
   text: z
-    .string({ required_error: 'Command text is required' })
+    .string({ error: 'Command text is required' })
     .trim()
     .min(1, 'Command text is required')
     .max(1500, 'Command text cannot exceed 1500 characters'),

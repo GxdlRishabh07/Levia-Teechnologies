@@ -109,10 +109,15 @@ export default function TaskModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#11121c]/20 dark:bg-[#020308]/65 backdrop-blur-[8px] p-4">
-      <div className="w-full max-w-lg linear-modal overflow-hidden">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[#11121c]/20 dark:bg-[#020308]/65 backdrop-blur-[8px] p-3 sm:p-4"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div className="w-full max-w-lg max-h-[90dvh] flex flex-col linear-modal overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-[#111216]/8 dark:border-white/10 px-5 py-4 bg-white/55 dark:bg-white/[0.04]">
+        <div className="shrink-0 flex items-center justify-between border-b border-[#111216]/8 dark:border-white/10 px-4 sm:px-5 py-3.5 sm:py-4 bg-white/55 dark:bg-white/[0.04]">
           <div className="flex items-center gap-2.5 min-w-0">
             <StatusIcon status={status} size={16} className="shrink-0" />
             {isEditing && initialTask?.code ? (
@@ -120,7 +125,7 @@ export default function TaskModal({
                 {initialTask.code}
               </span>
             ) : null}
-            <h3 className="text-[16.5px] font-semibold tracking-[-0.02em] text-[#111216] dark:text-[#F5F6FA] m-0 truncate">
+            <h3 className="text-[16px] sm:text-[16.5px] font-semibold tracking-[-0.02em] text-[#111216] dark:text-[#F5F6FA] m-0 truncate">
               {isEditing ? 'Edit Issue' : 'New Issue'}
             </h3>
           </div>
@@ -135,7 +140,7 @@ export default function TaskModal({
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="p-5 space-y-4">
+        <form onSubmit={handleSubmit} className="flex-1 min-h-0 overflow-y-auto p-4 sm:p-5 space-y-4">
           <div>
             <label className="text-[13.5px] font-semibold text-[#111216]/85 dark:text-[#F5F6FA]/85 block mb-1.5">
               Issue Title <span className="text-[#E11D48] dark:text-[#FB7185]">*</span>
@@ -164,7 +169,7 @@ export default function TaskModal({
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="text-[13.5px] font-semibold text-[#111216]/85 dark:text-[#F5F6FA]/85 block mb-1.5">
                 Project

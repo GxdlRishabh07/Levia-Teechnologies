@@ -21,6 +21,8 @@ export default function Sidebar({
   members = [],
   onlineMembers = [],
   onOpenMemberModal,
+  isMobileOpen = false,
+  onCloseMobile,
 }) {
   const [wsDropdownOpen, setWsDropdownOpen] = useState(false);
   const [isCreatingWs, setIsCreatingWs] = useState(false);
@@ -31,6 +33,21 @@ export default function Sidebar({
 
   const isOwner = activeWorkspace?.role === 'OWNER';
   const onlineIds = new Set(onlineMembers.map((m) => String(m.id)));
+
+  // Close mobile drawer on Escape and lock background body scroll while open
+  useEffect(() => {
+    if (!isMobileOpen) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const handleEsc = (e) => {
+      if (e.key === 'Escape') onCloseMobile?.();
+    };
+    document.addEventListener('keydown', handleEsc);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      document.removeEventListener('keydown', handleEsc);
+    };
+  }, [isMobileOpen, onCloseMobile]);
 
   useEffect(() => {
     if (!wsDropdownOpen) return;
@@ -70,24 +87,51 @@ export default function Sidebar({
   };
 
   return (
-    <aside className="w-full lg:w-[244px] shrink-0 glass-sidebar flex flex-col lg:h-[calc(100vh-24px)] lg:max-h-[calc(100vh-24px)] lg:sticky lg:top-3 p-3 overflow-hidden">
-      {/* Workspace Header Switcher (Pinned at top) */}
-      <div className="shrink-0 relative mb-3" ref={dropdownRef}>
-        <div className="flex items-center justify-between px-1 mb-2">
-          <span className="type-eyebrow">Workspace</span>
-          <button
-            type="button"
-            onClick={() => {
-              setWsDropdownOpen(false);
-              setIsCreatingWs((v) => !v);
-            }}
-            title={isCreatingWs ? 'Cancel' : 'Create workspace'}
-            aria-label={isCreatingWs ? 'Cancel' : 'Create workspace'}
-            className="h-6 w-6 inline-flex items-center justify-center rounded-[8px] text-[#111216]/50 dark:text-[#F5F6FA]/55 hover:text-[#111216] dark:hover:text-[#F5F6FA] hover:bg-white/75 dark:hover:bg-white/10 transition-colors cursor-pointer"
-          >
-            {isCreatingWs ? <X className="h-3.5 w-3.5" /> : <Plus className="h-3.5 w-3.5" />}
-          </button>
-        </div>
+    <>
+      {/* Mobile / Tablet Slide-Over Scrim Backdrop */}
+      {isMobileOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-[#02040A]/55 backdrop-blur-[4px] lg:hidden transition-opacity"
+          aria-hidden="true"
+          onClick={() => onCloseMobile?.()}
+        />
+      )}
+
+      <aside
+        aria-label="Workspace navigation"
+        className={`glass-sidebar flex flex-col p-3 overflow-hidden transition-transform duration-200 ease-out
+          fixed inset-y-2.5 left-2.5 z-50 w-[280px] max-w-[calc(100vw-24px)]
+          lg:static lg:inset-auto lg:z-auto lg:w-[248px] lg:shrink-0 lg:h-[calc(100vh-24px)] lg:max-h-[calc(100vh-24px)] lg:sticky lg:top-3 lg:translate-x-0
+          ${isMobileOpen ? 'translate-x-0' : '-translate-x-[calc(100%+24px)] pointer-events-none lg:pointer-events-auto'}
+        `}
+      >
+        {/* Workspace Header Switcher (Pinned at top) */}
+        <div className="shrink-0 relative mb-3" ref={dropdownRef}>
+          <div className="flex items-center justify-between px-1 mb-2">
+            <span className="type-eyebrow">Workspace</span>
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                onClick={() => {
+                  setWsDropdownOpen(false);
+                  setIsCreatingWs((v) => !v);
+                }}
+                title={isCreatingWs ? 'Cancel' : 'Create workspace'}
+                aria-label={isCreatingWs ? 'Cancel' : 'Create workspace'}
+                className="h-6 w-6 inline-flex items-center justify-center rounded-[8px] text-[#111216]/50 dark:text-[#F5F6FA]/55 hover:text-[#111216] dark:hover:text-[#F5F6FA] hover:bg-white/75 dark:hover:bg-white/10 transition-colors cursor-pointer"
+              >
+                {isCreatingWs ? <X className="h-3.5 w-3.5" /> : <Plus className="h-3.5 w-3.5" />}
+              </button>
+              <button
+                type="button"
+                onClick={() => onCloseMobile?.()}
+                aria-label="Close sidebar"
+                className="lg:hidden h-6 w-6 inline-flex items-center justify-center rounded-[8px] text-[#111216]/60 dark:text-[#F5F6FA]/65 hover:text-[#111216] dark:hover:text-[#F5F6FA] hover:bg-white/75 dark:hover:bg-white/10 transition-colors cursor-pointer"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
 
         <button
           type="button"
@@ -125,6 +169,7 @@ export default function Sidebar({
                   onClick={() => {
                     onSelectWorkspace(ws.id);
                     setWsDropdownOpen(false);
+                    onCloseMobile?.();
                   }}
                   className={`w-full flex items-center justify-between rounded-[9px] px-2.5 py-2 text-left transition-colors cursor-pointer ${
                     isSelected
@@ -209,7 +254,10 @@ export default function Sidebar({
             <span className="type-eyebrow">Projects</span>
             <button
               type="button"
-              onClick={onOpenProjectModal}
+              onClick={() => {
+                onOpenProjectModal();
+                onCloseMobile?.();
+              }}
               title="New project"
               aria-label="New project"
               className="h-6 w-6 inline-flex items-center justify-center rounded-[8px] text-[#111216]/50 dark:text-[#F5F6FA]/55 hover:text-[#111216] dark:hover:text-[#F5F6FA] hover:bg-white/75 dark:hover:bg-white/10 transition-colors cursor-pointer"
@@ -221,7 +269,10 @@ export default function Sidebar({
           <div className="space-y-0.5">
             <button
               type="button"
-              onClick={() => onSelectProject('')}
+              onClick={() => {
+                onSelectProject('');
+                onCloseMobile?.();
+              }}
               className={`relative w-full flex items-center justify-between px-2.5 py-1.5 rounded-[9px] text-left transition-all cursor-pointer ${
                 !selectedProjectId
                   ? 'text-[#111216] dark:text-[#F5F6FA] font-semibold bg-white/60 dark:bg-white/[0.08]'
@@ -255,7 +306,10 @@ export default function Sidebar({
                 <button
                   key={proj.id}
                   type="button"
-                  onClick={() => onSelectProject(isSelected ? '' : proj.id)}
+                  onClick={() => {
+                    onSelectProject(isSelected ? '' : proj.id);
+                    onCloseMobile?.();
+                  }}
                   className={`relative w-full flex items-center justify-between px-2.5 py-1.5 rounded-[9px] text-left transition-all cursor-pointer ${
                     isSelected
                       ? 'text-[#111216] dark:text-[#F5F6FA] font-semibold bg-white/60 dark:bg-white/[0.08]'
@@ -303,7 +357,10 @@ export default function Sidebar({
             {isOwner && (
               <button
                 type="button"
-                onClick={onOpenMemberModal}
+                onClick={() => {
+                  onOpenMemberModal();
+                  onCloseMobile?.();
+                }}
                 title="Invite member"
                 aria-label="Invite member"
                 className="h-6 w-6 inline-flex items-center justify-center rounded-[8px] text-[#111216]/50 dark:text-[#F5F6FA]/55 hover:text-[#111216] dark:hover:text-[#F5F6FA] hover:bg-white/75 dark:hover:bg-white/10 transition-colors cursor-pointer"
@@ -356,8 +413,8 @@ export default function Sidebar({
         </div>
       </div>
 
-      {/* Bottom Pinned Footer: Voice & AI Shortcut Hint */}
-      <div className="shrink-0 pt-2.5 mt-auto">
+      {/* Bottom Pinned Footer: Voice & AI Shortcut Hint (Desktop keyboards) */}
+      <div className="hidden lg:block shrink-0 pt-2.5 mt-auto">
         <div className="rounded-[14px] bg-white/65 dark:bg-white/[0.06] border border-white/85 dark:border-white/12 p-3 space-y-2 shadow-[inset_1px_1px_2px_rgba(255,255,255,0.9)] dark:shadow-[inset_1px_1px_1px_rgba(255,255,255,0.1)]">
           <div className="flex items-center gap-1.5">
             <Mic className="h-3.5 w-3.5 text-[#6531F7] dark:text-[#A78BFA]" />
@@ -378,5 +435,6 @@ export default function Sidebar({
         </div>
       </div>
     </aside>
+    </>
   );
 }

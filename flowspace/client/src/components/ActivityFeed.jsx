@@ -156,7 +156,7 @@ export default function ActivityFeed({
   compact = false,
 }) {
   return (
-    <div className="linear-panel p-6">
+    <div className="linear-panel p-4 sm:p-6">
       <div className="flex items-center justify-between pb-4 mb-1 border-b border-[#111216]/8 dark:border-white/10">
         <div className="flex items-center gap-2">
           <Activity className="h-4 w-4 text-[#6531F7] dark:text-[#A78BFA]" />

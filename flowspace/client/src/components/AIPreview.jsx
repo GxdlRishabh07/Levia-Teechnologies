@@ -134,23 +134,28 @@ export default function AIPreview({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#11121c]/20 dark:bg-[#020308]/65 backdrop-blur-[8px] p-4">
-      <div className="w-full max-w-2xl linear-modal overflow-hidden">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[#11121c]/20 dark:bg-[#020308]/65 backdrop-blur-[8px] p-3 sm:p-4"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div className="w-full max-w-2xl max-h-[90dvh] flex flex-col linear-modal overflow-hidden">
         {/* Header */}
-        <div className="px-5 py-4 border-b border-[#111216]/8 dark:border-white/10 bg-white/55 dark:bg-white/[0.04] flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2.5 min-w-0">
+        <div className="shrink-0 px-4 sm:px-5 py-3.5 sm:py-4 border-b border-[#111216]/8 dark:border-white/10 bg-white/55 dark:bg-white/[0.04] flex items-center justify-between gap-2.5">
+          <div className="flex items-center gap-2 min-w-0 flex-wrap">
             {source === 'AI_VOICE' ? (
               <Mic className="h-4 w-4 text-[#6531F7] dark:text-[#A78BFA] shrink-0" />
             ) : (
               <Sparkles className="h-4 w-4 text-[#6531F7] dark:text-[#A78BFA] shrink-0" />
             )}
-            <h3 className="text-[16.5px] font-semibold tracking-[-0.02em] text-[#111216] dark:text-[#F5F6FA] m-0 truncate">
+            <h3 className="text-[15.5px] sm:text-[16.5px] font-semibold tracking-[-0.02em] text-[#111216] dark:text-[#F5F6FA] m-0 truncate">
               AI Execution Plan
             </h3>
-            <span className="linear-badge shrink-0">{draftPreview.intent}</span>
+            <span className="linear-badge shrink-0 !text-[11px] sm:!text-[12px]">{draftPreview.intent}</span>
           </div>
 
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex items-center gap-2 shrink-0">
             <button
               type="button"
               onClick={onClose}
@@ -163,7 +168,7 @@ export default function AIPreview({
         </div>
 
         {/* Body */}
-        <div className="p-5 max-h-[74vh] overflow-y-auto space-y-4">
+        <div className="flex-1 min-h-0 p-4 sm:p-5 overflow-y-auto space-y-4">
           {/* Original Natural Language Input */}
           <div className="rounded-[14px] bg-white/70 dark:bg-white/[0.06] border border-white dark:border-white/12 p-4 shadow-2xs">
             <div className="type-eyebrow mb-1">
@@ -226,7 +231,7 @@ export default function AIPreview({
                     )}
                   </div>
 
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5">
                     <div>
                       <label className="type-eyebrow !text-[11.5px] block mb-1">
                         Priority

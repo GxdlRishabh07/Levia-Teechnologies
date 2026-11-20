@@ -109,7 +109,7 @@ export default function CommandBar({
         </div>
 
         {/* Right: Mic Action, Compile CTA */}
-        <div className="flex items-center justify-end gap-2 shrink-0">
+        <div className="flex items-center justify-end gap-2 shrink-0 w-full sm:w-auto">
           <button
             type="button"
             onClick={toggleRecording}
@@ -117,8 +117,8 @@ export default function CommandBar({
             title="Click to record voice or hold Right Alt (Windows) / Right Option (Mac)"
             className={
               isRecording
-                ? 'btn-secondary !bg-white dark:!bg-[#7242FF]/20 !border-[#6531F7] dark:!border-[#855BFF] !py-1.5 !px-3 !text-[13.5px]'
-                : 'btn-secondary !py-1.5 !px-3 !text-[13.5px]'
+                ? 'btn-secondary flex-1 sm:flex-none !bg-white dark:!bg-[#7242FF]/20 !border-[#6531F7] dark:!border-[#855BFF] !py-2 sm:!py-1.5 !px-3 !text-[13.5px]'
+                : 'btn-secondary flex-1 sm:flex-none !py-2 sm:!py-1.5 !px-3 !text-[13.5px]'
             }
           >
             {isTranscribing ? (
@@ -153,7 +153,7 @@ export default function CommandBar({
           <button
             type="submit"
             disabled={!commandText.trim() || isParsing || isTranscribing}
-            className="btn-primary !py-2 !px-4 !text-[13.5px]"
+            className="btn-primary flex-1 sm:flex-none !py-2 !px-4 !text-[13.5px]"
           >
             {isParsing ? (
               <>
@@ -171,7 +171,7 @@ export default function CommandBar({
       </form>
 
       {/* Single-Line Frosted Quick Prompt Chips */}
-      <div className="mt-2.5 flex items-center gap-2 overflow-x-auto pb-0.5">
+      <div className="mt-2.5 flex items-center gap-2 overflow-x-auto scrollbar-none pb-0.5">
         <span className="type-eyebrow !text-[11.5px] text-[#111216]/45 dark:text-[#F5F6FA]/45 shrink-0 mr-1">
           Try
         </span>
@@ -183,7 +183,7 @@ export default function CommandBar({
               setCommandText(sample);
               runParse(sample, 'AI_TEXT');
             }}
-            className="linear-tag !rounded-full !bg-white/65 dark:!bg-white/[0.06] !border-white/90 dark:!border-white/12 !text-[#111216]/70 dark:!text-[#F5F6FA]/75 hover:!bg-white dark:hover:!bg-white/12 hover:!text-[#111216] dark:hover:!text-[#F5F6FA] !py-1 !px-3 !text-[12.5px] shadow-[0_2px_6px_rgba(31,28,70,0.03)] dark:shadow-none transition-all shrink-0 max-w-[320px] cursor-pointer"
+            className="linear-tag !rounded-full !bg-white/65 dark:!bg-white/[0.06] !border-white/90 dark:!border-white/12 !text-[#111216]/70 dark:!text-[#F5F6FA]/75 hover:!bg-white dark:hover:!bg-white/12 hover:!text-[#111216] dark:hover:!text-[#F5F6FA] !py-1 !px-3 !text-[12.5px] shadow-[0_2px_6px_rgba(31,28,70,0.03)] dark:shadow-none transition-all shrink-0 max-w-[250px] sm:max-w-[320px] cursor-pointer"
           >
             <span className="truncate">{sample}</span>
             <ArrowRight className="h-3 w-3 text-[#6531F7] dark:text-[#A78BFA] shrink-0" />
@@ -193,10 +193,11 @@ export default function CommandBar({
 
       {/* Floating Glass Voice HUD Capsule when Holding Right Alt / Right Option or Recording */}
       {isRecording && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3.5 linear-modal !rounded-full px-5 py-2.5">
+        <div className="fixed bottom-5 sm:bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2.5 sm:gap-3.5 linear-modal !rounded-full px-3.5 sm:px-5 py-2 sm:py-2.5 max-w-[calc(100vw-24px)]">
           <span className="h-2.5 w-2.5 rounded-full bg-[#6531F7] dark:bg-[#A78BFA] animate-pulse shrink-0 shadow-[0_0_8px_rgba(101,49,247,0.6)]" />
-          <span className="text-[14px] font-semibold text-[#111216] dark:text-[#F5F6FA] whitespace-nowrap">
-            Listening (English / Hinglish)
+          <span className="text-[13px] sm:text-[14px] font-semibold text-[#111216] dark:text-[#F5F6FA] whitespace-nowrap">
+            <span className="sm:hidden">Listening</span>
+            <span className="hidden sm:inline">Listening (English / Hinglish)</span>
           </span>
           <div className="flex items-center gap-[3px] h-5 px-1">
             {levels.map((lvl, idx) => (
@@ -207,13 +208,13 @@ export default function CommandBar({
               />
             ))}
           </div>
-          <span className="type-mono !text-[13px] text-[#111216]/75 dark:text-[#F5F6FA]/80">
+          <span className="type-mono !text-[12.5px] sm:!text-[13px] text-[#111216]/75 dark:text-[#F5F6FA]/80">
             {formatMonoTimer(durationSec)}
           </span>
           <button
             type="button"
             onClick={stopRecording}
-            className="btn-primary !rounded-full !py-1.5 !px-3.5 !text-[13px]"
+            className="btn-primary !rounded-full !py-1.5 !px-3.5 !text-[13px] shrink-0"
           >
             Done
           </button>

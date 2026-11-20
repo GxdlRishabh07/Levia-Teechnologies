@@ -57,10 +57,15 @@ export default function StandupModal({ isOpen, workspaceId, workspaceName, onClo
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#11121c]/20 dark:bg-[#020308]/65 backdrop-blur-[8px] p-4">
-      <div className="w-full max-w-2xl linear-modal overflow-hidden">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[#11121c]/20 dark:bg-[#020308]/65 backdrop-blur-[8px] p-3 sm:p-4"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div className="w-full max-w-2xl max-h-[90dvh] flex flex-col linear-modal overflow-hidden">
         {/* Header */}
-        <div className="px-5 py-4 border-b border-[#111216]/8 dark:border-white/10 bg-white/55 dark:bg-white/[0.04] flex items-center justify-between gap-3">
+        <div className="shrink-0 px-4 sm:px-5 py-3.5 sm:py-4 border-b border-[#111216]/8 dark:border-white/10 bg-white/55 dark:bg-white/[0.04] flex items-center justify-between gap-3">
           <div className="min-w-0">
             <div className="flex items-center gap-1.5 mb-1">
               <Sparkles className="h-3.5 w-3.5 text-[#6531F7] dark:text-[#A78BFA]" />
@@ -68,7 +73,7 @@ export default function StandupModal({ isOpen, workspaceId, workspaceName, onClo
                 AI Daily Standup · Last 24h Activity
               </span>
             </div>
-            <h3 className="text-[17.5px] font-semibold tracking-[-0.02em] text-[#111216] dark:text-[#F5F6FA] m-0 truncate">
+            <h3 className="text-[16px] sm:text-[17.5px] font-semibold tracking-[-0.02em] text-[#111216] dark:text-[#F5F6FA] m-0 truncate">
               {workspaceName || 'Workspace'} Standup Digest
             </h3>
           </div>
@@ -83,7 +88,7 @@ export default function StandupModal({ isOpen, workspaceId, workspaceName, onClo
         </div>
 
         {/* Body */}
-        <div className="p-5 max-h-[72vh] overflow-y-auto space-y-4">
+        <div className="flex-1 min-h-0 p-4 sm:p-5 overflow-y-auto space-y-4">
           {isLoading ? (
             <div className="py-14 text-center space-y-2.5">
               <RefreshCw className="h-5 w-5 text-[#6531F7] dark:text-[#A78BFA] animate-spin mx-auto" />
@@ -221,7 +226,7 @@ export default function StandupModal({ isOpen, workspaceId, workspaceName, onClo
         </div>
 
         {/* Footer */}
-        <div className="border-t border-[#111216]/8 dark:border-white/10 bg-white/55 dark:bg-white/[0.04] px-5 py-3.5 flex items-center justify-between">
+        <div className="shrink-0 border-t border-[#111216]/8 dark:border-white/10 bg-white/55 dark:bg-white/[0.04] px-4 sm:px-5 py-3.5 flex flex-wrap items-center justify-between gap-2">
           <button
             type="button"
             onClick={generateStandup}

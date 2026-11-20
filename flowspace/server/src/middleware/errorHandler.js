@@ -55,18 +55,23 @@ export function errorHandler(err, _req, res, _next) {
   }
 
   // 2. Zod validation error -> HTTP 400 Bad Request
-  if (err?.name === 'ZodError') {
-    const fieldErrors = err.flatten ? err.flatten().fieldErrors : undefined;
+  if (err?.name === 'ZodError' || Array.isArray(err?.issues)) {
+    const fieldErrors = {};
+    for (const issue of err.issues || []) {
+      const key = issue.path?.length ? issue.path.join('.') : '_root';
+      if (!fieldErrors[key]) fieldErrors[key] = [];
+      fieldErrors[key].push(issue.message);
+    }
     const firstIssue = err.issues?.[0];
     const firstMessage = firstIssue
-      ? `${firstIssue.path.join('.') ? `${firstIssue.path.join('.')}: ` : ''}${firstIssue.message}`
+      ? `${firstIssue.path?.length ? `${firstIssue.path.join('.')}: ` : ''}${firstIssue.message}`
       : 'Validation failed';
 
     return res.status(400).json({
       error: {
         code: 'VALIDATION_ERROR',
         message: firstMessage,
-        details: fieldErrors || err.issues || null,
+        details: Object.keys(fieldErrors).length ? fieldErrors : err.issues || null,
       },
     });
   }

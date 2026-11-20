@@ -45,6 +45,7 @@ export default function Workspace() {
   const [activeTab, setActiveTab] = useState('board');
   const [filters, setFilters] = useState(INITIAL_FILTERS);
   const [page, setPage] = useState(1);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   // Modals & AI Preview state
   const [aiPreviewData, setAiPreviewData] = useState(null);
@@ -279,9 +280,9 @@ export default function Workspace() {
       {/* Fixed Luminous Ambient Canvas (Sky-blue + Lavender/Violet Blurs) */}
       <GlassAmbientCanvas />
 
-      {/* Outer Floating Viewport Frame: 12px outer padding, 16px layout gap */}
-      <div className="relative z-10 min-h-screen flex flex-col lg:flex-row items-stretch gap-4 p-3 max-w-[1680px] mx-auto">
-        {/* Floating Left Glass Panel */}
+      {/* Outer Floating Viewport Frame: responsive padding & layout gap */}
+      <div className="relative z-10 min-h-screen flex flex-col lg:flex-row items-stretch gap-3 sm:gap-4 p-2.5 sm:p-3 max-w-[1680px] mx-auto">
+        {/* Floating Left Glass Panel (Desktop) + Slide-Over Drawer (Mobile/Tablet) */}
         <Sidebar
           workspaces={workspaces}
           activeWorkspace={activeWorkspace}
@@ -297,10 +298,12 @@ export default function Workspace() {
           members={members}
           onlineMembers={onlineMembers}
           onOpenMemberModal={() => setIsMemberModalOpen(true)}
+          isMobileOpen={mobileSidebarOpen}
+          onCloseMobile={() => setMobileSidebarOpen(false)}
         />
 
         {/* Right Main Column: Floating TopBar + AI Command Bar + View Canvas */}
-        <div className="flex-1 min-w-0 flex flex-col gap-4">
+        <div className="flex-1 min-w-0 flex flex-col gap-3 sm:gap-4">
           <TopBar
             user={user}
             activeWorkspace={activeWorkspace}
@@ -309,6 +312,7 @@ export default function Workspace() {
             onlineMembers={onlineMembers}
             realtimeMode={realtimeMode}
             isConnected={isConnected}
+            onToggleMobileSidebar={() => setMobileSidebarOpen((v) => !v)}
             onOpenNewTask={() =>
               setTaskModalState({ isOpen: true, task: null, defaultStatus: 'BACKLOG' })
             }
