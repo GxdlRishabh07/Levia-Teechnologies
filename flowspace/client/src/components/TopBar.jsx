@@ -3,7 +3,6 @@ import {
   FileText,
   Plus,
   LogOut,
-  Command,
   LayoutGrid,
   List,
   BarChart3,
@@ -29,7 +28,6 @@ export default function TopBar({
   onlineMembers = [],
   realtimeMode = 'polling',
   isConnected = false,
-  onFocusCommandBar,
   onOpenNewTask,
   onOpenStandup,
   onLogout,
@@ -88,7 +86,7 @@ export default function TopBar({
         </nav>
       </div>
 
-      {/* Right: Live Presence, Command, Standup, New Issue, Theme Toggle, Sign Out */}
+      {/* Right: Live Presence, Standup, New Issue, Theme Toggle, Sign Out */}
       <div className="flex items-center gap-1.5 shrink-0">
         {/* Live Presence Indicator */}
         <div
@@ -121,18 +119,6 @@ export default function TopBar({
             </div>
           )}
         </div>
-
-        {/* Cmd+K Command Trigger */}
-        <button
-          type="button"
-          onClick={onFocusCommandBar}
-          className="btn-secondary !py-1.5 !px-2 sm:!px-2.5 !text-[13px] inline-flex items-center gap-1.5 whitespace-nowrap"
-          title="Focus command bar (⌘K)"
-        >
-          <Command className="h-3.5 w-3.5 text-[#111216]/60 dark:text-[#F5F6FA]/65 shrink-0" />
-          <span className="hidden sm:inline">Command</span>
-          <kbd className="linear-kbd ml-0.5">⌘K</kbd>
-        </button>
 
         {/* AI Daily Standup Trigger */}
         <button

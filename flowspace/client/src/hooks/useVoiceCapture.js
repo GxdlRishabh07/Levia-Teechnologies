@@ -4,6 +4,14 @@ import { api } from '../api/client';
 
 const MAX_RECORDING_MS = 58000;
 
+function isRightAltKey(e) {
+  return (
+    e.code === 'AltRight' ||
+    e.key === 'AltGraph' ||
+    (e.key === 'Alt' && e.location === 2)
+  );
+}
+
 export function useVoiceCapture({ workspaceId, onTranscribed, enableShortcut = true }) {
   const [isRecording, setIsRecording] = useState(false);
   const [isTranscribing, setIsTranscribing] = useState(false);
@@ -17,7 +25,10 @@ export function useVoiceCapture({ workspaceId, onTranscribed, enableShortcut = t
   const chunksRef = useRef([]);
   const timeoutRef = useRef(null);
   const timerIntervalRef = useRef(null);
-  const isHoldingRightOptionRef = useRef(false);
+  const isHoldingRightAltRef = useRef(false);
+  const isStartingRef = useRef(false);
+  const startRecordingRef = useRef(null);
+  const stopRecordingRef = useRef(null);
 
   const cleanupAudio = useCallback(() => {
     if (rafRef.current) {
@@ -51,9 +62,11 @@ export function useVoiceCapture({ workspaceId, onTranscribed, enableShortcut = t
     setIsRecording(false);
   }, []);
 
-  const startRecording = useCallback(async () => {
-    if (isRecording || isTranscribing || !workspaceId) return;
+  const startRecording = useCallback(async (options) => {
+    const fromShortcut = Boolean(options?.fromShortcut);
+    if (isRecording || isTranscribing || isStartingRef.current || !workspaceId) return;
 
+    isStartingRef.current = true;
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: {
@@ -62,6 +75,11 @@ export function useVoiceCapture({ workspaceId, onTranscribed, enableShortcut = t
           autoGainControl: true,
         },
       });
+      if (fromShortcut && !isHoldingRightAltRef.current) {
+        stream.getTracks().forEach((track) => track.stop());
+        isStartingRef.current = false;
+        return;
+      }
       streamRef.current = stream;
 
       const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
@@ -134,6 +152,7 @@ export function useVoiceCapture({ workspaceId, onTranscribed, enableShortcut = t
       };
 
       recorder.start(150);
+      isStartingRef.current = false;
       setIsRecording(true);
       setDurationSec(0);
 
@@ -145,6 +164,7 @@ export function useVoiceCapture({ workspaceId, onTranscribed, enableShortcut = t
         stopRecording();
       }, MAX_RECORDING_MS);
     } catch (err) {
+      isStartingRef.current = false;
       cleanupAudio();
       toast.error(
         err.name === 'NotAllowedError'
@@ -162,31 +182,58 @@ export function useVoiceCapture({ workspaceId, onTranscribed, enableShortcut = t
     }
   }, [isRecording, startRecording, stopRecording]);
 
-  // Optional hold-Right-Option (AltRight) push-to-talk shortcut
+  useEffect(() => {
+    startRecordingRef.current = startRecording;
+    stopRecordingRef.current = stopRecording;
+  }, [startRecording, stopRecording]);
+
+  // Cross-platform hold-Right-Alt (Windows) / hold-Right-Option (Mac) push-to-talk shortcut
   useEffect(() => {
     if (!enableShortcut || !workspaceId) return undefined;
 
     const handleKeyDown = (e) => {
-      if (e.code === 'AltRight' && !e.repeat && !isHoldingRightOptionRef.current) {
-        isHoldingRightOptionRef.current = true;
-        startRecording();
+      if (isRightAltKey(e)) {
+        e.preventDefault();
+        if (!e.repeat && !isHoldingRightAltRef.current) {
+          isHoldingRightAltRef.current = true;
+          startRecordingRef.current?.({ fromShortcut: true });
+        }
       }
     };
 
     const handleKeyUp = (e) => {
-      if (e.code === 'AltRight' && isHoldingRightOptionRef.current) {
-        isHoldingRightOptionRef.current = false;
-        stopRecording();
+      if (isRightAltKey(e) && isHoldingRightAltRef.current) {
+        e.preventDefault();
+        isHoldingRightAltRef.current = false;
+        stopRecordingRef.current?.();
+      }
+    };
+
+    const handleBlur = () => {
+      if (isHoldingRightAltRef.current) {
+        isHoldingRightAltRef.current = false;
+        stopRecordingRef.current?.();
+      }
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.hidden && isHoldingRightAltRef.current) {
+        isHoldingRightAltRef.current = false;
+        stopRecordingRef.current?.();
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
+    window.addEventListener('blur', handleBlur);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
+      window.removeEventListener('blur', handleBlur);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, [enableShortcut, workspaceId, startRecording, stopRecording]);
+  }, [enableShortcut, workspaceId]);
 
   useEffect(() => {
     return () => cleanupAudio();

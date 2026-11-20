@@ -21,7 +21,6 @@ export default function Sidebar({
   members = [],
   onlineMembers = [],
   onOpenMemberModal,
-  onFocusCommandBar,
 }) {
   const [wsDropdownOpen, setWsDropdownOpen] = useState(false);
   const [isCreatingWs, setIsCreatingWs] = useState(false);
@@ -366,19 +365,14 @@ export default function Sidebar({
               AI &amp; Voice
             </span>
           </div>
-          <div className="space-y-1 text-[12px] text-[#111216]/70 dark:text-[#F5F6FA]/70">
-            <button
-              type="button"
-              onClick={onFocusCommandBar}
-              className="w-full flex items-center justify-between gap-2 p-1.5 -mx-1.5 rounded-[8px] hover:bg-white/80 dark:hover:bg-white/10 text-left transition-colors cursor-pointer group"
-              title="Click to focus command bar (⌘K)"
-            >
-              <span className="group-hover:text-[#6531F7] dark:group-hover:text-[#A78BFA] transition-colors font-medium">Command bar</span>
-              <kbd className="linear-kbd group-hover:border-[#6531F7]/40 dark:group-hover:border-[#855BFF]/50 transition-colors">⌘K</kbd>
-            </button>
-            <div className="flex items-center justify-between gap-2 px-0 text-[#111216]/60 dark:text-[#F5F6FA]/60 text-[11.5px]">
-              <span>Hold to speak</span>
-              <kbd className="linear-kbd">Right ⌥</kbd>
+          <div className="space-y-1.5 text-[11.5px] text-[#111216]/65 dark:text-[#F5F6FA]/65">
+            <div className="flex items-center justify-between gap-2">
+              <span>Hold to speak (Mac)</span>
+              <kbd className="linear-kbd shrink-0 whitespace-nowrap">Right ⌥</kbd>
+            </div>
+            <div className="flex items-center justify-between gap-2">
+              <span>Hold to speak (Win)</span>
+              <kbd className="linear-kbd shrink-0 whitespace-nowrap">Right Alt</kbd>
             </div>
           </div>
         </div>

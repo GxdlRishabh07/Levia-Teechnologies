@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { RotateCcw, Filter } from 'lucide-react';
@@ -41,7 +41,6 @@ export default function Workspace() {
   } = useAuth();
 
   const queryClient = useQueryClient();
-  const commandInputRef = useRef(null);
 
   const [activeTab, setActiveTab] = useState('board');
   const [filters, setFilters] = useState(INITIAL_FILTERS);
@@ -298,7 +297,6 @@ export default function Workspace() {
           members={members}
           onlineMembers={onlineMembers}
           onOpenMemberModal={() => setIsMemberModalOpen(true)}
-          onFocusCommandBar={() => commandInputRef.current?.focus()}
         />
 
         {/* Right Main Column: Floating TopBar + AI Command Bar + View Canvas */}
@@ -311,7 +309,6 @@ export default function Workspace() {
             onlineMembers={onlineMembers}
             realtimeMode={realtimeMode}
             isConnected={isConnected}
-            onFocusCommandBar={() => commandInputRef.current?.focus()}
             onOpenNewTask={() =>
               setTaskModalState({ isOpen: true, task: null, defaultStatus: 'BACKLOG' })
             }
@@ -320,10 +317,9 @@ export default function Workspace() {
           />
 
           <main className="flex-1 min-w-0 flex flex-col">
-            {/* Persistent AI Command Bar (Cmd+K + Voice Capture) */}
+            {/* Persistent AI Command Bar (Text + Voice Capture) */}
             <CommandBar
               workspaceId={wid}
-              inputRef={commandInputRef}
               onPreviewReady={(data) => setAiPreviewData(data)}
             />
 

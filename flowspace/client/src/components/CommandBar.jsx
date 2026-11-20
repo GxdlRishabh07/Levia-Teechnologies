@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Terminal, Mic, Square, Loader2, ArrowRight, CornerDownLeft } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { api } from '../api/client';
@@ -20,7 +20,6 @@ function formatMonoTimer(totalSeconds = 0) {
 
 export default function CommandBar({
   workspaceId,
-  inputRef,
   onPreviewReady,
 }) {
   const [commandText, setCommandText] = useState('');
@@ -77,18 +76,6 @@ export default function CommandBar({
     enableShortcut: true,
   });
 
-  // Global Cmd+K / Ctrl+K shortcut to focus the Command Bar input
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
-        e.preventDefault();
-        inputRef?.current?.focus();
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [inputRef]);
-
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!commandText.trim() || isParsing || isTranscribing) return;
@@ -112,7 +99,6 @@ export default function CommandBar({
             }`}
           />
           <input
-            ref={inputRef}
             type="text"
             value={commandText}
             onChange={(e) => setCommandText(e.target.value)}
@@ -122,22 +108,13 @@ export default function CommandBar({
           />
         </div>
 
-        {/* Right: Shortcut Badge, Mic Action, Compile CTA */}
+        {/* Right: Mic Action, Compile CTA */}
         <div className="flex items-center justify-end gap-2 shrink-0">
-          <button
-            type="button"
-            onClick={() => inputRef?.current?.focus()}
-            className="linear-kbd inline-flex hover:border-[#6531F7]/40 dark:hover:border-[#855BFF]/50 transition-colors cursor-pointer"
-            title="Focus command bar (⌘K)"
-          >
-            ⌘K
-          </button>
-
           <button
             type="button"
             onClick={toggleRecording}
             disabled={isParsing || isTranscribing}
-            title="Click to record voice or hold Right Option (AltRight)"
+            title="Click to record voice or hold Right Alt (Windows) / Right Option (Mac)"
             className={
               isRecording
                 ? 'btn-secondary !bg-white dark:!bg-[#7242FF]/20 !border-[#6531F7] dark:!border-[#855BFF] !py-1.5 !px-3 !text-[13.5px]'
@@ -214,7 +191,7 @@ export default function CommandBar({
         ))}
       </div>
 
-      {/* Floating Glass Voice HUD Capsule when Holding Right-Option or Recording */}
+      {/* Floating Glass Voice HUD Capsule when Holding Right Alt / Right Option or Recording */}
       {isRecording && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3.5 linear-modal !rounded-full px-5 py-2.5">
           <span className="h-2.5 w-2.5 rounded-full bg-[#6531F7] dark:bg-[#A78BFA] animate-pulse shrink-0 shadow-[0_0_8px_rgba(101,49,247,0.6)]" />

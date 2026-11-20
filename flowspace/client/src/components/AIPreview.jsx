@@ -55,7 +55,7 @@ export default function AIPreview({
 
   if (!previewData || !draftPreview) return null;
 
-  const { source, latencyMs, model, rawText } = previewData;
+  const { source, rawText } = previewData;
 
   const handleTaskFieldChange = (index, field, value) => {
     setDraftPreview((prev) => {
@@ -151,11 +151,6 @@ export default function AIPreview({
           </div>
 
           <div className="flex items-center gap-3 shrink-0">
-            {latencyMs ? (
-              <span className="type-mono !text-[12.5px] text-[#111216]/45 dark:text-[#F5F6FA]/45">
-                {model || 'Llama 3.3'} · {latencyMs}ms
-              </span>
-            ) : null}
             <button
               type="button"
               onClick={onClose}
