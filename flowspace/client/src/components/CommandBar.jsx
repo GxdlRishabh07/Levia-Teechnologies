@@ -124,7 +124,14 @@ export default function CommandBar({
 
         {/* Right: Shortcut Badge, Mic Action, Compile CTA */}
         <div className="flex items-center justify-end gap-2 shrink-0">
-          <kbd className="linear-kbd hidden md:inline-flex">⌘K</kbd>
+          <button
+            type="button"
+            onClick={() => inputRef?.current?.focus()}
+            className="linear-kbd inline-flex hover:border-[#6531F7]/40 dark:hover:border-[#855BFF]/50 transition-colors cursor-pointer"
+            title="Focus command bar (⌘K)"
+          >
+            ⌘K
+          </button>
 
           <button
             type="button"

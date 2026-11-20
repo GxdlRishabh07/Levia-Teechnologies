@@ -126,10 +126,11 @@ export default function TopBar({
         <button
           type="button"
           onClick={onFocusCommandBar}
-          className="btn-secondary !py-1.5 !px-2.5 !text-[13px] hidden md:inline-flex whitespace-nowrap"
+          className="btn-secondary !py-1.5 !px-2 sm:!px-2.5 !text-[13px] inline-flex items-center gap-1.5 whitespace-nowrap"
+          title="Focus command bar (⌘K)"
         >
-          <Command className="h-3.5 w-3.5 text-[#111216]/60 dark:text-[#F5F6FA]/65" />
-          <span>Command</span>
+          <Command className="h-3.5 w-3.5 text-[#111216]/60 dark:text-[#F5F6FA]/65 shrink-0" />
+          <span className="hidden sm:inline">Command</span>
           <kbd className="linear-kbd ml-0.5">⌘K</kbd>
         </button>
 

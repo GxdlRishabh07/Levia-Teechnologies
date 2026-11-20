@@ -298,6 +298,7 @@ export default function Workspace() {
           members={members}
           onlineMembers={onlineMembers}
           onOpenMemberModal={() => setIsMemberModalOpen(true)}
+          onFocusCommandBar={() => commandInputRef.current?.focus()}
         />
 
         {/* Right Main Column: Floating TopBar + AI Command Bar + View Canvas */}
